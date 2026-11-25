@@ -1,0 +1,14 @@
+{
+  "name": "Skyforge Labyrinth",
+  "short_name": "Skyforge",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#0b0f16",
+  "theme_color": "#0b0f16",
+  "icons": [
+    { "src": "textures/story/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "textures/story/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

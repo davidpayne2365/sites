@@ -1,0 +1,2098 @@
+{
+  "assumptions": {
+    "fill_fraction": 0.5,
+    "max_drawdown": 0.25,
+    "max_spread": 0.04,
+    "slippage": 0.01,
+    "stake_usd": 10,
+    "window_hours": 36
+  },
+  "bankroll_each": 1000,
+  "decisions_total": 1877,
+  "generated_at": "2026-11-24T11:08:38+00:00",
+  "last_run": {
+    "active": 221,
+    "at": "2026-11-24T11:08:38+00:00",
+    "entries": {
+      "fav_85_90": 6,
+      "fav_90_95": 4,
+      "fav_90_97_busy": 8,
+      "fav_95_98": 10,
+      "random_control": 10,
+      "wx_certain": 0,
+      "wx_lock": 0,
+      "wx_value_10": 10,
+      "wx_value_20": 9
+    },
+    "rate_limited": 0,
+    "requests": 160,
+    "scanned": 3000,
+    "settled": 0,
+    "status": "ok",
+    "weather": {
+      "calibration": {
+        "n": {
+          "<=18h": 150,
+          "<=30h": 150,
+          "<=3h": 0,
+          "<=48h": 36,
+          "<=9h": 13
+        },
+        "sigma": [
+          [
+            3,
+            1.2
+          ],
+          [
+            9,
+            1.8
+          ],
+          [
+            18,
+            2.034557691489725
+          ],
+          [
+            30,
+            2.2050831428013473
+          ],
+          [
+            48,
+            2.476879196803016
+          ]
+        ]
+      },
+      "decided_by_observations": 12,
+      "errors_added": 0,
+      "markets": 288,
+      "priced": 288,
+      "scored": 0,
+      "series": 101,
+      "stations_failed": 0,
+      "stations_ok": 24,
+      "status": "ok"
+    }
+  },
+  "schema_version": 1,
+  "settled_trades_total": 1643,
+  "started_at": "2026-11-09T23:03:05+00:00",
+  "strategies": [
+    {
+      "avg_price": 0.8822,
+      "band": [
+        0.85,
+        0.9
+      ],
+      "biggest_loss": -9.07,
+      "breakeven_win_rate": 0.8900877963125549,
+      "cash": 825.68,
+      "description": "Buy the favourite when it costs 85 to 90 cents. Needs to win more than about 87% of the time to break even.",
+      "equity": 956.02,
+      "fees_paid": 8.95,
+      "halt_reason": null,
+      "halted": false,
+      "id": "fav_85_90",
+      "kind": "favourite",
+      "name": "Favourite priced 85-90c",
+      "open": [
+        {
+          "close_time": "2026-11-24T05:00:00+00:00",
+          "contracts": 10,
+          "price": 0.9,
+          "side": "no",
+          "ticker": "KXRAIN-26NOV23-TTN",
+          "title": "Will it rain in Trenton on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.86,
+          "side": "no",
+          "ticker": "KXHIGHNY-26NOV23-B64.5",
+          "title": "Will the maximum temperature be 64-65\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 6,
+          "price": 0.9,
+          "side": "no",
+          "ticker": "KXHIGHAUS-26NOV23-B63.5",
+          "title": "Will the maximum temperature be 63-64\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 3,
+          "price": 0.87,
+          "side": "no",
+          "ticker": "KXHIGHTNOLA-26NOV23-B72.5",
+          "title": "Will the maximum temperature be 72-73\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.87,
+          "side": "yes",
+          "ticker": "KXLOWTPHX-26NOV23-T48",
+          "title": "Will the minimum temperature be >48\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.89,
+          "side": "no",
+          "ticker": "KXHIGHTDAL-26NOV23-B55.5",
+          "title": "Will the maximum temperature be 55-56\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 3,
+          "price": 0.87,
+          "side": "no",
+          "ticker": "KXHIGHTLV-26NOV23-B59.5",
+          "title": "Will the maximum temperature be 59-60\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 7,
+          "price": 0.88,
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV23-B59.5",
+          "title": "Will the maximum temperature be 59-60\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-25T09:00:00+00:00",
+          "contracts": 2,
+          "price": 0.9,
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV24-B64.5",
+          "title": "Will the maximum temperature be 64-65\u00b0 on Nov 24, 2026?"
+        },
+        {
+          "close_time": "2026-11-25T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.89,
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV24-T55",
+          "title": "Will the maximum temperature be >55\u00b0 on Nov 24, 2026?"
+        },
+        {
+          "close_time": "2026-11-25T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.86,
+          "side": "no",
+          "ticker": "KXLOWTLV-26NOV24-T44",
+          "title": "Will the minimum temperature be >44\u00b0 on Nov 24, 2026?"
+        },
+        {
+          "close_time": "2026-11-25T07:00:00+00:00",
+          "contracts": 5,
+          "price": 0.86,
+          "side": "no",
+          "ticker": "KXLOWTCHI-26NOV24-B30.5",
+          "title": "Will the minimum temperature be 30-31\u00b0 on Nov 24, 2026?"
+        }
+      ],
+      "open_cost": 130.34,
+      "open_positions": 20,
+      "realized_pnl": -42.81,
+      "recent_trades": [
+        {
+          "contracts": 7,
+          "outcome": "win",
+          "pnl": 0.65,
+          "price": 0.9,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTCHI-26NOV22-B36.5",
+          "title": "Will the minimum temperature be 36-37\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 2,
+          "outcome": "win",
+          "pnl": 0.26,
+          "price": 0.86,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXLOWTATL-26NOV22-B55.5",
+          "title": "Will the minimum temperature be 55-56\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.93,
+          "price": 0.9,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV22-B71.5",
+          "title": "Will the maximum temperature be 71-72\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 1.03,
+          "price": 0.89,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTLV-26NOV22-T56",
+          "title": "Will the maximum temperature be <56\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.93,
+          "price": 0.9,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHTATL-26NOV22-T65",
+          "title": "Will the maximum temperature be <65\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "loss",
+          "pnl": -4.44,
+          "price": 0.88,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHPHIL-26NOV22-B67.5",
+          "title": "Will the maximum temperature be 67-68\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 7,
+          "outcome": "win",
+          "pnl": 0.85,
+          "price": 0.87,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHMIA-26NOV22-B87.5",
+          "title": "Will the maximum temperature be 87-88\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 7,
+          "outcome": "win",
+          "pnl": 0.92,
+          "price": 0.86,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTDAL-26NOV22-T66",
+          "title": "Will the maximum temperature be <66\u00b0 on Nov 22, 2026?"
+        }
+      ],
+      "settled": 142,
+      "top_series": [
+        {
+          "pnl": -8.97,
+          "series": "KXRAIN",
+          "trades": 10
+        },
+        {
+          "pnl": 7.6,
+          "series": "KXHIGHTPHX",
+          "trades": 9
+        },
+        {
+          "pnl": -22.24,
+          "series": "KXHIGHNY",
+          "trades": 9
+        },
+        {
+          "pnl": 6.18,
+          "series": "KXHIGHDEN",
+          "trades": 6
+        },
+        {
+          "pnl": 5.14,
+          "series": "KXHIGHTSFO",
+          "trades": 6
+        },
+        {
+          "pnl": 4.23,
+          "series": "KXHIGHTOKC",
+          "trades": 6
+        }
+      ],
+      "win_rate": 0.8591549295774648,
+      "win_rate_ci95": [
+        0.792449778182723,
+        0.9069391478850107
+      ],
+      "wins": 122
+    },
+    {
+      "avg_price": 0.931,
+      "band": [
+        0.9,
+        0.95
+      ],
+      "biggest_loss": -9.54,
+      "breakeven_win_rate": 0.9360300300300299,
+      "cash": 753.7,
+      "description": "Buy the favourite when it costs 90 to 95 cents.",
+      "equity": 982.3,
+      "fees_paid": 8.4,
+      "halt_reason": null,
+      "halted": false,
+      "id": "fav_90_95",
+      "kind": "favourite",
+      "name": "Favourite priced 90-95c",
+      "open": [
+        {
+          "close_time": "2026-11-24T05:00:00+00:00",
+          "contracts": 10,
+          "price": 0.92,
+          "side": "no",
+          "ticker": "KXRAIN-26NOV23-NYC",
+          "title": "Will it rain in New York City on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.91,
+          "side": "no",
+          "ticker": "KXHIGHCHI-26NOV23-B44.5",
+          "title": "Will the maximum temperature be 44-45\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.95,
+          "side": "no",
+          "ticker": "KXHIGHPHIL-26NOV23-B71.5",
+          "title": "Will the maximum temperature be 71-72\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.93,
+          "side": "no",
+          "ticker": "KXLOWTNOLA-26NOV23-B62.5",
+          "title": "Will the minimum temperature be 62-63\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.94,
+          "side": "no",
+          "ticker": "KXLOWTPHX-26NOV23-B47.5",
+          "title": "Will the minimum temperature be 47-48\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 1,
+          "price": 0.95,
+          "side": "no",
+          "ticker": "KXHIGHTATL-26NOV23-B72.5",
+          "title": "Will the maximum temperature be 72-73\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 1,
+          "price": 0.94,
+          "side": "no",
+          "ticker": "KXHIGHNY-26NOV23-B64.5",
+          "title": "Will the maximum temperature be 64-65\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.95,
+          "side": "yes",
+          "ticker": "KXHIGHTSDF-26NOV23-B58.5",
+          "title": "Will the maximum temperature be 58-59\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 6,
+          "price": 0.91,
+          "side": "yes",
+          "ticker": "KXHIGHTHOU-26NOV23-T68",
+          "title": "Will the maximum temperature be <68\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.95,
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV23-T55",
+          "title": "Will the maximum temperature be <55\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 3,
+          "price": 0.91,
+          "side": "no",
+          "ticker": "KXHIGHTBOS-26NOV23-B64.5",
+          "title": "Will the maximum temperature be 64-65\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.94,
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV23-B49.5",
+          "title": "Will the maximum temperature be 49-50\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 228.6,
+      "open_positions": 29,
+      "realized_pnl": -16.49,
+      "recent_trades": [
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTOKC-26NOV22-B35.5",
+          "title": "Will the minimum temperature be 35-36\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHAUS-26NOV22-B75.5",
+          "title": "Will the maximum temperature be 75-76\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 6,
+          "outcome": "loss",
+          "pnl": -5.72,
+          "price": 0.95,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHNY-26NOV22-B61.5",
+          "title": "Will the maximum temperature be 61-62\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTEWR-26NOV22-B65.5",
+          "title": "Will the maximum temperature be 65-66\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.74,
+          "price": 0.92,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV22-T47",
+          "title": "Will the maximum temperature be <47\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.84,
+          "price": 0.91,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTATL-26NOV22-B65.5",
+          "title": "Will the maximum temperature be 65-66\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.84,
+          "price": 0.91,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV22-B53.5",
+          "title": "Will the maximum temperature be 53-54\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "win",
+          "pnl": 0.37,
+          "price": 0.92,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV22-B71.5",
+          "title": "Will the maximum temperature be 71-72\u00b0 on Nov 22, 2026?"
+        }
+      ],
+      "settled": 203,
+      "top_series": [
+        {
+          "pnl": -13.73,
+          "series": "KXRAIN",
+          "trades": 11
+        },
+        {
+          "pnl": -5.57,
+          "series": "KXHIGHAUS",
+          "trades": 9
+        },
+        {
+          "pnl": -5.02,
+          "series": "KXHIGHCHI",
+          "trades": 9
+        },
+        {
+          "pnl": -5.19,
+          "series": "KXHIGHTMIN",
+          "trades": 9
+        },
+        {
+          "pnl": -4.75,
+          "series": "KXHIGHPHIL",
+          "trades": 9
+        },
+        {
+          "pnl": 4.13,
+          "series": "KXHIGHTBOS",
+          "trades": 8
+        }
+      ],
+      "win_rate": 0.916256157635468,
+      "win_rate_ci95": [
+        0.8699912391268799,
+        0.9470591027772631
+      ],
+      "wins": 186
+    },
+    {
+      "avg_price": 0.9792,
+      "band": [
+        0.95,
+        0.98
+      ],
+      "biggest_loss": -9.91,
+      "breakeven_win_rate": 0.9812156237544839,
+      "cash": 660.31,
+      "description": "Buy near-certain outcomes for a few cents of profit each. One loss wipes out many wins.",
+      "equity": 963.54,
+      "fees_paid": 5.02,
+      "halt_reason": null,
+      "halted": false,
+      "id": "fav_95_98",
+      "kind": "favourite",
+      "name": "Near-certain 95-98c",
+      "open": [
+        {
+          "close_time": "2026-11-18T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXLOWTSAN-26NOV17-T52",
+          "title": "Will the minimum temperature be <52\u00b0 on Nov 17, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.99,
+          "side": "no",
+          "ticker": "KXLOWTSDF-26NOV23-B31.5",
+          "title": "Will the minimum temperature be 31-32\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.99,
+          "side": "no",
+          "ticker": "KXHIGHPHIL-26NOV23-T65",
+          "title": "Will the maximum temperature be <65\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXHIGHCHI-26NOV23-T40",
+          "title": "Will the maximum temperature be <40\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 3,
+          "price": 0.98,
+          "side": "no",
+          "ticker": "KXLOWTTTN-26NOV23-B39.5",
+          "title": "Will the minimum temperature be 39-40\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.99,
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV23-B72.5",
+          "title": "Will the maximum temperature be 72-73\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXHIGHTHOU-26NOV23-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.99,
+          "side": "no",
+          "ticker": "KXHIGHLAX-26NOV23-B71.5",
+          "title": "Will the maximum temperature be 71-72\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXHIGHNY-26NOV23-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T08:00:00+00:00",
+          "contracts": 9,
+          "price": 0.99,
+          "side": "no",
+          "ticker": "KXLOWTDEN-26NOV23-T20",
+          "title": "Will the minimum temperature be <20\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.96,
+          "side": "no",
+          "ticker": "KXHIGHTLV-26NOV23-B63.5",
+          "title": "Will the maximum temperature be 63-64\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.99,
+          "side": "no",
+          "ticker": "KXHIGHTOKC-26NOV23-B52.5",
+          "title": "Will the maximum temperature be 52-53\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 303.23,
+      "open_positions": 37,
+      "realized_pnl": -35.87,
+      "recent_trades": [
+        {
+          "contracts": 1,
+          "outcome": "win",
+          "pnl": 0.0,
+          "price": 0.99,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTHOU-26NOV22-T58",
+          "title": "Will the minimum temperature be <58\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.27,
+          "price": 0.97,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV22-B57.5",
+          "title": "Will the maximum temperature be 57-58\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.18,
+          "price": 0.98,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXLOWTNYC-26NOV22-B54.5",
+          "title": "Will the minimum temperature be 54-55\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -9.63,
+          "price": 0.96,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHNY-26NOV22-T61",
+          "title": "Will the maximum temperature be <61\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.18,
+          "price": 0.98,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTCHI-26NOV22-T36",
+          "title": "Will the minimum temperature be <36\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.27,
+          "price": 0.97,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTNOLA-26NOV22-T74",
+          "title": "Will the maximum temperature be <74\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.18,
+          "price": 0.98,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTDC-26NOV22-T62",
+          "title": "Will the maximum temperature be <62\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 6,
+          "outcome": "win",
+          "pnl": 0.11,
+          "price": 0.98,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTAUS-26NOV22-T50",
+          "title": "Will the minimum temperature be <50\u00b0 on Nov 22, 2026?"
+        }
+      ],
+      "settled": 279,
+      "top_series": [
+        {
+          "pnl": 2.05,
+          "series": "KXHIGHMIA",
+          "trades": 13
+        },
+        {
+          "pnl": 2.32,
+          "series": "KXHIGHTSEA",
+          "trades": 12
+        },
+        {
+          "pnl": 2.35,
+          "series": "KXRAIN",
+          "trades": 12
+        },
+        {
+          "pnl": 1.86,
+          "series": "KXHIGHTSFO",
+          "trades": 12
+        },
+        {
+          "pnl": -7.68,
+          "series": "KXHIGHDEN",
+          "trades": 12
+        },
+        {
+          "pnl": 2.3,
+          "series": "KXHIGHLAX",
+          "trades": 12
+        }
+      ],
+      "win_rate": 0.967741935483871,
+      "win_rate_ci95": [
+        0.9398399576789541,
+        0.9829380212322102
+      ],
+      "wins": 270
+    },
+    {
+      "avg_price": 0.9459,
+      "band": [
+        0.9,
+        0.97
+      ],
+      "biggest_loss": -9.73,
+      "breakeven_win_rate": 0.9500631067961165,
+      "cash": 690.56,
+      "description": "Same idea, only in markets with at least 50 contracts traded in the last 24 hours.",
+      "equity": 966.64,
+      "fees_paid": 8.6,
+      "halt_reason": null,
+      "halted": false,
+      "id": "fav_90_97_busy",
+      "kind": "favourite",
+      "name": "Favourite 90-97c, busy markets",
+      "open": [
+        {
+          "close_time": "2026-11-18T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXLOWTSAN-26NOV17-T52",
+          "title": "Will the minimum temperature be <52\u00b0 on Nov 17, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T05:00:00+00:00",
+          "contracts": 10,
+          "price": 0.92,
+          "side": "no",
+          "ticker": "KXRAIN-26NOV23-NYC",
+          "title": "Will it rain in New York City on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.91,
+          "side": "no",
+          "ticker": "KXHIGHCHI-26NOV23-B44.5",
+          "title": "Will the maximum temperature be 44-45\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.95,
+          "side": "no",
+          "ticker": "KXHIGHPHIL-26NOV23-B71.5",
+          "title": "Will the maximum temperature be 71-72\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.93,
+          "side": "no",
+          "ticker": "KXLOWTNOLA-26NOV23-B62.5",
+          "title": "Will the minimum temperature be 62-63\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXHIGHTHOU-26NOV23-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXHIGHNY-26NOV23-T64",
+          "title": "Will the maximum temperature be <64\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.96,
+          "side": "no",
+          "ticker": "KXHIGHTSATX-26NOV23-B65.5",
+          "title": "Will the maximum temperature be 65-66\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.95,
+          "side": "yes",
+          "ticker": "KXHIGHTSDF-26NOV23-B58.5",
+          "title": "Will the maximum temperature be 58-59\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.96,
+          "side": "no",
+          "ticker": "KXHIGHTLV-26NOV23-B63.5",
+          "title": "Will the maximum temperature be 63-64\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.95,
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV23-T55",
+          "title": "Will the maximum temperature be <55\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 3,
+          "price": 0.91,
+          "side": "no",
+          "ticker": "KXHIGHTBOS-26NOV23-B64.5",
+          "title": "Will the maximum temperature be 64-65\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 276.08,
+      "open_positions": 32,
+      "realized_pnl": -32.13,
+      "recent_trades": [
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.27,
+          "price": 0.97,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTHOU-26NOV22-B83.5",
+          "title": "Will the maximum temperature be 83-84\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHAUS-26NOV22-B75.5",
+          "title": "Will the maximum temperature be 75-76\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -9.63,
+          "price": 0.96,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHNY-26NOV22-T61",
+          "title": "Will the maximum temperature be <61\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.74,
+          "price": 0.92,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV22-T47",
+          "title": "Will the maximum temperature be <47\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.27,
+          "price": 0.97,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTNOLA-26NOV22-T74",
+          "title": "Will the maximum temperature be <74\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.84,
+          "price": 0.91,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV22-B53.5",
+          "title": "Will the maximum temperature be 53-54\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "win",
+          "pnl": 0.37,
+          "price": 0.92,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV22-B71.5",
+          "title": "Will the maximum temperature be 71-72\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 9,
+          "outcome": "win",
+          "pnl": 0.33,
+          "price": 0.96,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXWTI-26NOV2314-T87.49",
+          "title": "Will the WTI crude oil settlement price be above 87.49 USD/Bbl on Nov 23, 2026?"
+        }
+      ],
+      "settled": 241,
+      "top_series": [
+        {
+          "pnl": -4.02,
+          "series": "KXRAIN",
+          "trades": 12
+        },
+        {
+          "pnl": -4.04,
+          "series": "KXHIGHCHI",
+          "trades": 12
+        },
+        {
+          "pnl": -5.59,
+          "series": "KXHIGHAUS",
+          "trades": 11
+        },
+        {
+          "pnl": 5.16,
+          "series": "KXHIGHTBOS",
+          "trades": 11
+        },
+        {
+          "pnl": 4.7,
+          "series": "KXHIGHTOKC",
+          "trades": 10
+        },
+        {
+          "pnl": -5.36,
+          "series": "KXHIGHTMIN",
+          "trades": 10
+        }
+      ],
+      "win_rate": 0.9294605809128631,
+      "win_rate_ci95": [
+        0.8899487085394062,
+        0.9554958564364802
+      ],
+      "wins": 224
+    },
+    {
+      "avg_price": 0.4421,
+      "band": [
+        0.05,
+        0.95
+      ],
+      "biggest_loss": -8.59,
+      "breakeven_win_rate": 0.45300751879699247,
+      "cash": 760.57,
+      "description": "Buys a random side of a random market. Shows what fees and spreads cost by themselves.",
+      "equity": 926.22,
+      "fees_paid": 21.95,
+      "halt_reason": null,
+      "halted": false,
+      "id": "random_control",
+      "kind": "random",
+      "name": "Random control (no skill)",
+      "open": [
+        {
+          "close_time": "2026-11-18T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.49,
+          "side": "yes",
+          "ticker": "KXHIGHTSAN-26NOV17-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 17, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.37,
+          "side": "yes",
+          "ticker": "KXLOWTSDF-26NOV23-B35.5",
+          "title": "Will the minimum temperature be 35-36\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 7,
+          "price": 0.91,
+          "side": "no",
+          "ticker": "KXHIGHPHIL-26NOV23-B65.5",
+          "title": "Will the maximum temperature be 65-66\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T08:00:00+00:00",
+          "contracts": 10,
+          "price": 0.5,
+          "side": "no",
+          "ticker": "KXRAIN-26NOV23-SAN",
+          "title": "Will it rain in San Diego on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.79,
+          "side": "no",
+          "ticker": "KXHIGHMIA-26NOV23-B77.5",
+          "title": "Will the maximum temperature be 77-78\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.12,
+          "side": "yes",
+          "ticker": "KXHIGHCHI-26NOV23-B44.5",
+          "title": "Will the maximum temperature be 44-45\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.78,
+          "side": "no",
+          "ticker": "KXHIGHTSATX-26NOV23-B61.5",
+          "title": "Will the maximum temperature be 61-62\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.58,
+          "side": "yes",
+          "ticker": "KXLOWTMIA-26NOV23-B67.5",
+          "title": "Will the minimum temperature be 67-68\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 1,
+          "price": 0.19,
+          "side": "yes",
+          "ticker": "KXLOWTTTN-26NOV23-B43.5",
+          "title": "Will the minimum temperature be 43-44\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.48,
+          "side": "no",
+          "ticker": "KXHIGHLAX-26NOV23-B67.5",
+          "title": "Will the maximum temperature be 67-68\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 4,
+          "price": 0.13,
+          "side": "yes",
+          "ticker": "KXLOWTSEA-26NOV23-B39.5",
+          "title": "Will the minimum temperature be 39-40\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.35,
+          "side": "yes",
+          "ticker": "KXHIGHTSEA-26NOV23-B53.5",
+          "title": "Will the maximum temperature be 53-54\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 165.65,
+      "open_positions": 39,
+      "realized_pnl": -69.93,
+      "recent_trades": [
+        {
+          "contracts": 5,
+          "outcome": "loss",
+          "pnl": -1.22,
+          "price": 0.23,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXLOWTMIN-26NOV22-B27.5",
+          "title": "Will the minimum temperature be 27-28\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "win",
+          "pnl": 1.32,
+          "price": 0.72,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTDAL-26NOV22-B48.5",
+          "title": "Will the minimum temperature be 48-49\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 2,
+          "outcome": "win",
+          "pnl": 1.45,
+          "price": 0.26,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHTNOLA-26NOV22-B78.5",
+          "title": "Will the maximum temperature be 78-79\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 8,
+          "outcome": "loss",
+          "pnl": -4.46,
+          "price": 0.54,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTDAL-26NOV22-B66.5",
+          "title": "Will the maximum temperature be 66-67\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "loss",
+          "pnl": -0.32,
+          "price": 0.06,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTBOS-26NOV22-T62",
+          "title": "Will the maximum temperature be <62\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 2,
+          "outcome": "win",
+          "pnl": 0.32,
+          "price": 0.83,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSFO-26NOV22-B57.5",
+          "title": "Will the maximum temperature be 57-58\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -0.64,
+          "price": 0.06,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXLOWTPHIL-26NOV22-B48.5",
+          "title": "Will the minimum temperature be 48-49\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -1.49,
+          "price": 0.14,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHPHIL-26NOV22-T63",
+          "title": "Will the maximum temperature be <63\u00b0 on Nov 22, 2026?"
+        }
+      ],
+      "settled": 280,
+      "top_series": [
+        {
+          "pnl": -28.92,
+          "series": "KXHIGHDEN",
+          "trades": 12
+        },
+        {
+          "pnl": -4.56,
+          "series": "KXHIGHNY",
+          "trades": 12
+        },
+        {
+          "pnl": -8.92,
+          "series": "KXHIGHAUS",
+          "trades": 12
+        },
+        {
+          "pnl": 1.21,
+          "series": "KXRAIN",
+          "trades": 11
+        },
+        {
+          "pnl": 5.71,
+          "series": "KXHIGHTBOS",
+          "trades": 11
+        },
+        {
+          "pnl": -0.46,
+          "series": "KXHIGHLAX",
+          "trades": 11
+        }
+      ],
+      "win_rate": 0.4357142857142857,
+      "win_rate_ci95": [
+        0.378892046335396,
+        0.49427665057161124
+      ],
+      "wins": 122
+    },
+    {
+      "avg_price": 0.3476,
+      "band": [
+        0.05,
+        0.95
+      ],
+      "biggest_loss": -7.83,
+      "breakeven_win_rate": 0.3617777777777778,
+      "cash": 871.28,
+      "description": "Bets when the NWS-based probability beats the price (after fees) by 10+ percentage points.",
+      "equity": 965.21,
+      "fees_paid": 22.99,
+      "halt_reason": null,
+      "halted": false,
+      "id": "wx_value_10",
+      "kind": "weather_value",
+      "name": "Weather model, edge 10+ pts",
+      "open": [
+        {
+          "close_time": "2026-11-18T09:00:00+00:00",
+          "contracts": 9,
+          "price": 0.54,
+          "side": "no",
+          "ticker": "KXHIGHTSAN-26NOV17-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 17, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 4,
+          "price": 0.18,
+          "side": "no",
+          "ticker": "KXLOWTPHX-26NOV23-T48",
+          "title": "Will the minimum temperature be >48\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 5,
+          "price": 0.44,
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 7,
+          "price": 0.4,
+          "side": "no",
+          "ticker": "KXHIGHTDAL-26NOV23-B57.5",
+          "title": "Will the maximum temperature be 57-58\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 1,
+          "price": 0.55,
+          "side": "no",
+          "ticker": "KXHIGHTNOLA-26NOV23-T70",
+          "title": "Will the maximum temperature be <70\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 5,
+          "price": 0.54,
+          "side": "no",
+          "ticker": "KXLOWTCHI-26NOV23-B29.5",
+          "title": "Will the minimum temperature be 29-30\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 7,
+          "price": 0.07,
+          "side": "yes",
+          "ticker": "KXHIGHTHOU-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 4,
+          "price": 0.34,
+          "side": "no",
+          "ticker": "KXHIGHTSATX-26NOV23-B63.5",
+          "title": "Will the maximum temperature be 63-64\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.63,
+          "side": "no",
+          "ticker": "KXHIGHCHI-26NOV23-B40.5",
+          "title": "Will the maximum temperature be 40-41\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 6,
+          "price": 0.57,
+          "side": "no",
+          "ticker": "KXHIGHTATL-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 6,
+          "price": 0.66,
+          "side": "no",
+          "ticker": "KXHIGHTBOS-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 2,
+          "price": 0.07,
+          "side": "yes",
+          "ticker": "KXLOWTSATX-26NOV23-B43.5",
+          "title": "Will the minimum temperature be 43-44\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 93.93,
+      "open_positions": 40,
+      "realized_pnl": -31.08,
+      "recent_trades": [
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -0.64,
+          "price": 0.06,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXLOWTHOU-26NOV22-T65",
+          "title": "Will the minimum temperature be >65\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -3.05,
+          "price": 0.29,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHDEN-26NOV22-B47.5",
+          "title": "Will the maximum temperature be 47-48\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 2,
+          "outcome": "loss",
+          "pnl": -0.15,
+          "price": 0.07,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXLOWTMIA-26NOV22-T73",
+          "title": "Will the minimum temperature be >73\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 1,
+          "outcome": "win",
+          "pnl": 0.24,
+          "price": 0.74,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTOKC-26NOV22-B37.5",
+          "title": "Will the minimum temperature be 37-38\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -4.98,
+          "price": 0.48,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTLV-26NOV22-B56.5",
+          "title": "Will the maximum temperature be 56-57\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 3,
+          "outcome": "loss",
+          "pnl": -0.26,
+          "price": 0.08,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTOKC-26NOV22-B59.5",
+          "title": "Will the maximum temperature be 59-60\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -4.27,
+          "price": 0.41,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTHOU-26NOV22-B81.5",
+          "title": "Will the maximum temperature be 81-82\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 2,
+          "outcome": "loss",
+          "pnl": -0.2,
+          "price": 0.09,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHTEWR-26NOV22-B65.5",
+          "title": "Will the maximum temperature be 65-66\u00b0 on Nov 22, 2026?"
+        }
+      ],
+      "settled": 249,
+      "top_series": [
+        {
+          "pnl": -6.93,
+          "series": "KXHIGHTMIN",
+          "trades": 12
+        },
+        {
+          "pnl": -15.04,
+          "series": "KXHIGHTBOS",
+          "trades": 12
+        },
+        {
+          "pnl": 16.47,
+          "series": "KXHIGHDEN",
+          "trades": 12
+        },
+        {
+          "pnl": -5.05,
+          "series": "KXHIGHTPHX",
+          "trades": 11
+        },
+        {
+          "pnl": -1.33,
+          "series": "KXHIGHNY",
+          "trades": 11
+        },
+        {
+          "pnl": -0.84,
+          "series": "KXHIGHTATL",
+          "trades": 11
+        }
+      ],
+      "win_rate": 0.3413654618473896,
+      "win_rate_ci95": [
+        0.28527881378895464,
+        0.40227260180088503
+      ],
+      "wins": 85
+    },
+    {
+      "avg_price": 0.3411,
+      "band": [
+        0.05,
+        0.95
+      ],
+      "biggest_loss": -6.37,
+      "breakeven_win_rate": 0.35526424159231296,
+      "cash": 901.01,
+      "description": "Same model, only big disagreements with the market (20+ points).",
+      "equity": 980.27,
+      "fees_paid": 20.61,
+      "halt_reason": null,
+      "halted": false,
+      "id": "wx_value_20",
+      "kind": "weather_value",
+      "name": "Weather model, edge 20+ pts",
+      "open": [
+        {
+          "close_time": "2026-11-18T09:00:00+00:00",
+          "contracts": 9,
+          "price": 0.54,
+          "side": "no",
+          "ticker": "KXHIGHTSAN-26NOV17-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 17, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 4,
+          "price": 0.18,
+          "side": "no",
+          "ticker": "KXLOWTPHX-26NOV23-T48",
+          "title": "Will the minimum temperature be >48\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 5,
+          "price": 0.44,
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 7,
+          "price": 0.4,
+          "side": "no",
+          "ticker": "KXHIGHTDAL-26NOV23-B57.5",
+          "title": "Will the maximum temperature be 57-58\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 1,
+          "price": 0.55,
+          "side": "no",
+          "ticker": "KXHIGHTNOLA-26NOV23-T70",
+          "title": "Will the maximum temperature be <70\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 5,
+          "price": 0.54,
+          "side": "no",
+          "ticker": "KXLOWTCHI-26NOV23-B29.5",
+          "title": "Will the minimum temperature be 29-30\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 7,
+          "price": 0.07,
+          "side": "yes",
+          "ticker": "KXHIGHTHOU-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 4,
+          "price": 0.34,
+          "side": "no",
+          "ticker": "KXHIGHTSATX-26NOV23-B63.5",
+          "title": "Will the maximum temperature be 63-64\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 10,
+          "price": 0.63,
+          "side": "no",
+          "ticker": "KXHIGHCHI-26NOV23-B40.5",
+          "title": "Will the maximum temperature be 40-41\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 6,
+          "price": 0.57,
+          "side": "no",
+          "ticker": "KXHIGHTATL-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 6,
+          "price": 0.66,
+          "side": "no",
+          "ticker": "KXHIGHTBOS-26NOV23-B68.5",
+          "title": "Will the maximum temperature be 68-69\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T07:00:00+00:00",
+          "contracts": 2,
+          "price": 0.07,
+          "side": "yes",
+          "ticker": "KXLOWTSATX-26NOV23-B43.5",
+          "title": "Will the minimum temperature be 43-44\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 79.26,
+      "open_positions": 34,
+      "realized_pnl": -16.62,
+      "recent_trades": [
+        {
+          "contracts": 3,
+          "outcome": "loss",
+          "pnl": -0.26,
+          "price": 0.08,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTOKC-26NOV22-B59.5",
+          "title": "Will the maximum temperature be 59-60\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -4.27,
+          "price": 0.41,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTHOU-26NOV22-B81.5",
+          "title": "Will the maximum temperature be 81-82\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 2,
+          "outcome": "loss",
+          "pnl": -0.2,
+          "price": 0.09,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHTEWR-26NOV22-B65.5",
+          "title": "Will the maximum temperature be 65-66\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -2.95,
+          "price": 0.28,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHLAX-26NOV22-B67.5",
+          "title": "Will the maximum temperature be 67-68\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "loss",
+          "pnl": -2.34,
+          "price": 0.45,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV22-B47.5",
+          "title": "Will the maximum temperature be 47-48\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "loss",
+          "pnl": -3.46,
+          "price": 0.33,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTPHX-26NOV22-B73.5",
+          "title": "Will the maximum temperature be 73-74\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 1,
+          "outcome": "win",
+          "pnl": 0.33,
+          "price": 0.65,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTTTN-26NOV22-T61",
+          "title": "Will the maximum temperature be <61\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 8,
+          "outcome": "loss",
+          "pnl": -1.44,
+          "price": 0.17,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "yes",
+          "ticker": "KXHIGHTDAL-26NOV22-T66",
+          "title": "Will the maximum temperature be <66\u00b0 on Nov 22, 2026?"
+        }
+      ],
+      "settled": 225,
+      "top_series": [
+        {
+          "pnl": -6.01,
+          "series": "KXHIGHTPHX",
+          "trades": 11
+        },
+        {
+          "pnl": -0.84,
+          "series": "KXHIGHTATL",
+          "trades": 11
+        },
+        {
+          "pnl": -0.76,
+          "series": "KXHIGHTDAL",
+          "trades": 11
+        },
+        {
+          "pnl": -10.46,
+          "series": "KXHIGHTMIN",
+          "trades": 11
+        },
+        {
+          "pnl": -13.0,
+          "series": "KXHIGHTBOS",
+          "trades": 11
+        },
+        {
+          "pnl": 3.15,
+          "series": "KXHIGHNY",
+          "trades": 10
+        }
+      ],
+      "win_rate": 0.3466666666666667,
+      "win_rate_ci95": [
+        0.2875257859867014,
+        0.41095560900441896
+      ],
+      "wins": 78
+    },
+    {
+      "avg_price": 0.9137,
+      "band": [
+        0.5,
+        0.97
+      ],
+      "biggest_loss": -1.87,
+      "breakeven_win_rate": 0.9195364238410596,
+      "cash": 989.55,
+      "description": "Late in the day, when observations make the result ~98.5%+ certain but the price still lags.",
+      "equity": 1008.05,
+      "fees_paid": 0.88,
+      "halt_reason": null,
+      "halted": false,
+      "id": "wx_lock",
+      "kind": "weather_lock",
+      "name": "Weather, outcome nearly locked",
+      "open": [
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.91,
+          "side": "no",
+          "ticker": "KXLOWTATL-26NOV23-B50.5",
+          "title": "Will the minimum temperature be 50-51\u00b0 on Nov 23, 2026?"
+        },
+        {
+          "close_time": "2026-11-24T09:00:00+00:00",
+          "contracts": 10,
+          "price": 0.94,
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV23-B49.5",
+          "title": "Will the maximum temperature be 49-50\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 18.5,
+      "open_positions": 2,
+      "realized_pnl": 8.15,
+      "recent_trades": [
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXHIGHDEN-26NOV22-B43.5",
+          "title": "Will the maximum temperature be 43-44\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 5,
+          "outcome": "win",
+          "pnl": 1.57,
+          "price": 0.67,
+          "settled_at": "2026-11-24T01:02:12+00:00",
+          "side": "no",
+          "ticker": "KXLOWTBOS-26NOV22-T44",
+          "title": "Will the minimum temperature be <44\u00b0 on Nov 22, 2026?"
+        },
+        {
+          "contracts": 4,
+          "outcome": "win",
+          "pnl": 1.14,
+          "price": 0.7,
+          "settled_at": "2026-11-21T20:10:24+00:00",
+          "side": "no",
+          "ticker": "KXLOWTDEN-26NOV20-B35.5",
+          "title": "Will the minimum temperature be 35-36\u00b0 on Nov 20, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.74,
+          "price": 0.92,
+          "settled_at": "2026-11-20T21:19:31+00:00",
+          "side": "no",
+          "ticker": "KXHIGHNY-26NOV13-B50.5",
+          "title": "Will the maximum temperature be 50-51\u00b0 on Nov 13, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-19T21:40:57+00:00",
+          "side": "no",
+          "ticker": "KXHIGHAUS-26NOV18-B70.5",
+          "title": "Will the maximum temperature be 70-71\u00b0 on Nov 18, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-19T21:40:57+00:00",
+          "side": "no",
+          "ticker": "KXLOWTNYC-26NOV18-B43.5",
+          "title": "Will the minimum temperature be 43-44\u00b0 on Nov 18, 2026?"
+        },
+        {
+          "contracts": 4,
+          "outcome": "win",
+          "pnl": 0.67,
+          "price": 0.82,
+          "settled_at": "2026-11-19T21:40:57+00:00",
+          "side": "no",
+          "ticker": "KXHIGHTSEA-26NOV18-B50.5",
+          "title": "Will the maximum temperature be 50-51\u00b0 on Nov 18, 2026?"
+        },
+        {
+          "contracts": 10,
+          "outcome": "win",
+          "pnl": 0.46,
+          "price": 0.95,
+          "settled_at": "2026-11-19T21:40:57+00:00",
+          "side": "no",
+          "ticker": "KXLOWTDEN-26NOV18-T30",
+          "title": "Will the minimum temperature be <30\u00b0 on Nov 18, 2026?"
+        }
+      ],
+      "settled": 23,
+      "top_series": [
+        {
+          "pnl": 2.16,
+          "series": "KXLOWTDEN",
+          "trades": 5
+        },
+        {
+          "pnl": 1.76,
+          "series": "KXHIGHDEN",
+          "trades": 3
+        },
+        {
+          "pnl": 0.57,
+          "series": "KXHIGHAUS",
+          "trades": 2
+        },
+        {
+          "pnl": 0.67,
+          "series": "KXLOWTNOLA",
+          "trades": 1
+        },
+        {
+          "pnl": -1.65,
+          "series": "KXHIGHTSFO",
+          "trades": 1
+        },
+        {
+          "pnl": -1.87,
+          "series": "KXLOWTOKC",
+          "trades": 1
+        }
+      ],
+      "win_rate": 0.9130434782608695,
+      "win_rate_ci95": [
+        0.7320359570190598,
+        0.9758205045927666
+      ],
+      "wins": 21
+    },
+    {
+      "avg_price": null,
+      "band": [
+        0.6,
+        0.97
+      ],
+      "biggest_loss": 0.0,
+      "breakeven_win_rate": null,
+      "cash": 990.27,
+      "description": "Trusts the market, except when today's thermometer readings have already settled the bracket (with a 1F safety margin) and the price still lags.",
+      "equity": 999.97,
+      "fees_paid": 0,
+      "halt_reason": null,
+      "halted": false,
+      "id": "wx_certain",
+      "kind": "weather_certain",
+      "name": "Weather, already decided by today's readings",
+      "open": [
+        {
+          "close_time": "2026-11-24T06:00:00+00:00",
+          "contracts": 10,
+          "price": 0.97,
+          "side": "no",
+          "ticker": "KXHIGHTSDF-26NOV23-B54.5",
+          "title": "Will the maximum temperature be 54-55\u00b0 on Nov 23, 2026?"
+        }
+      ],
+      "open_cost": 9.7,
+      "open_positions": 1,
+      "realized_pnl": 0,
+      "recent_trades": [],
+      "settled": 0,
+      "top_series": [],
+      "win_rate": null,
+      "win_rate_ci95": null,
+      "wins": 0
+    }
+  ],
+  "weather": {
+    "advantage": -0.03115575861048478,
+    "advantage_se": 0.0023605441640745257,
+    "brier_market": 0.10278204622322436,
+    "brier_model": 0.13393780483370912,
+    "calibration": [
+      {
+        "actual": 0.0481651376146789,
+        "n": 1308,
+        "predicted": 0.04904594801223242,
+        "range": [
+          0.0,
+          0.1
+        ]
+      },
+      {
+        "actual": 0.16270337922403003,
+        "n": 799,
+        "predicted": 0.14964468085106383,
+        "range": [
+          0.1,
+          0.2
+        ]
+      },
+      {
+        "actual": 0.2694610778443114,
+        "n": 668,
+        "predicted": 0.26022275449101795,
+        "range": [
+          0.2,
+          0.3
+        ]
+      },
+      {
+        "actual": 0.3606837606837607,
+        "n": 585,
+        "predicted": 0.3515726495726496,
+        "range": [
+          0.3,
+          0.4
+        ]
+      },
+      {
+        "actual": 0.3017241379310345,
+        "n": 116,
+        "predicted": 0.4250629310344827,
+        "range": [
+          0.4,
+          0.5
+        ]
+      },
+      {
+        "actual": 0.3333333333333333,
+        "n": 18,
+        "predicted": 0.5595611111111111,
+        "range": [
+          0.5,
+          0.6
+        ]
+      },
+      {
+        "actual": 0.625,
+        "n": 16,
+        "predicted": 0.6472,
+        "range": [
+          0.6,
+          0.7
+        ]
+      },
+      {
+        "actual": 0.46153846153846156,
+        "n": 13,
+        "predicted": 0.7405769230769231,
+        "range": [
+          0.7,
+          0.8
+        ]
+      },
+      {
+        "actual": 0.8888888888888888,
+        "n": 9,
+        "predicted": 0.8372666666666667,
+        "range": [
+          0.8,
+          0.9
+        ]
+      },
+      {
+        "actual": 0.9333333333333333,
+        "n": 15,
+        "predicted": 0.9306933333333334,
+        "range": [
+          0.9,
+          1.0
+        ]
+      }
+    ],
+    "last_run": {
+      "calibration": {
+        "n": {
+          "<=18h": 150,
+          "<=30h": 150,
+          "<=3h": 0,
+          "<=48h": 36,
+          "<=9h": 13
+        },
+        "sigma": [
+          [
+            3,
+            1.2
+          ],
+          [
+            9,
+            1.8
+          ],
+          [
+            18,
+            2.034557691489725
+          ],
+          [
+            30,
+            2.2050831428013473
+          ],
+          [
+            48,
+            2.476879196803016
+          ]
+        ]
+      },
+      "decided_by_observations": 12,
+      "errors_added": 0,
+      "markets": 288,
+      "priced": 288,
+      "scored": 0,
+      "series": 101,
+      "stations_failed": 0,
+      "stations_ok": 24,
+      "status": "ok"
+    },
+    "n": 3548
+  }
+}

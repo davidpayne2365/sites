@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ad Block Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #09090b; color: #fff; font-family: system-ui, sans-serif; padding: 24px 16px; }
+    h1 { font-size: 1.3rem; font-weight: 700; margin-bottom: 4px; }
+    p.sub { color: #71717a; font-size: 0.85rem; margin-bottom: 24px; }
+    button#run { background: #4f46e5; color: #fff; font-weight: 700; border: none; padding: 12px 28px; border-radius: 12px; font-size: 1rem; cursor: pointer; margin-bottom: 28px; width: 100%; }
+    button#run:active { background: #4338ca; }
+    .card { background: #18181b; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .dot.blocked { background: #22c55e; }
+    .dot.reachable { background: #ef4444; }
+    .dot.pending { background: #71717a; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .label { font-size: 0.9rem; font-weight: 600; flex: 1; }
+    .status { font-size: 0.75rem; color: #71717a; }
+    .status.blocked { color: #22c55e; }
+    .status.reachable { color: #ef4444; }
+    .section { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: #52525b; margin: 20px 0 8px; letter-spacing: .05em; }
+    #popup-result { background: #18181b; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; font-size: 0.9rem; }
+    #popup-result span { font-weight: 700; }
+    #summary { background: #18181b; border-radius: 12px; padding: 16px; margin-top: 20px; font-size: 0.9rem; line-height: 1.6; color: #a1a1aa; display: none; }
+    #summary strong { color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>Ad Protection Test</h1>
+  <p class="sub">Run this anytime to see what's blocked and what's getting through.</p>
+
+  <button id="run" onclick="runTests()">▶ Run Tests</button>
+
+  <div class="section">Popup / New Tab Test</div>
+  <div id="popup-result" class="card">Click "Run Tests" to start</div>
+
+  <div class="section">Ad Network Reachability</div>
+  <div id="results"></div>
+
+  <div id="summary"></div>
+
+  <script>
+    const AD_DOMAINS = [
+      { name: "Google Ads (DoubleClick)", url: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" },
+      { name: "Adcash", url: "https://static.adcash.com/js/aclib.js" },
+      { name: "ExoClick", url: "https://syndication.exoclick.com/splash.js" },
+      { name: "PropellerAds", url: "https://whephzibeteighp.com/pfe/current/tag.min.js" },
+      { name: "PopAds", url: "https://c1.popads.net/pop.js" },
+      { name: "Adsterra", url: "https://a.adsterra.com/js/adsterra.js" },
+      { name: "TrafficJunky", url: "https://ads.trafficjunky.net/ct" },
+      { name: "JuicyAds", url: "https://syndication.juicyads.com/js/jads.js" },
+      { name: "top-toones (seen in your app)", url: "https://top-toones.com/robots.txt" },
+      { name: "shuffle.us (seen in your app)", url: "https://shuffle.us/robots.txt" },
+    ];
+
+    async function checkDomain(url) {
+      try {
+        await fetch(url, { method: "HEAD", mode: "no-cors", cache: "no-store", signal: AbortSignal.timeout(5000) });
+        return "reachable"; // fetch succeeded = not blocked
+      } catch {
+        return "blocked"; // fetch failed = blocked by DNS/VPN/extension
+      }
+    }
+
+    function popupBlocked() {
+      const w = window.open("about:blank", "_blank", "width=1,height=1");
+      if (!w || w.closed || typeof w.closed === "undefined") return true;
+      w.close();
+      return false;
+    }
+
+    async function runTests() {
+      document.getElementById("run").textContent = "Running…";
+      document.getElementById("run").disabled = true;
+
+      // Popup test
+      const popEl = document.getElementById("popup-result");
+      const blocked = popupBlocked();
+      popEl.innerHTML = blocked
+        ? `<div class="dot blocked"></div><div><div class="label">Popup / New Tab</div><span class="status blocked">✓ Blocked — window.open returned null</span></div>`
+        : `<div class="dot reachable"></div><div><div class="label">Popup / New Tab</div><span class="status reachable">✗ NOT blocked — popups can open</span></div>`;
+
+      // Domain tests
+      const container = document.getElementById("results");
+      container.innerHTML = "";
+      const cards = [];
+
+      for (const d of AD_DOMAINS) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<div class="dot pending"></div><div><div class="label">${d.name}</div><span class="status">Checking…</span></div>`;
+        container.appendChild(card);
+        cards.push({ card, d });
+      }
+
+      let reachableCount = 0;
+      await Promise.all(cards.map(async ({ card, d }) => {
+        const result = await checkDomain(d.url);
+        const dot = card.querySelector(".dot");
+        const status = card.querySelector(".status");
+        dot.className = `dot ${result}`;
+        if (result === "blocked") {
+          status.textContent = "✓ Blocked";
+          status.className = "status blocked";
+        } else {
+          status.textContent = "✗ Reachable — NOT blocked";
+          status.className = "status reachable";
+          reachableCount++;
+        }
+      }));
+
+      // Summary
+      const summary = document.getElementById("summary");
+      summary.style.display = "block";
+      const popupOk = blocked;
+      if (reachableCount === 0 && popupOk) {
+        summary.innerHTML = `<strong>✓ Fully protected.</strong> All ad networks blocked and popups disabled. You're good to go.`;
+      } else if (reachableCount === 0 && !popupOk) {
+        summary.innerHTML = `<strong>⚠ Partial protection.</strong> Ad domains are blocked but popups can still open. Your VPN/DNS is working but the browser isn't blocking window.open.`;
+      } else {
+        summary.innerHTML = `<strong>✗ ${reachableCount} ad network${reachableCount > 1 ? "s" : ""} still reachable.</strong> Your protection isn't blocking all ad sources. ${popupOk ? "Popups are blocked." : "Popups can also still open."}`;
+      }
+
+      document.getElementById("run").textContent = "▶ Run Again";
+      document.getElementById("run").disabled = false;
+    }
+  </script>
+</body>
+</html>

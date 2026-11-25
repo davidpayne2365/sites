@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Skyforge</title>
+<style>
+  :root {
+    --hud-bg: rgba(12, 16, 24, 0.55);
+    --hud-fg: #f2f5fa;
+    --accent: #ffd24a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b0f16; color: var(--hud-fg);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none; }
+  #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+  #info { position: fixed; left: calc(10px + env(safe-area-inset-left, 0px)); top: calc(10px + env(safe-area-inset-top, 0px)); padding: 6px 10px; border-radius: 8px; background: var(--hud-bg);
+    font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; pointer-events: none; white-space: pre; }
+
+  #hotbar { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); display: flex; gap: 4px; padding: 5px;
+    border-radius: 10px; background: var(--hud-bg); max-width: calc(100vw - 16px); overflow-x: auto; }
+  #info { z-index: 3; }
+
+  /* One HUD per local player, positioned over that player's part of the screen. --s scales it for big TVs. */
+  .phud { position: fixed; pointer-events: none; overflow: hidden; --s: 1; }
+  body.split .phud { box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.75); }
+  .phud .tag { display: none; position: absolute; right: calc(10px * var(--s)); top: calc(10px * var(--s));
+    padding: calc(2px * var(--s)) calc(10px * var(--s)); border-radius: calc(6px * var(--s)); font-weight: 800;
+    font-size: calc(14px * var(--s)); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+  body.split .phud .tag { display: block; }
+  .phud .cross { position: absolute; left: 50%; top: 50%; width: calc(18px * var(--s)); height: calc(18px * var(--s)); transform: translate(-50%, -50%); }
+  .phud .cross::before, .phud .cross::after { content: ""; position: absolute; background: #fff; mix-blend-mode: difference; }
+  .phud .cross::before { left: calc(50% - 1px * var(--s)); top: 0; width: calc(2px * var(--s)); height: 100%; }
+  .phud .cross::after { top: calc(50% - 1px * var(--s)); left: 0; height: calc(2px * var(--s)); width: 100%; }
+  .phud .hotbar { position: absolute; left: 50%; bottom: calc(12px * var(--s) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+    display: flex; gap: calc(4px * var(--s)); padding: calc(5px * var(--s)); border-radius: calc(10px * var(--s)); background: var(--hud-bg);
+    max-width: calc(100% - 16px); overflow-x: auto; scrollbar-width: none; pointer-events: auto; scroll-behavior: smooth; }
+  .phud .hotbar::-webkit-scrollbar { display: none; }
+  .slot { position: relative; width: calc(44px * var(--s)); height: calc(44px * var(--s)); flex: 0 0 auto; border-radius: calc(6px * var(--s));
+    border: calc(2px * var(--s)) solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.25); cursor: pointer; }
+  .slot img { width: 100%; height: 100%; image-rendering: pixelated; border-radius: calc(4px * var(--s)); display: block; }
+  .slot.sel { border-color: var(--accent); box-shadow: 0 0 0 calc(2px * var(--s)) rgba(255,210,74,0.35); }
+  .slot span { position: absolute; left: 3px; top: 1px; font-size: calc(10px * var(--s)); text-shadow: 0 1px 2px #000; }
+  .phud .bname { position: absolute; left: 50%; bottom: calc(74px * var(--s)); transform: translateX(-50%); padding: calc(3px * var(--s)) calc(10px * var(--s));
+    border-radius: calc(6px * var(--s)); background: var(--hud-bg); font-weight: 600; font-size: calc(14px * var(--s)); opacity: 0; transition: opacity .4s; white-space: nowrap; }
+  .phud .hint { position: absolute; left: 50%; top: calc(50% + 28px * var(--s)); transform: translateX(-50%); padding: calc(4px * var(--s)) calc(12px * var(--s));
+    border-radius: calc(6px * var(--s)); background: rgba(255,210,74,0.92); color: #1a1300; font-weight: 800; font-size: calc(14px * var(--s));
+    opacity: 0; transition: opacity .2s; white-space: nowrap; }
+  /* Clean screen: no stats panel anywhere; on desktop only the crosshair and block selector show. */
+  #info { display: none; }
+  body:not(.touch) .phud .bname { display: none; }
+  .phud .hint.tappable { pointer-events: auto; cursor: pointer; padding: calc(10px * var(--s)) calc(20px * var(--s)); font-size: calc(16px * var(--s)); }
+  /* Block menu: a carousel along the bottom of the player's screen. --s scales it. */
+  .phud .palette { position: absolute; left: 0; right: 0; bottom: calc(64px * var(--s) + env(safe-area-inset-bottom, 0px)); pointer-events: auto;
+    display: flex; flex-direction: column; align-items: center; gap: calc(8px * var(--s)); padding: calc(10px * var(--s)) 8px;
+    background: none; } /* no backdrop: the 3D preview is drawn on the game canvas behind the centre cell */
+  .phud .palette[hidden] { display: none; }
+  .phud.menu .cross, .phud.menu .hint { display: none; }
+  .phud .phead { display: flex; flex-direction: column; align-items: center; gap: calc(6px * var(--s)); }
+  .phud .ptabs { display: flex; gap: calc(6px * var(--s)); }
+  .phud .ptabs button { font: inherit; font-weight: 800; font-size: calc(15px * var(--s)); padding: calc(6px * var(--s)) calc(18px * var(--s));
+    border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); background: rgba(12,16,24,0.7); color: #dfe6f0; cursor: pointer; }
+  .phud .ptabs button.on { background: var(--accent); color: #1a1300; border-color: var(--accent); }
+  .phud .pcat { font-size: calc(13px * var(--s)); font-weight: 700; letter-spacing: 0.04em; color: #dbe3ef; background: rgba(12,16,24,0.7); padding: calc(3px * var(--s)) calc(12px * var(--s)); border-radius: 999px; }
+  .phud .carousel { display: flex; align-items: center; justify-content: center; max-width: 100%; touch-action: none; }
+  .phud .ccell { flex: 0 0 auto; border-radius: calc(8px * var(--s)); overflow: hidden; cursor: pointer; background: rgba(12,16,24,0.6);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4); transition: width .12s, height .12s; }
+  .phud .ccell img { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: auto; }
+  .phud .ccell.center { background: transparent; box-shadow: 0 0 0 3px var(--accent), 0 8px 28px rgba(0,0,0,0.55); border-radius: calc(12px * var(--s)); }
+  .phud .pinfo { text-align: center; background: rgba(12,16,24,0.78); padding: calc(6px * var(--s)) calc(16px * var(--s)); border-radius: calc(10px * var(--s)); max-width: calc(100% - 16px); }
+  .phud .ptitle { font-weight: 800; font-size: calc(18px * var(--s)); }
+  .phud .paction { color: var(--accent); font-weight: 800; font-size: calc(14px * var(--s)); margin-top: calc(2px * var(--s)); }
+  .phud .phelp { font-size: calc(12px * var(--s)); color: #b9c3d3; margin-top: calc(4px * var(--s)); }
+  .phud .pclose { position: absolute; right: calc(12px * var(--s)); top: calc(8px * var(--s)); font: inherit; font-weight: 800;
+    font-size: calc(16px * var(--s)); width: calc(36px * var(--s)); height: calc(36px * var(--s)); border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3); background: rgba(12,16,24,0.7); color: #fff; cursor: pointer; }
+  #toast { position: fixed; left: 50%; top: 18%; transform: translateX(-50%); padding: 10px 18px; border-radius: 10px; background: rgba(12,16,24,0.8);
+    font-weight: 700; font-size: clamp(14px, 1.4vw, 30px); opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 20; white-space: nowrap; }
+
+  #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px;
+    background: radial-gradient(ellipse at center, rgba(10,14,22,0.55), rgba(10,14,22,0.85)); cursor: pointer; z-index: 10; }
+  #overlay.hidden { display: none; }
+  .card { max-width: 760px; max-height: calc(100vh - 32px); overflow-y: auto; width: 100%; padding: 22px 24px; border-radius: 14px; background: rgba(18,24,36,0.92);
+    border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .card h1 { margin: 0 0 4px; font-size: 28px; letter-spacing: 0.04em; }
+  .card p { margin: 0 0 14px; color: #b9c3d3; }
+  .card .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 28px; }
+  .card h2 { margin: 0 0 6px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #8fa0b8; }
+  .card table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  body.touch .desk-h { display: none; }
+  .card .note { margin: 12px 0 0; font-size: 13px; color: #b9c3d3; }
+  .card td { padding: 3px 0; vertical-align: top; }
+  .card td:first-child { color: var(--accent); white-space: nowrap; padding-right: 14px; font-weight: 600; }
+  .go { margin-top: 16px; text-align: center; font-weight: 700; font-size: 16px; padding: 10px; border-radius: 10px;
+    background: var(--accent); color: #1a1300; }
+  .touch-only { display: none; }
+  body.touch .touch-only { display: table-row; }
+  body.touch .desk-only { display: none; }
+
+  /* Touch controls */
+  #touch { display: none; }
+  body.touch #touch { display: block; }
+  body.touch.palopen #touch { display: none; }
+  #dpad { position: fixed; left: calc(16px + env(safe-area-inset-left, 0px)); bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    width: 150px; height: 150px; border-radius: 50%; background: rgba(12,16,24,0.45); border: 2px solid rgba(255,255,255,0.3); }
+  #dpad .arr { position: absolute; width: 0; height: 0; border: 16px solid transparent; opacity: 0.7; }
+  #dpad .au { left: 59px; top: 10px; border-bottom: 22px solid #fff; border-top: 0; }
+  #dpad .ad { left: 59px; bottom: 10px; border-top: 22px solid #fff; border-bottom: 0; }
+  #dpad .al { top: 59px; left: 10px; border-right: 22px solid #fff; border-left: 0; }
+  #dpad .ar { top: 59px; right: 10px; border-left: 22px solid #fff; border-right: 0; }
+  #dpad.u .au, #dpad.d .ad, #dpad.l .al, #dpad.r .ar { opacity: 1; filter: drop-shadow(0 0 6px #ffd24a); border-color: transparent; }
+  #dpad.u .au { border-bottom-color: #ffd24a; } #dpad.d .ad { border-top-color: #ffd24a; }
+  #dpad.l .al { border-right-color: #ffd24a; } #dpad.r .ar { border-left-color: #ffd24a; }
+  .tbtn { position: fixed; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: rgba(12,16,24,0.5); border: 2px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 12px; text-align: center; }
+  .tbtn.on { background: rgba(255,210,74,0.55); color: #1a1300; }
+  #bJump { right: 18px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); width: 76px; height: 76px; }
+  #bPlace { right: 104px; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+  #bBreak { right: 104px; bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  #bPal { left: 18px; top: calc(70px + env(safe-area-inset-top, 0px)); width: 58px; height: 58px; font-size: 10px; }
+  #bFly { left: 18px; top: calc(140px + env(safe-area-inset-top, 0px)); width: 58px; height: 58px; font-size: 11px; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="huds"></div>
+<div id="info">Loading…</div>
+<div id="toast"></div>
+
+<div id="touch">
+  <div id="dpad"><div class="arr au"></div><div class="arr ad"></div><div class="arr al"></div><div class="arr ar"></div></div>
+  <div class="tbtn" id="bJump">JUMP</div>
+  <div class="tbtn" id="bPlace">PLACE</div>
+  <div class="tbtn" id="bBreak">BREAK</div>
+  <div class="tbtn" id="bPal">BLOCKS</div>
+  <div class="tbtn" id="bFly">FLY</div>
+</div>
+
+<div id="overlay">
+  <div class="card">
+    <h1>SKYFORGE</h1>
+    <p>An open world under an HD sky. Run, jump, build, and drive.</p>
+    <div class="cols">
+      <div>
+        <h2 class="desk-h">Keyboard &amp; mouse</h2>
+        <table>
+          <tr class="desk-only"><td>W A S D</td><td>Move</td></tr>
+          <tr class="desk-only"><td>Mouse</td><td>Look</td></tr>
+                    <tr class="desk-only"><td>Space</td><td>Jump</td></tr>
+          <tr class="desk-only"><td>Right click</td><td>Place block</td></tr>
+          <tr class="desk-only"><td>Left click</td><td>Remove block</td></tr>
+          <tr class="desk-only"><td>1–9 / wheel</td><td>Choose a favourite slot</td></tr>
+          <tr class="desk-only"><td>Tab / Q</td><td>Block carousel · arrows or wheel browse · [ / ]: tabs · click the middle (or Enter) to use</td></tr>
+          <tr class="desk-only"><td>E</td><td>Get in / out of a vehicle</td></tr>
+          <tr class="desk-only"><td>Driving</td><td>W / S gas &amp; reverse, A / D steer, Space brake</td></tr>
+          <tr class="desk-only"><td>Esc</td><td>Pause</td></tr>
+          <tr class="touch-only"><td>D-pad (bottom left)</td><td>Move · slide for diagonals</td></tr>
+          <tr class="touch-only"><td>Drag anywhere else</td><td>Look around</td></tr>
+          <tr class="touch-only"><td>Buttons</td><td>Jump, place, break · usable things show a message to tap</td></tr>
+          <tr class="touch-only"><td>Hotbar / BLOCKS</td><td>Tap to choose a block</td></tr>
+        </table>
+      </div>
+      <div>
+        <h2>Xbox controller</h2>
+        <table>
+          <tr><td>Left stick</td><td>Move</td></tr>
+          <tr><td>Right stick</td><td>Look around</td></tr>
+          <tr><td>A</td><td>Jump · on a steering wheel: drive</td></tr>
+          <tr><td>RT</td><td>Place block (hold to repeat)</td></tr>
+          <tr><td>LT</td><td>Remove block (hold to repeat)</td></tr>
+          <tr><td>LB / RB</td><td>Switch between your 9 favourite slots</td></tr>
+          <tr><td>Y</td><td>Block carousel · LB / RB: Hotbar, Ground, Sky tabs · ← →: browse · ↑ ↓: category · LT / RT: jump 10 · A: use</td></tr>
+          <tr><td>View</td><td>Split: side by side / top-bottom</td></tr>
+          <tr><td>Driving</td><td>RT gas, LT brake / reverse, left stick steer, B get out</td></tr>
+          <tr><td>Menu</td><td>Pause</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="note">A red car is parked next to you: look at its steering wheel and press A (or E) to drive. Build your own vehicle from any blocks plus a Steering Wheel, which faces the way you're looking when you place it.</p>
+    <p class="note">Two players: connect a second controller and press any button on it. The screen splits left and right, one half per controller.</p>
+    <div class="go" id="goText">Click to play</div>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

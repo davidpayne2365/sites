@@ -1,0 +1,527 @@
+{
+ "generated_at": "2026-11-24T22:00:39+00:00",
+ "tried": 11,
+ "passed": 0,
+ "last_run": "2026-11-24T00:46:40+00:00",
+ "n_trials": 58,
+ "luck_bar_sharpe": 0.6241536044926868,
+ "ideas": [
+  {
+   "id": "2026-11-24-near-the-high",
+   "name": "Ride funds at their 1-year high",
+   "hypothesis": "Investors hesitate to buy anything at a record high, so good news gets priced in slowly and funds near their 1-year high tend to keep rising. So hold the stock funds trading within 2% of their 1-year high (up to 3 at a time, a third each), drop any that slip 5% below it, and bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-24T00:46:40+00:00",
+   "verdict": "rejected: luck_test, beats_spy, survives_costs, market_conditions",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": true
+    },
+    {
+     "gate": "survives_costs",
+     "ok": false
+    },
+    {
+     "gate": "market_conditions",
+     "ok": false
+    }
+   ],
+   "cagr": 0.03011774463876371,
+   "sharpe": 0.3336157719365204,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.20765837790014252,
+   "trades": 827,
+   "deflated_sharpe": 0.24360579732577864,
+   "luck_bar_sharpe": 0.6241536044926868,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-23-gap-rescue",
+   "name": "Morning panic, afternoon rescue \u00b7 2x Nasdaq",
+   "hypothesis": "When the Nasdaq opens sharply lower but buyers push it back up to close above its open, the overnight panic selling was absorbed by bigger buyers, and prices tend to keep recovering for days. So after such a day in a rising market, hold 2x Nasdaq (QLD) for one week, and bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-23T00:46:41+00:00",
+   "verdict": "rejected: luck_test, beats_spy, enough_trades, survives_costs",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": false
+    },
+    {
+     "gate": "survives_costs",
+     "ok": false
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": -0.000642361165759886,
+   "sharpe": 0.0350362346856069,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.15767938674073212,
+   "trades": 29,
+   "deflated_sharpe": 0.07607789787612312,
+   "luck_bar_sharpe": 0.6257366267032266,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-22-volume-footprint",
+   "name": "Follow the big buyers \u00b7 2x Nasdaq",
+   "hypothesis": "Big funds can't buy quietly: when far more shares trade on the Nasdaq's up days than on its down days, large buyers are usually moving in, and that tends to keep prices rising. So hold 2x Nasdaq (QLD) while up-day volume beats down-day volume and the price trend is up, go to cash as soon as either fades, and bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-22T00:47:00+00:00",
+   "verdict": "rejected: luck_test",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": true
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": true
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.14310152088935957,
+   "sharpe": 1.1256460693954475,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.15612018399833283,
+   "trades": 54,
+   "deflated_sharpe": 0.8843143536953926,
+   "luck_bar_sharpe": 0.6119522279112937,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-20-multi-asset-dips",
+   "name": "Buy the dip in everything",
+   "hypothesis": "Sharp few-day drops in a rising market tend to bounce back, and that is true for bonds, gold and foreign stocks too, which often dip at different times than U.S. stocks. So buy short dips in five different assets (S&P 500 and Nasdaq via 2x funds, plus long bonds, gold and international stocks), sell after the bounce, and bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-20T00:46:30+00:00",
+   "verdict": "rejected: luck_test, beats_spy",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": true
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.03248292411875542,
+   "sharpe": 0.31108521112597753,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.2040664444489243,
+   "trades": 181,
+   "deflated_sharpe": 0.2566615947341395,
+   "luck_bar_sharpe": 0.5841073778993024,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-19-hedged-leverage",
+   "name": "Leverage only with a working safety net",
+   "hypothesis": "Bonds usually rise when stocks crash, which makes leverage safer, but sometimes (like 2022) both fall together. So use 2x S&P plus long bonds only while stocks and bonds have recently moved in opposite directions, plain S&P 500 when they move together, and step aside when the market is falling; bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-19T00:46:36+00:00",
+   "verdict": "rejected: luck_test, enough_trades",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": true
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": false
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.09046421832292006,
+   "sharpe": 0.7376985709443304,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.1697471245637182,
+   "trades": 14,
+   "deflated_sharpe": 0.641454041300797,
+   "luck_bar_sharpe": 0.5846763028635468,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-18-rates-speed-limit",
+   "name": "Interest rates as a speed limit",
+   "hypothesis": "Tech stocks do best when interest rates are falling and get hit hard when rates rise (as in 2022). So hold 2x Nasdaq (QLD) when the Nasdaq and bond prices are both rising, plain S&P 500 when the Nasdaq rises but rates are going up, and cash when the Nasdaq is falling; bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-18T00:46:46+00:00",
+   "verdict": "rejected: luck_test, enough_trades",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": true
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": false
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.14283576670109266,
+   "sharpe": 0.9460755359932891,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.22241409884802887,
+   "trades": 19,
+   "deflated_sharpe": 0.8030686281840282,
+   "luck_bar_sharpe": 0.583652838094115,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-17-calm-leverage",
+   "name": "2x Nasdaq, calm markets only",
+   "hypothesis": "Leverage pays off in calm, rising markets and gets destroyed in wild ones, and calm or wild spells tend to last. So hold 2x Nasdaq (QLD) only while the Nasdaq is rising and calmer than usual, sell the same day it turns jumpy or falls below trend, and bank profits with the house-money rule.",
+   "evaluated_at": "2026-11-17T00:46:36+00:00",
+   "verdict": "rejected: luck_test, beats_spy, enough_trades",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": false
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.052735570801089704,
+   "sharpe": 0.44462123665891684,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.23248114603254788,
+   "trades": 23,
+   "deflated_sharpe": 0.3829325256360142,
+   "luck_bar_sharpe": 0.569453791321715,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-16-breadth-leverage",
+   "name": "Healthy-market leverage \u00b7 2x S&P",
+   "hypothesis": "Rallies where most parts of the market rise together tend to last, while rallies carried by only a few sectors are fragile. So use 2x S&P (SSO) when at least 6 of the 8 sectors are in uptrends, plain SPY when it is mixed, and cash when most are falling; once the money doubles, bank the original stake, then bank half again each time the rest doubles.",
+   "evaluated_at": "2026-11-16T10:07:12+00:00",
+   "verdict": "rejected: luck_test, beats_spy, drawdown, market_conditions",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": false
+    },
+    {
+     "gate": "enough_trades",
+     "ok": true
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": false
+    }
+   ],
+   "cagr": 0.08237289426945815,
+   "sharpe": 0.5582169124998325,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.29892512790338555,
+   "trades": 35,
+   "deflated_sharpe": 0.4859265238960926,
+   "luck_bar_sharpe": 0.5730552117179691,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-16-sector-weekly-rebound",
+   "name": "Last week's losers bounce \u00b7 Sectors",
+   "hypothesis": "When one part of the market falls hard for a week, it is often because of short-term overreaction or forced selling, and it tends to partly bounce back the next week. So at the start of each week, buy the 3 of the 8 sector funds that fell the most over the past 5 days, and hold them for the week.",
+   "evaluated_at": "2026-11-16T00:46:36+00:00",
+   "verdict": "rejected: luck_test, beats_spy, drawdown, survives_costs",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": false
+    },
+    {
+     "gate": "enough_trades",
+     "ok": true
+    },
+    {
+     "gate": "survives_costs",
+     "ok": false
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.04271392366926863,
+   "sharpe": 0.3097061279456369,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.4183812136152082,
+   "trades": 543,
+   "deflated_sharpe": 0.2611146200086789,
+   "luck_bar_sharpe": 0.5765483732464761,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-15-risk-appetite-xly-xlp",
+   "name": "Shopper mood switch \u00b7 SPY or bonds",
+   "hypothesis": "When investors favour \"nice-to-have\" spending stocks (consumer discretionary, XLY) over \"must-have\" ones (consumer staples, XLP), they are confident and stocks tend to do well; when they rotate into staples, trouble often follows. So hold SPY while discretionary is beating staples, and switch to Treasury bonds (IEF) when it is not.",
+   "evaluated_at": "2026-11-15T00:46:59+00:00",
+   "verdict": "rejected: luck_test, enough_trades",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": true
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": false
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.09046710287508164,
+   "sharpe": 0.7791546080863536,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.20346576134813954,
+   "trades": 29,
+   "deflated_sharpe": 0.6835070641567256,
+   "luck_bar_sharpe": 0.5774280221201182,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  },
+  {
+   "id": "2026-11-14-turn-of-month",
+   "name": "Month-end paycheck effect \u00b7 SPY",
+   "hypothesis": "Stocks tend to rise around the turn of each month, when salaries, pension contributions and fund inflows get invested. So hold SPY only from the last trading day of a month through the third trading day of the next month, and sit in cash the rest of the time.",
+   "evaluated_at": "2026-11-14T01:43:42+00:00",
+   "verdict": "rejected: luck_test, beats_spy",
+   "passed": false,
+   "gates": [
+    {
+     "gate": "no_lookahead",
+     "ok": true
+    },
+    {
+     "gate": "luck_test",
+     "ok": false
+    },
+    {
+     "gate": "beats_spy",
+     "ok": false
+    },
+    {
+     "gate": "drawdown",
+     "ok": true
+    },
+    {
+     "gate": "enough_trades",
+     "ok": true
+    },
+    {
+     "gate": "survives_costs",
+     "ok": true
+    },
+    {
+     "gate": "market_conditions",
+     "ok": true
+    }
+   ],
+   "cagr": 0.0332584946329062,
+   "sharpe": 0.49111039097083126,
+   "spy_sharpe": 0.64437659196597,
+   "max_drawdown": 0.1062062088147192,
+   "trades": 71,
+   "deflated_sharpe": 0.42121364510729736,
+   "luck_bar_sharpe": 0.5737330048273005,
+   "holdout_cagr": null,
+   "holdout_sharpe": null
+  }
+ ]
+}

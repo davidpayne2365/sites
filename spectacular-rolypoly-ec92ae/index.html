@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CompTIA A+ 220-1201 - Professor Messer</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #2563eb;
+    --track: #e5e7eb;
+    --header-bg: rgba(245,246,248,0.92);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121316;
+      --card: #1c1e22;
+      --text: #f2f2f3;
+      --muted: #9aa0a8;
+      --border: #2d2f34;
+      --accent: #5b9dff;
+      --track: #2d2f34;
+      --header-bg: rgba(18,19,22,0.92);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(8px);
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem 0.9rem;
+  }
+  header h1 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .summary {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .summary-bar {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--track);
+    overflow: hidden;
+  }
+  .summary-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0.75rem 0.6rem 3rem;
+  }
+  ul#list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .group-header {
+    margin: 1.1rem 0.3rem 0.2rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+  }
+  .group-header:first-child { margin-top: 0.2rem; }
+  li.item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.6rem;
+    cursor: pointer;
+  }
+  .done-checkbox {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .title-block {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .section-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .title-text {
+    font-size: 0.92rem;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+  .percent-text {
+    font-size: 0.78rem;
+    font-weight: 700;
+    min-width: 2.6rem;
+    text-align: right;
+    color: var(--muted);
+  }
+  .bar {
+    height: 4px;
+    background: var(--track);
+    margin: 0 0.6rem 0.55rem;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+  .player-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.32s ease;
+  }
+  .player-wrap.open {
+    max-height: 640px;
+  }
+  .player-aspect {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+  .player-aspect iframe,
+  .player-aspect > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  li.item.complete {
+    border-color: color-mix(in srgb, #22c55e 45%, var(--border));
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>CompTIA A+ 220-1201 &middot; Professor Messer</h1>
+  <div class="summary">
+    <span id="summaryText">0 / 0 complete</span>
+    <div class="summary-bar"><div class="summary-bar-fill" id="summaryFill"></div></div>
+  </div>
+</header>
+<main>
+  <ul id="list"></ul>
+</main>
+
+<script>
+const VIDEOS = [
+  { id: "AIfIA7hEgrw", section: "", title: "How to Pass Your CompTIA A+ Exams in 2026", group: "Introduction" },
+  { id: "zODZ0i-Iark", section: "1.1", title: "Laptop Hardware", group: "1.0 Mobile Devices" },
+  { id: "Iis2-_89YvQ", section: "1.2", title: "Connecting Mobile Devices", group: "1.0 Mobile Devices" },
+  { id: "14iM8lLBS0c", section: "1.2", title: "Mobile Device Accessories", group: "1.0 Mobile Devices" },
+  { id: "1LADZLBV3vo", section: "1.3", title: "Mobile Device Networks", group: "1.0 Mobile Devices" },
+  { id: "NhGi9M4JP7g", section: "1.3", title: "Mobile Device Management", group: "1.0 Mobile Devices" },
+  { id: "RRFjKXxYJdM", section: "2.1", title: "Introduction to IP", group: "2.0 Networking" },
+  { id: "_qGlbfZ44hg", section: "2.1", title: "Common Ports", group: "2.0 Networking" },
+  { id: "aTuaEk5hnAs", section: "2.2", title: "Wireless Network Technologies", group: "2.0 Networking" },
+  { id: "Z-9mkqi2ELI", section: "2.3", title: "Network Services", group: "2.0 Networking" },
+  { id: "HwUqCZFx6wk", section: "2.4", title: "DHCP", group: "2.0 Networking" },
+  { id: "lAHqO9sDVy4", section: "2.4", title: "DNS Configuration", group: "2.0 Networking" },
+  { id: "Z1wPgxsx4GI", section: "2.4", title: "VLANs and VPNs", group: "2.0 Networking" },
+  { id: "0hd6_bx0ydo", section: "2.5", title: "Network Devices", group: "2.0 Networking" },
+  { id: "yubEz-ZEVwY", section: "2.6", title: "IPv4 and IPv6", group: "2.0 Networking" },
+  { id: "nU5ko6cQWmc", section: "2.6", title: "Assigning IP Addresses", group: "2.0 Networking" },
+  { id: "PBEXIMeqRNY", section: "2.7", title: "Network Types", group: "2.0 Networking" },
+  { id: "iN2QnGFl06E", section: "2.7", title: "Internet Connection Types", group: "2.0 Networking" },
+  { id: "CHQQgjtrhYU", section: "2.8", title: "Network Tools", group: "2.0 Networking" },
+  { id: "xOyialyd4JU", section: "3.1", title: "Display Types", group: "3.0 Hardware" },
+  { id: "fmrWo8swzyU", section: "3.1", title: "Display Attributes", group: "3.0 Hardware" },
+  { id: "29X5Ho3m2KU", section: "3.2", title: "Network Cables", group: "3.0 Hardware" },
+  { id: "1w42VC2_JYo", section: "3.2", title: "568A and 568B Colors", group: "3.0 Hardware" },
+  { id: "poQdq2APqic", section: "3.2", title: "Optical Fiber", group: "3.0 Hardware" },
+  { id: "VO8C3lrWlVU", section: "3.2", title: "Copper Connectors", group: "3.0 Hardware" },
+  { id: "Qxbp-c23cYY", section: "3.2", title: "Fiber Connectors", group: "3.0 Hardware" },
+  { id: "FK1b4stA2hk", section: "3.2", title: "Video Cables", group: "3.0 Hardware" },
+  { id: "YM4pig2XYCo", section: "3.2", title: "Storage Cables", group: "3.0 Hardware" },
+  { id: "JGuVE-3CvT4", section: "3.2", title: "Peripheral Cables", group: "3.0 Hardware" },
+  { id: "3GkSvmeuhe8", section: "3.2", title: "Adapters and Converters", group: "3.0 Hardware" },
+  { id: "JylKt1N6o0I", section: "3.3", title: "An Overview of Memory", group: "3.0 Hardware" },
+  { id: "HU-qsVtpnM0", section: "3.3", title: "Memory Technologies", group: "3.0 Hardware" },
+  { id: "UfLNl8-c9VM", section: "3.4", title: "Storage Devices", group: "3.0 Hardware" },
+  { id: "5E16qftlfRY", section: "3.4", title: "RAID", group: "3.0 Hardware" },
+  { id: "dbxM_LFMXpw", section: "3.5", title: "Motherboards", group: "3.0 Hardware" },
+  { id: "QvPX1XJwJH8", section: "3.5", title: "Motherboard Expansion Slots", group: "3.0 Hardware" },
+  { id: "UjJwjjwa6Q0", section: "3.5", title: "Motherboard Connections", group: "3.0 Hardware" },
+  { id: "O5wA53NYv1M", section: "3.5", title: "Motherboard Compatibility", group: "3.0 Hardware" },
+  { id: "TgUxAM8rjyg", section: "3.5", title: "The BIOS", group: "3.0 Hardware" },
+  { id: "QfJkU0vD3gg", section: "3.5", title: "BIOS Settings", group: "3.0 Hardware" },
+  { id: "qLSV_lpM_Mk", section: "3.5", title: "HSM and TPM", group: "3.0 Hardware" },
+  { id: "4RPVQQd2sOM", section: "3.5", title: "CPU Features", group: "3.0 Hardware" },
+  { id: "KtipbKR8rqo", section: "3.5", title: "Expansion Cards", group: "3.0 Hardware" },
+  { id: "qC306MGytR8", section: "3.5", title: "Cooling", group: "3.0 Hardware" },
+  { id: "gK0SYCnWoIM", section: "3.6", title: "Computer Power", group: "3.0 Hardware" },
+  { id: "ctAOL7WyEUY", section: "3.7", title: "Multifunction Devices", group: "3.0 Hardware" },
+  { id: "hp2DfL6KxwA", section: "3.8", title: "Laser Printer Maintenance", group: "3.0 Hardware" },
+  { id: "qIIiTWNnWuQ", section: "3.8", title: "Inkjet Printers", group: "3.0 Hardware" },
+  { id: "yRjKpaQQw1k", section: "3.8", title: "Inkjet Printer Maintenance", group: "3.0 Hardware" },
+  { id: "izk4zbSkUTg", section: "3.8", title: "Thermal Printers", group: "3.0 Hardware" },
+  { id: "emKON9CAjks", section: "3.8", title: "Thermal Printer Maintenance", group: "3.0 Hardware" },
+  { id: "wkSlTGmPlWU", section: "3.8", title: "Impact Printers", group: "3.0 Hardware" },
+  { id: "KCLqKxFsEOM", section: "3.8", title: "Impact Printer Maintenance", group: "3.0 Hardware" },
+  { id: "xXOIdDWUNGU", section: "4.1", title: "Virtualization Concepts", group: "4.0 Virtualization and Cloud Computing" },
+  { id: "wPB_C7hOY-8", section: "4.1", title: "Virtualization Services", group: "4.0 Virtualization and Cloud Computing" },
+  { id: "KZxAY5ssUxc", section: "4.2", title: "Cloud Models", group: "4.0 Virtualization and Cloud Computing" },
+  { id: "XzNnFbY0dMQ", section: "4.2", title: "Cloud Characteristics", group: "4.0 Virtualization and Cloud Computing" },
+  { id: "HgeURynWn_w", section: "5.1", title: "Troubleshooting Hardware", group: "5.0 Hardware and Network Troubleshooting" },
+  { id: "aVIuyHCNPCE", section: "5.2", title: "Troubleshooting Storage Devices", group: "5.0 Hardware and Network Troubleshooting" },
+  { id: "KXZu72i1eX8", section: "5.3", title: "Troubleshooting Display Issues", group: "5.0 Hardware and Network Troubleshooting" },
+  { id: "huQwiY4kiko", section: "5.4", title: "Troubleshooting Mobile Devices", group: "5.0 Hardware and Network Troubleshooting" },
+  { id: "VBDS_kOHhVk", section: "5.5", title: "Troubleshooting Networks", group: "5.0 Hardware and Network Troubleshooting" },
+  { id: "_BhO_nYod0o", section: "5.6", title: "Troubleshooting Printers", group: "5.0 Hardware and Network Troubleshooting" }
+];
+
+const STORAGE_KEY = "pmProgress";
+const DONE_THRESHOLD = 97;
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch (e) {
+    return {};
+  }
+}
+function saveProgress(data) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+let progress = loadProgress();
+
+function getEntry(id) {
+  return progress[id] || { percent: 0, manualDone: false };
+}
+function effectivePercent(id) {
+  const e = getEntry(id);
+  return e.manualDone ? 100 : (e.percent || 0);
+}
+function percentColor(pct) {
+  if (pct >= 100) return "#22c55e";
+  const hue = Math.max(0, Math.min(120, pct * 1.2));
+  return `hsl(${hue}, 72%, 45%)`;
+}
+
+function updateRowUI(id) {
+  const li = document.querySelector(`li[data-id="${id}"]`);
+  if (!li) return;
+  const pct = effectivePercent(id);
+  const color = percentColor(pct);
+  li.querySelector(".percent-text").textContent = pct + "%";
+  li.querySelector(".percent-text").style.color = color;
+  const fill = li.querySelector(".bar-fill");
+  fill.style.width = pct + "%";
+  fill.style.background = color;
+  li.classList.toggle("complete", pct >= 100);
+  li.querySelector(".done-checkbox").checked = getEntry(id).manualDone;
+}
+
+function updateSummary() {
+  const total = VIDEOS.length;
+  const done = VIDEOS.filter(v => effectivePercent(v.id) >= DONE_THRESHOLD).length;
+  const avg = Math.round(VIDEOS.reduce((s, v) => s + effectivePercent(v.id), 0) / total);
+  document.getElementById("summaryText").textContent = `${done} / ${total} complete`;
+  const fill = document.getElementById("summaryFill");
+  fill.style.width = avg + "%";
+  fill.style.background = percentColor(avg);
+}
+
+let ytApiReady = false;
+let currentPlayer = null;
+let currentPollId = null;
+let currentOpenId = null;
+
+function recordPosition(id) {
+  if (!currentPlayer || typeof currentPlayer.getDuration !== "function") return;
+  try {
+    const dur = currentPlayer.getDuration();
+    const cur = currentPlayer.getCurrentTime();
+    if (dur > 0) {
+      const pct = Math.min(100, Math.round((cur / dur) * 100));
+      const entry = getEntry(id);
+      entry.lastPosition = cur;
+      if (pct > (entry.percent || 0)) entry.percent = pct;
+      progress[id] = entry;
+      saveProgress(progress);
+      updateRowUI(id);
+      updateSummary();
+    }
+  } catch (e) {}
+}
+
+function stopPolling() {
+  if (currentPollId) {
+    clearInterval(currentPollId);
+    currentPollId = null;
+  }
+}
+
+function destroyCurrentPlayer() {
+  if (currentOpenId) recordPosition(currentOpenId);
+  stopPolling();
+  if (currentPlayer && typeof currentPlayer.destroy === "function") {
+    currentPlayer.destroy();
+  }
+  currentPlayer = null;
+}
+
+function createPlayer(id) {
+  const entry = getEntry(id);
+  const startAt = Math.floor(entry.lastPosition || 0);
+  currentPlayer = new YT.Player(`player-${id}`, {
+    videoId: id,
+    playerVars: startAt > 0 ? { rel: 0, start: startAt } : { rel: 0 },
+    events: {
+      onStateChange: (event) => {
+        if (event.data === YT.PlayerState.PLAYING) {
+          stopPolling();
+          currentPollId = setInterval(() => recordPosition(id), 2000);
+        } else if (event.data === YT.PlayerState.ENDED) {
+          const e = getEntry(id);
+          e.percent = 100;
+          e.lastPosition = 0;
+          progress[id] = e;
+          saveProgress(progress);
+          updateRowUI(id);
+          updateSummary();
+          stopPolling();
+        } else {
+          recordPosition(id);
+          stopPolling();
+        }
+      }
+    }
+  });
+}
+
+function toggleExpand(id) {
+  const li = document.querySelector(`li[data-id="${id}"]`);
+  const wrap = li.querySelector(".player-wrap");
+
+  if (currentOpenId === id) {
+    wrap.classList.remove("open");
+    destroyCurrentPlayer();
+    currentOpenId = null;
+    return;
+  }
+
+  if (currentOpenId) {
+    const prevLi = document.querySelector(`li[data-id="${currentOpenId}"]`);
+    if (prevLi) prevLi.querySelector(".player-wrap").classList.remove("open");
+    destroyCurrentPlayer();
+  }
+
+  currentOpenId = id;
+  wrap.classList.add("open");
+  const holder = wrap.querySelector(".player-aspect");
+  holder.innerHTML = `<div id="player-${id}"></div>`;
+
+  if (ytApiReady) {
+    createPlayer(id);
+  } else {
+    const check = setInterval(() => {
+      if (ytApiReady) {
+        clearInterval(check);
+        createPlayer(id);
+      }
+    }, 200);
+  }
+}
+
+function toggleDone(id, checked) {
+  const entry = getEntry(id);
+  entry.manualDone = checked;
+  progress[id] = entry;
+  saveProgress(progress);
+  updateRowUI(id);
+  updateSummary();
+}
+
+function render() {
+  const list = document.getElementById("list");
+  let lastGroup = null;
+  VIDEOS.forEach(v => {
+    if (v.group !== lastGroup) {
+      const h = document.createElement("li");
+      h.className = "group-header";
+      h.textContent = v.group;
+      list.appendChild(h);
+      lastGroup = v.group;
+    }
+
+    const li = document.createElement("li");
+    li.className = "item";
+    li.dataset.id = v.id;
+    li.innerHTML = `
+      <div class="row">
+        <input type="checkbox" class="done-checkbox" aria-label="Mark complete">
+        <div class="title-block">
+          ${v.section ? `<span class="section-badge">${v.section}</span>` : ""}
+          <span class="title-text">${v.title}</span>
+        </div>
+        <span class="percent-text">0%</span>
+      </div>
+      <div class="bar"><div class="bar-fill"></div></div>
+      <div class="player-wrap"><div class="player-aspect"></div></div>
+    `;
+
+    li.querySelector(".row").addEventListener("click", (e) => {
+      if (e.target.classList.contains("done-checkbox")) return;
+      toggleExpand(v.id);
+    });
+    li.querySelector(".done-checkbox").addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleDone(v.id, e.target.checked);
+    });
+
+    list.appendChild(li);
+    updateRowUI(v.id);
+  });
+  updateSummary();
+}
+
+window.onYouTubeIframeAPIReady = () => { ytApiReady = true; };
+
+render();
+
+const tag = document.createElement("script");
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+</script>
+</body>
+</html>

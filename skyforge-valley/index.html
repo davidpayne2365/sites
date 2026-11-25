@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Skyforge Valley</title>
+<style>
+  :root {
+    --hud-bg: rgba(28, 20, 14, 0.62);
+    --hud-fg: #fbf3e4;
+    --accent: #ffcf4a;
+    --wood: #8a5a32;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #1a140e; color: var(--hud-fg);
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none; }
+  #game { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* One HUD per local player, positioned over that player's part of the screen. --s scales it for big TVs. */
+  .phud { position: fixed; pointer-events: none; overflow: hidden; --s: 1; }
+  body.split .phud { box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.8); }
+  .phud .tag { display: none; position: absolute; left: calc(10px * var(--s)); top: calc(10px * var(--s));
+    padding: calc(2px * var(--s)) calc(10px * var(--s)); border-radius: calc(6px * var(--s)); font-weight: 800;
+    font-size: calc(14px * var(--s)); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+  body.split .phud .tag { display: block; }
+  .phud .clock { position: absolute; right: calc(10px * var(--s)); top: calc(10px * var(--s)); padding: calc(4px * var(--s)) calc(12px * var(--s));
+    border-radius: calc(8px * var(--s)); background: var(--hud-bg); border: 2px solid var(--wood); font-weight: 800; font-size: calc(14px * var(--s)); }
+  .phud .bag { position: absolute; right: calc(10px * var(--s)); top: calc(46px * var(--s)); padding: calc(3px * var(--s)) calc(10px * var(--s));
+    border-radius: calc(8px * var(--s)); background: var(--hud-bg); font-weight: 700; font-size: calc(13px * var(--s)); display: flex; align-items: center; gap: 6px; }
+  .phud .bag img { width: calc(20px * var(--s)); height: calc(20px * var(--s)); image-rendering: pixelated; }
+  .phud .hotbar { position: absolute; left: 50%; bottom: calc(12px * var(--s) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
+    display: flex; gap: calc(4px * var(--s)); padding: calc(5px * var(--s)); border-radius: calc(10px * var(--s)); background: var(--hud-bg);
+    border: 2px solid var(--wood); pointer-events: auto; }
+  .slot { position: relative; width: calc(44px * var(--s)); height: calc(44px * var(--s)); flex: 0 0 auto; border-radius: calc(6px * var(--s));
+    border: calc(2px * var(--s)) solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.25); cursor: pointer; }
+  .slot img { width: 100%; height: 100%; image-rendering: pixelated; border-radius: calc(4px * var(--s)); display: block; object-fit: cover; }
+  .slot.sel { border-color: var(--accent); box-shadow: 0 0 0 calc(2px * var(--s)) rgba(255,207,74,0.35); }
+  .slot span { position: absolute; left: 3px; top: 1px; font-size: calc(10px * var(--s)); text-shadow: 0 1px 2px #000; }
+  .phud .bname { position: absolute; left: 50%; bottom: calc(74px * var(--s)); transform: translateX(-50%); padding: calc(3px * var(--s)) calc(10px * var(--s));
+    border-radius: calc(6px * var(--s)); background: var(--hud-bg); font-weight: 700; font-size: calc(14px * var(--s)); opacity: 0; transition: opacity .4s; white-space: nowrap; }
+  .phud .hint { position: absolute; left: 50%; bottom: calc(110px * var(--s)); transform: translateX(-50%); padding: calc(4px * var(--s)) calc(12px * var(--s));
+    border-radius: calc(6px * var(--s)); background: rgba(255,207,74,0.94); color: #2a1a00; font-weight: 800; font-size: calc(14px * var(--s));
+    opacity: 0; transition: opacity .2s; white-space: nowrap; }
+  .phud.menu .hint, .phud.menu .bname { display: none; }
+
+  /* Item menu: a carousel along the bottom of the player's screen. */
+  .phud .palette { position: absolute; left: 0; right: 0; bottom: calc(64px * var(--s) + env(safe-area-inset-bottom, 0px)); pointer-events: auto;
+    display: flex; flex-direction: column; align-items: center; gap: calc(8px * var(--s)); padding: calc(10px * var(--s)) 8px;
+    background: linear-gradient(to top, rgba(26,18,10,0.8), rgba(26,18,10,0)); }
+  .phud .palette[hidden] { display: none; }
+  .phud .ptabs { display: flex; gap: calc(6px * var(--s)); }
+  .phud .ptabs button { font: inherit; font-weight: 800; font-size: calc(15px * var(--s)); padding: calc(6px * var(--s)) calc(18px * var(--s));
+    border-radius: 999px; border: 2px solid var(--wood); background: rgba(40,28,16,0.85); color: #f4e8d0; cursor: pointer; }
+  .phud .ptabs button.on { background: var(--accent); color: #2a1a00; border-color: var(--accent); }
+  .phud .pcat { font-size: calc(13px * var(--s)); font-weight: 700; color: #f4e8d0; background: rgba(40,28,16,0.8); padding: calc(3px * var(--s)) calc(12px * var(--s)); border-radius: 999px; }
+  .phud .carousel { display: flex; align-items: center; justify-content: center; max-width: 100%; touch-action: none; }
+  .phud .ccell { flex: 0 0 auto; border-radius: calc(8px * var(--s)); overflow: hidden; cursor: pointer; background: rgba(40,28,16,0.7);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45); }
+  .phud .ccell img { width: 100%; height: 100%; object-fit: cover; display: block; image-rendering: pixelated; }
+  .phud .ccell.center { box-shadow: 0 0 0 3px var(--accent), 0 8px 28px rgba(0,0,0,0.55); border-radius: calc(12px * var(--s)); }
+  .phud .pinfo { text-align: center; background: rgba(40,28,16,0.88); border: 2px solid var(--wood); padding: calc(6px * var(--s)) calc(16px * var(--s));
+    border-radius: calc(10px * var(--s)); max-width: calc(100% - 16px); }
+  .phud .ptitle { font-weight: 800; font-size: calc(18px * var(--s)); }
+  .phud .paction { color: var(--accent); font-weight: 800; font-size: calc(14px * var(--s)); margin-top: calc(2px * var(--s)); }
+  .phud .phelp { font-size: calc(12px * var(--s)); color: #e0d2b8; margin-top: calc(4px * var(--s)); }
+  .phud .pclose { position: absolute; right: calc(12px * var(--s)); top: calc(8px * var(--s)); font: inherit; font-weight: 800;
+    font-size: calc(16px * var(--s)); width: calc(36px * var(--s)); height: calc(36px * var(--s)); border-radius: 50%;
+    border: 2px solid var(--wood); background: rgba(40,28,16,0.85); color: #fff; cursor: pointer; }
+
+  #toast { position: fixed; left: 50%; top: 14%; transform: translateX(-50%); padding: 10px 18px; border-radius: 10px; background: rgba(40,28,16,0.9);
+    border: 2px solid var(--wood); font-weight: 700; font-size: clamp(14px, 1.4vw, 30px); opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 20; white-space: nowrap; }
+
+  #overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px;
+    background: radial-gradient(ellipse at center, rgba(30,20,12,0.55), rgba(20,14,8,0.88)); cursor: pointer; z-index: 10; }
+  #overlay.hidden { display: none; }
+  .card { max-width: 760px; width: 100%; max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 24px; border-radius: 14px;
+    background: rgba(44,30,18,0.95); border: 3px solid var(--wood); box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .card h1 { margin: 0 0 4px; font-size: 30px; letter-spacing: 0.04em; color: var(--accent); }
+  .card p { margin: 0 0 14px; color: #e0d2b8; }
+  .card .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 28px; }
+  .card h2 { margin: 0 0 6px; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: #c9b48f; }
+  .card table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .card td { padding: 3px 0; vertical-align: top; }
+  .card td:first-child { color: var(--accent); white-space: nowrap; padding-right: 14px; font-weight: 600; }
+  .card .note { margin: 12px 0 0; font-size: 13px; color: #e0d2b8; }
+  .go { margin-top: 16px; text-align: center; font-weight: 800; font-size: 16px; padding: 10px; border-radius: 10px; background: var(--accent); color: #2a1a00; }
+  .touch-only { display: none; }
+  body.touch .touch-only { display: table-row; }
+  body.touch .desk-only, body.touch .desk-h { display: none; }
+
+  /* Touch controls */
+  #touch { display: none; }
+  body.touch #touch { display: block; }
+  body.touch.palopen #touch { display: none; }
+  #dpad { position: fixed; left: calc(16px + env(safe-area-inset-left, 0px)); bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    width: 150px; height: 150px; border-radius: 50%; background: rgba(40,28,16,0.45); border: 2px solid rgba(255,255,255,0.3); }
+  #dpad .arr { position: absolute; width: 0; height: 0; border: 16px solid transparent; opacity: 0.75; }
+  #dpad .au { left: 59px; top: 10px; border-bottom: 22px solid #fff; border-top: 0; }
+  #dpad .ad { left: 59px; bottom: 10px; border-top: 22px solid #fff; border-bottom: 0; }
+  #dpad .al { top: 59px; left: 10px; border-right: 22px solid #fff; border-left: 0; }
+  #dpad .ar { top: 59px; right: 10px; border-left: 22px solid #fff; border-right: 0; }
+  #dpad.u .au { border-bottom-color: var(--accent); } #dpad.d .ad { border-top-color: var(--accent); }
+  #dpad.l .al { border-right-color: var(--accent); } #dpad.r .ar { border-left-color: var(--accent); }
+  .tbtn { position: fixed; width: 66px; height: 66px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    background: rgba(40,28,16,0.6); border: 2px solid rgba(255,255,255,0.35); font-weight: 800; font-size: 12px; text-align: center; }
+  #bUse { right: 18px; bottom: calc(110px + env(safe-area-inset-bottom, 0px)); width: 80px; height: 80px; background: rgba(255,207,74,0.55); color: #2a1a00; }
+  #bBreak { right: 108px; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  #bPal { left: 18px; top: calc(18px + env(safe-area-inset-top, 0px)); width: 62px; height: 62px; font-size: 11px; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="huds"></div>
+<div id="toast"></div>
+
+<div id="touch">
+  <div id="dpad"><div class="arr au"></div><div class="arr ad"></div><div class="arr al"></div><div class="arr ar"></div></div>
+  <div class="tbtn" id="bUse">USE</div>
+  <div class="tbtn" id="bBreak">BREAK</div>
+  <div class="tbtn" id="bPal">ITEMS</div>
+</div>
+
+<div id="overlay">
+  <div class="card">
+    <h1>SKYFORGE VALLEY</h1>
+    <p>A cozy top-down world. Build with hundreds of blocks, farm wheat, and play together on one screen.</p>
+    <div class="cols">
+      <div>
+        <h2 class="desk-h">Keyboard &amp; mouse</h2>
+        <table>
+          <tr class="desk-only"><td>W A S D</td><td>Walk</td></tr>
+          <tr class="desk-only"><td>Mouse</td><td>Point at a tile (or use the one you face)</td></tr>
+          <tr class="desk-only"><td>Right click / E</td><td>Use: place block, till, plant, harvest</td></tr>
+          <tr class="desk-only"><td>Left click</td><td>Remove</td></tr>
+          <tr class="desk-only"><td>1–9 / wheel</td><td>Choose a hotbar slot</td></tr>
+          <tr class="desk-only"><td>Tab / Q</td><td>Item carousel (Hotbar / Ground tabs)</td></tr>
+          <tr class="desk-only"><td>Esc</td><td>Pause</td></tr>
+          <tr class="touch-only"><td>D-pad</td><td>Walk</td></tr>
+          <tr class="touch-only"><td>USE / BREAK</td><td>Use the selected item / remove</td></tr>
+          <tr class="touch-only"><td>ITEMS</td><td>Item carousel</td></tr>
+        </table>
+      </div>
+      <div>
+        <h2>Xbox controller</h2>
+        <table>
+          <tr><td>Left stick / D-pad</td><td>Walk</td></tr>
+          <tr><td>A or RT</td><td>Use: place block, till, plant, harvest</td></tr>
+          <tr><td>LT</td><td>Remove</td></tr>
+          <tr><td>LB / RB</td><td>Switch hotbar slot</td></tr>
+          <tr><td>Y</td><td>Item carousel · LB / RB: tabs · ← →: browse · ↑ ↓: category · A: use</td></tr>
+          <tr><td>View</td><td>Split: side by side / top-bottom</td></tr>
+          <tr><td>Menu</td><td>Pause</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="note">Farming: use the Hoe on grass to make farmland, plant Wheat Seeds on it, and harvest when the wheat turns golden. At night, lamps and lava glow.</p>
+    <p class="note">Two players: connect a second controller and press any button on it. The screen splits, one half per controller.</p>
+    <div class="go" id="goText">Click to play</div>
+  </div>
+</div>
+
+<script type="module" src="js/game2d.js"></script>
+</body>
+</html>

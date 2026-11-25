@@ -1,0 +1,36 @@
+/* Simple home page. Colours come from style.css tokens (light + dark). */
+body.simple { font-size: 17px; line-height: 1.45; }
+.s-wrap { max-width: 560px; margin: 0 auto; padding: 24px 16px 48px; }
+.s-top { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.s-top h1 { font-size: 20px; margin: 0; letter-spacing: -0.01em; }
+.s-top .s-tag { margin-left: auto; font-size: 13px; color: var(--muted); border: 1px solid var(--border);
+  border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+.s-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+  margin-bottom: 14px; box-shadow: var(--shadow); }
+.s-label { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 0 0 6px; }
+.s-big { font-size: 30px; font-weight: 700; line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
+.s-sub { color: var(--ink-2); margin: 8px 0 0; }
+.s-muted { color: var(--muted); }
+.s-bar { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; margin: 16px 0 6px; }
+.s-bar > i { display: block; height: 100%; background: var(--series-1); border-radius: 999px; }
+.s-small { font-size: 14px; color: var(--muted); }
+.s-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border); }
+.s-row:first-of-type { border-top: 0; }
+.s-row .s-name { flex: 1; min-width: 0; }
+.s-row .s-name b { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.s-row .s-name span { font-size: 13px; color: var(--muted); }
+.s-row .s-money { text-align: right; font-variant-numeric: tabular-nums; }
+.s-row .s-money b { display: block; font-size: 18px; }
+.s-row .s-money span { font-size: 13px; }
+.s-row.s-spy { background: var(--series-1-wash); margin: 0 -20px; padding: 12px 20px; border-top: 0; }
+.s-up { color: var(--good-ink); }
+.s-down { color: var(--critical-ink); }
+.s-group { font-size: 13px; font-weight: 600; color: var(--muted); margin: 14px 0 0; }
+.s-btn { display: block; width: 100%; margin-top: 12px; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--ink); font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; }
+.s-btn:hover { border-color: var(--series-1); }
+.s-ideas { display: flex; gap: 12px; margin-top: 4px; }
+.s-ideas > div { flex: 1; background: var(--surface-2); border-radius: 12px; padding: 12px; text-align: center; }
+.s-ideas b { display: block; font-size: 28px; }
+.s-links { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: center; margin-top: 22px; font-size: 14px; }
+.s-links a { color: var(--muted); }

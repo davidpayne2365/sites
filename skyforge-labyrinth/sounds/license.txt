@@ -1,0 +1,20 @@
+frankenroar.mp3 is a mix of two CC0 (public domain) recordings from OpenGameArt.org:
+- "CC0 Deep Monster Roar" by trazzz123 (https://opengameart.org/content/cc0-deep-monster-roar), CC0 1.0
+- "Big Scary Troll Sounds" by Darsycho (https://opengameart.org/content/big-scary-troll-sounds), CC0 1.0
+(one troll roar, pitched down, layered over the deep roar; trimmed and faded).
+
+Music (sounds/music/), all CC0 1.0 (public domain) from OpenGameArt.org; trimmed, loudness matched, re-encoded:
+- lantern.mp3: "Afternoon Nap" by Tsorthan Grove (https://opengameart.org/content/afternoon-nap)
+- twilight.mp3: "Another August" by The Cynic Project / cynicmusic (https://opengameart.org/content/another-august)
+- waltz.mp3: "Fantasy: Rising Moon" by RandomMind (https://opengameart.org/content/fantasy-rising-moon)
+- rain.mp3: "Daydream" by Tsorthan Grove (https://opengameart.org/content/daydream-0)
+
+Sound effects (sounds/sfx/), all CC0 1.0 from OpenGameArt.org; trimmed, mixed and level matched:
+- coin, chest, big (coins), place, break, buy, gate-open, gate-close: Kenney, "50 RPG sound effects"
+  (https://opengameart.org/content/50-rpg-sound-effects): handleCoins, handleCoins2, metalLatch, metalClick, chop,
+  dropLeather, handleSmallLeather
+- click, tap: Kenney, "Interface Sounds" (https://opengameart.org/content/interface-sounds): select_001, tick_002
+- big (jingle): "open chest SFX" by Oiboo (https://opengameart.org/content/open-chest-sfx)
+- portal: "100 CC0 SFX #2" by rubberduck (https://opengameart.org/content/100-cc0-sfx-2): air_01
+- crickets: "Crickets Ambient Noise - loopable" by Wolfgang_ (https://opengameart.org/content/crickets-ambient-noise-loopable)
+- drips: "Dripping water loop" by Independent.nu (https://opengameart.org/content/dripping-water-loop), hum filtered out

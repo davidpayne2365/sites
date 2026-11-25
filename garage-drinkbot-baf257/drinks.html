@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14110f">
+<title>Garage Bar Drinks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: two live panes side by side (guest phone + bartender tablet); on phones a switcher shows one at a time.
+   Single dark "bar at night" look, matching the real DrinkBot app. */
+:root {
+  color-scheme: dark;
+  --bg: #14110f; --card: #221d1a; --sunk: #17130f; --line: #3a322c;
+  --text: #f4ede6; --muted: #b2a69a; --accent: #ff9f1c; --on-accent: #1b1206;
+  --ok: #3ccf7a; --on-ok: #062012; --warn: #ffcf33; --bad: #ff5a4f; --info-bg: #102a3b; --info-line: #1f5878; --info: #bfe6ff;
+  --f-display: "Space Grotesk", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --r: 14px;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--text); font: 15px/1.45 var(--f-body); margin: 0; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 18px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+h1 { font-size: 1.7rem; letter-spacing: -.01em; }
+.muted { color: var(--muted); } .small { font-size: .85rem; }
+code, .mono { font-family: var(--f-mono); font-size: .88em; }
+.intro { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.intro p { margin: 4px 0 0; max-width: 62ch; }
+.real { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 14px; font-size: .9rem; }
+.real b { color: var(--accent); }
+
+.switch { display: none; gap: 6px; margin: 4px 0 14px; }
+.switch button { flex: 1; }
+.panes { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.pane { min-width: 0; }
+.pane-label { font-size: .75rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
+.phone { background: var(--bg); border: 1px solid var(--line); border-radius: 28px; padding: 16px 14px 20px; position: relative; overflow: hidden; min-height: 640px; }
+.tablet { background: var(--sunk); border: 1px solid var(--line); border-radius: 20px; padding: 16px; }
+@media (max-width: 820px) {
+  .panes { grid-template-columns: minmax(0, 1fr); }
+  .switch { display: flex; }
+  .pane[data-hide="1"] { display: none; }
+  .phone, .tablet { border-radius: 18px; }
+}
+
+button { appearance: none; border: 0; border-radius: 12px; padding: 11px 14px; font: 600 .95rem var(--f-body);
+  background: #3a322c; color: var(--text); cursor: pointer; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button.primary { background: var(--accent); color: var(--on-accent); }
+button.ok { background: var(--ok); color: var(--on-ok); }
+button.bad { background: var(--bad); color: #fff; }
+button.ghost { background: transparent; border: 1px solid var(--line); }
+button.on { background: var(--accent); color: var(--on-accent); }
+button:disabled { opacity: .45; cursor: not-allowed; }
+button.big { width: 100%; padding: 15px; font-size: 1.05rem; }
+
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.price { font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.tag { display: inline-block; font-size: .72rem; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); margin: 2px 4px 2px 0; }
+.tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin: 8px 0 6px; }
+.tabs button { flex: 0 0 auto; padding: 7px 12px; border-radius: 99px; font-size: .85rem; }
+.list { display: grid; gap: 10px; max-height: 470px; overflow-y: auto; padding-right: 2px; }
+.drink { text-align: left; width: 100%; font: inherit; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; display: grid; gap: 3px; font-weight: 400; }
+.drink h3 { font-size: 1.02rem; }
+
+.sheet-bg { position: absolute; inset: 0; background: rgba(0,0,0,.55); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; background: var(--card); border-top: 1px solid var(--line);
+  border-radius: 20px 20px 0 0; padding: 16px 14px 18px; display: grid; gap: 10px; }
+.seg { display: flex; gap: 6px; } .seg button { flex: 1; padding: 9px 4px; font-size: .85rem; }
+label { font-weight: 600; font-size: .9rem; }
+input[type=text] { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--line); background: var(--sunk); color: var(--text); font: inherit; }
+.err { color: var(--bad); min-height: 1.1em; font-size: .85rem; }
+
+.status { font: 700 1.6rem/1.15 var(--f-display); margin: 4px 0; }
+.st-new, .st-queued { color: var(--warn); } .st-pouring { color: var(--accent); } .st-ready { color: var(--ok); } .st-done { color: var(--muted); } .st-cancelled { color: var(--bad); }
+.bar { height: 12px; background: var(--sunk); border-radius: 99px; overflow: hidden; border: 1px solid var(--line); }
+.bar > div { height: 100%; background: var(--accent); width: 0; transition: width .25s linear; }
+.flash { box-shadow: 0 0 0 3px var(--ok); }
+@media (prefers-reduced-motion: no-preference) { .flash { animation: flash 1s infinite alternate; } }
+@keyframes flash { from { box-shadow: 0 0 0 0 var(--ok); } to { box-shadow: 0 0 0 5px var(--ok); } }
+
+.machine { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.machine .grow { flex: 1 1 200px; min-width: 0; }
+.estop { background: var(--bad); color: #fff; border-radius: 99px; padding: 14px 22px; font-size: 1rem; }
+.sec { margin: 18px 0 8px; font-size: .75rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); }
+.grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.callout { font: 700 1.15rem/1.25 var(--f-display); color: var(--accent); margin: 6px 0; }
+.steps { margin: 6px 0 0; padding-left: 18px; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.note { background: var(--info-bg); border: 1px solid var(--info-line); color: var(--info); border-radius: 10px; padding: 7px 10px; margin: 8px 0; font-size: .88rem; }
+.warnnote { background: #3b2410; border: 1px solid #7a4a1a; color: #ffd8a8; border-radius: 10px; padding: 7px 10px; margin: 8px 0; font-size: .88rem; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; } .actions button { flex: 1 1 110px; }
+.empty { color: var(--muted); font-size: .9rem; }
+.opts { display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; margin-top: 14px; font-size: .88rem; color: var(--muted); }
+.opts .seg button { padding: 6px 10px; flex: 0 0 auto; }
+.myorders { display: grid; gap: 8px; margin-top: 10px; }
+.mini { display: flex; justify-content: space-between; gap: 8px; font-size: .88rem; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); width: 100%; text-align: left; font-weight: 400; }
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.topbar h2 { font-size: 1.3rem; }
+
+/* drink pictures */
+.drink { grid-template-columns: 76px minmax(0, 1fr); column-gap: 12px; align-items: center; }
+.drink .art { width: 76px; height: 76px; border-radius: 12px; background: var(--sunk); overflow: hidden; grid-row: span 4; }
+.art svg, .sheet-art svg, .big-art svg { width: 100%; height: 100%; display: block; }
+.sheet-art { width: 110px; height: 110px; margin: -6px auto 0; }
+.navlinks { display: flex; gap: 14px; margin-top: 8px; font-size: .92rem; }
+.navlinks a { color: var(--accent); }
+
+/* drink list page */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0 18px; }
+.filters button { padding: 7px 13px; border-radius: 99px; font-size: .88rem; }
+.cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.dcard { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+.big-art { aspect-ratio: 1 / 1; max-width: 100%; background: var(--sunk); border-bottom: 1px solid var(--line); }
+.dcard .body { padding: 14px 16px 16px; display: grid; gap: 8px; }
+.dcard h2 { font-size: 1.25rem; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; background: var(--sunk); color: var(--muted); border: 1px solid var(--line); }
+.chip.na { color: var(--ok); border-color: #2a5a3e; }
+.recipe { list-style: none; padding: 0; margin: 0; display: grid; gap: 3px; font-size: .9rem; font-variant-numeric: tabular-nums; }
+.recipe li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--line); padding-bottom: 3px; }
+.recipe .amt { color: var(--muted); font-family: var(--f-mono); font-size: .82rem; white-space: nowrap; }
+.meta { display: flex; justify-content: space-between; gap: 10px; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
+.finish { font-size: .85rem; color: var(--info); }
+.foot { margin-top: 28px; font-size: .85rem; color: var(--muted); }
+.big-art img, .drink .art img, .sheet-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.credit { font-size: .72rem; color: var(--muted); line-height: 1.35; }
+.credit a { color: var(--muted); }
+</style>
+<script>
+/* DrinkArt — draws a picture of a drink from its recipe.
+ *
+ *   DrinkArt.svg({ glass: "highball", garnish: "lime",
+ *                  layers: [{ color: "#ff9d1c", tint: 1, ml: 135, last: false }, ...] })
+ *
+ * The liquid color is a mix of the ingredient colors weighted by ml × tint
+ * (clear spirits have a low tint, juices a high one). Ingredients marked
+ * `last` (e.g. grenadine in a Sunrise) sink to the bottom as a separate band.
+ * Used by the real app's menu and by the static demo site.
+ */
+(function (root) {
+  let uid = 0;
+
+  function hex(c) {
+    c = c.replace("#", "");
+    return [0, 2, 4].map(i => parseInt(c.substr(i, 2), 16));
+  }
+  function toHex(rgb) {
+    return "#" + rgb.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+  }
+  function mix(layers) {
+    let w = 0, ml = 0, acc = [0, 0, 0];
+    layers.forEach(l => {
+      const k = l.ml * l.tint, c = hex(l.color);
+      acc = acc.map((v, i) => v + c[i] * k);
+      w += k; ml += l.ml;
+    });
+    if (!w) return { color: "#e8eef2", opacity: 0.22 };
+    const density = w / Math.max(ml, 1);
+    return { color: toHex(acc.map(v => v / w)), opacity: Math.max(0.24, Math.min(0.92, 0.2 + density * 0.85)) };
+  }
+  function shade(color, f) { return toHex(hex(color).map(v => f < 0 ? v * (1 + f) : v + (255 - v) * f)); }
+
+  // Glass interiors (where liquid can be) and outlines, in a 200×200 box.
+  const GLASSES = {
+    highball: { inside: "M67 42 L133 42 L129 172 L71 172 Z", top: 42, bottom: 172, fill: 0.78, ice: 3, straw: true,
+      outline: "M64 38 L136 38 L131 176 L69 176 Z", base: "M69 176 L131 176 L131 184 L69 184 Z", rimL: 64, rimR: 136 },
+    rocks: { inside: "M58 92 L142 92 L138 168 L62 168 Z", top: 92, bottom: 168, fill: 0.72, ice: 2,
+      outline: "M54 88 L146 88 L141 172 L59 172 Z", base: "M59 172 L141 172 L141 182 L59 182 Z", rimL: 54, rimR: 146 },
+    martini: { inside: "M42 58 L158 58 L100 124 Z", top: 58, bottom: 124, fill: 0.86, ice: 0,
+      outline: "M36 52 L164 52 L100 128 Z", stem: true, rimL: 36, rimR: 164 },
+    mug: { inside: "M64 66 L136 66 L136 166 L64 166 Z", top: 66, bottom: 166, fill: 0.9, ice: 0, opaque: "#b8733a",
+      outline: "M60 60 L140 60 L140 170 Q140 178 132 178 L68 178 Q60 178 60 170 Z", handle: true, rimL: 60, rimR: 140 },
+    solo_16: { inside: "M60 50 L140 50 L129 172 L71 172 Z", top: 50, bottom: 172, fill: 0.8, ice: 0, opaque: "#c8282e",
+      outline: "M56 46 L144 46 L132 176 L68 176 Z", rimL: 56, rimR: 144 },
+  };
+
+  function garnishSvg(kind, g) {
+    const x = g.rimR - 6, y = g.top - (g.stem ? 8 : 6);
+    switch (kind) {
+      case "lime":
+      case "lemon": {
+        const rind = kind === "lime" ? "#5f9e2f" : "#e9c626", flesh = kind === "lime" ? "#cfe79a" : "#fbef9e";
+        const segs = [0, 60, 120, 180, 240, 300].map(a => {
+          const r = a * Math.PI / 180;
+          return `<line x1="${x}" y1="${y}" x2="${x + Math.cos(r) * 15}" y2="${y + Math.sin(r) * 15}" stroke="${rind}" stroke-width="1.2" opacity=".6"/>`;
+        }).join("");
+        return `<g><circle cx="${x}" cy="${y}" r="19" fill="${rind}"/><circle cx="${x}" cy="${y}" r="16" fill="${flesh}"/>${segs}<circle cx="${x}" cy="${y}" r="2.2" fill="${rind}" opacity=".7"/></g>`;
+      }
+      case "orange":
+        return `<g transform="translate(${x} ${y + 4})"><path d="M-22 0 A22 22 0 0 1 22 0 Z" fill="#f08a10"/><path d="M-18 0 A18 18 0 0 1 18 0 Z" fill="#ffc14d"/>` +
+          [30, 60, 90, 120, 150].map(a => { const r = a * Math.PI / 180; return `<line x1="0" y1="0" x2="${-Math.cos(r) * 17}" y2="${-Math.sin(r) * 17}" stroke="#f08a10" stroke-width="1.2" opacity=".7"/>`; }).join("") + `</g>`;
+      case "cherry":
+        return `<g><path d="M${x - 4} ${y - 2} Q${x + 2} ${y - 26} ${x + 16} ${y - 30}" fill="none" stroke="#4a6b2a" stroke-width="2.4" stroke-linecap="round"/><circle cx="${x - 4}" cy="${y + 4}" r="10" fill="#b5122b"/><circle cx="${x - 7}" cy="${y + 1}" r="3" fill="#ff8a9a" opacity=".7"/></g>`;
+      case "pineapple":
+        return `<g transform="translate(${x} ${y})"><path d="M-16 8 L16 8 L0 -18 Z" fill="#f5cf3b" stroke="#d8a91c" stroke-width="1.5"/><path d="M-3 -16 Q-10 -34 -2 -40 Q0 -28 2 -16 Z M3 -16 Q12 -32 8 -38 Q4 -26 0 -16 Z" fill="#3f8a3a"/></g>`;
+      default:
+        return "";
+    }
+  }
+
+  function svg(spec, opts) {
+    opts = opts || {};
+    const g = GLASSES[spec.glass] || GLASSES.highball;
+    const id = "da" + (++uid);
+    const main = spec.layers.filter(l => !l.last), sink = spec.layers.filter(l => l.last);
+    const m = mix(main.length ? main : spec.layers);
+    const total = spec.layers.reduce((a, l) => a + l.ml, 0) || 1;
+    const sinkFrac = sink.reduce((a, l) => a + l.ml, 0) / total;
+    const h = g.bottom - g.top, surface = g.bottom - h * g.fill;
+    const parts = [];
+
+    parts.push(`<defs>
+      <clipPath id="${id}c"><path d="${g.inside}"/></clipPath>
+      <linearGradient id="${id}l" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="${shade(m.color, -0.18)}"/><stop offset=".45" stop-color="${shade(m.color, 0.12)}"/><stop offset="1" stop-color="${shade(m.color, -0.25)}"/>
+      </linearGradient>
+      <radialGradient id="${id}g" cx=".5" cy=".62" r=".55"><stop offset="0" stop-color="${m.color}" stop-opacity="${0.28 * m.opacity + 0.06}"/><stop offset="1" stop-color="${m.color}" stop-opacity="0"/></radialGradient>
+      ${sink.length ? `<linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mix(sink).color}" stop-opacity="0"/><stop offset=".55" stop-color="${mix(sink).color}" stop-opacity=".95"/><stop offset="1" stop-color="${shade(mix(sink).color, -0.2)}"/></linearGradient>` : ""}
+    </defs>`);
+    if (!opts.noGlow) parts.push(`<rect x="0" y="0" width="200" height="200" fill="url(#${id}g)"/>`);
+    // table shadow
+    parts.push(`<ellipse cx="100" cy="${g.stem ? 186 : (g.base ? 185 : 181)}" rx="${(g.rimR - g.rimL) / 2 + 6}" ry="5" fill="#000" opacity=".35"/>`);
+
+    if (g.stem) {
+      parts.push(`<rect x="97.5" y="126" width="5" height="52" fill="#fff" opacity=".28"/><ellipse cx="100" cy="180" rx="30" ry="5" fill="#fff" opacity=".22"/>`);
+    }
+    if (g.handle) {
+      parts.push(`<path d="M140 82 Q166 84 166 112 Q166 140 140 142" fill="none" stroke="${shade(g.opaque, -0.2)}" stroke-width="9" stroke-linecap="round"/>`);
+    }
+    if (g.opaque) {
+      // opaque cup/mug: body color, liquid only visible at the rim
+      parts.push(`<path d="${g.outline}" fill="${g.opaque}"/>`);
+      parts.push(`<path d="M${g.rimL + 10} ${g.top + 12} L${g.rimL + 16} ${g.bottom - 10}" stroke="#fff" stroke-opacity=".22" stroke-width="7" stroke-linecap="round"/>`);
+      parts.push(`<ellipse cx="100" cy="${g.top + 2}" rx="${(g.rimR - g.rimL) / 2 - 3}" ry="7" fill="${m.color}" opacity="${Math.max(0.75, m.opacity)}"/>`);
+      parts.push(`<ellipse cx="100" cy="${g.top - 1}" rx="${(g.rimR - g.rimL) / 2}" ry="8" fill="none" stroke="${shade(g.opaque, 0.35)}" stroke-width="3"/>`);
+    } else {
+      parts.push(`<path d="${g.outline}" fill="#fff" opacity=".05"/>`);
+      if (g.base) parts.push(`<path d="${g.base}" fill="#fff" opacity=".2"/>`);
+      const liq = [];
+      liq.push(`<rect x="0" y="${surface}" width="200" height="${200 - surface}" fill="url(#${id}l)" opacity="${m.opacity}"/>`);
+      if (sink.length) {
+        const sh = Math.max(14, (g.bottom - surface) * Math.min(0.55, sinkFrac * 2.4));
+        liq.push(`<rect x="0" y="${g.bottom - sh * 1.6}" width="200" height="${sh * 1.6}" fill="url(#${id}s)"/>`);
+      }
+      // ice
+      for (let i = 0; i < g.ice; i++) {
+        const cx = 76 + (i * 23) % 50 + (g.ice === 2 ? 10 : 0), cy = surface + 4 + (i % 2) * 16, s = g.ice === 2 ? 30 : 24, rot = [-12, 9, -4][i % 3];
+        liq.push(`<rect x="${cx}" y="${cy}" width="${s}" height="${s}" rx="5" transform="rotate(${rot} ${cx + s / 2} ${cy + s / 2})" fill="#fff" fill-opacity=".14" stroke="#fff" stroke-opacity=".45" stroke-width="1.2"/>`);
+      }
+      liq.push(`<rect x="0" y="${surface - 1}" width="200" height="3" fill="#fff" opacity=".35"/>`);
+      parts.push(`<g clip-path="url(#${id}c)">${liq.join("")}</g>`);
+      if (g.straw) parts.push(`<path d="M${g.rimL + 24} ${g.bottom - 18} L${g.rimL + 8} ${g.top - 30}" stroke="#ff9f1c" stroke-width="6" stroke-linecap="round"/><path d="M${g.rimL + 24} ${g.bottom - 18} L${g.rimL + 8} ${g.top - 30}" stroke="#fff" stroke-width="6" stroke-dasharray="6 6" stroke-linecap="round" opacity=".6"/>`);
+      parts.push(`<path d="${g.outline}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2.2" stroke-linejoin="round"/>`);
+      parts.push(`<path d="M${g.rimL + 9} ${g.top + 6} L${g.rimL + 13} ${g.bottom - 12}" stroke="#fff" stroke-opacity=".28" stroke-width="4" stroke-linecap="round"/>`);
+    }
+    if (spec.garnish && spec.garnish !== "none") parts.push(garnishSvg(spec.garnish, g));
+    const label = opts.label ? ` role="img" aria-label="${String(opts.label).replace(/"/g, "&quot;")}"` : ` aria-hidden="true"`;
+    return `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"${label}>${parts.join("")}</svg>`;
+  }
+
+  root.DrinkArt = { svg, mix };
+})(typeof window !== "undefined" ? window : globalThis);
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <h1>Garage Bar drink list</h1>
+      <p class="muted">Every drink the robot can pour from its 16 bottles. Amounts are for a Regular pour; guests can also pick Light, Strong or No alcohol on most drinks.</p>
+    </div>
+    <div class="real"><div class="navlinks" style="margin-top:0"><a href='/'>← Try the ordering demo</a></div></div>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="cards" id="cards"></div>
+  <p class="foot">Photos come from Wikimedia Commons under the licenses credited on each card; a photo marked "similar drink" shows a drink that looks the same. Amounts: 1 oz ≈ 30 ml.</p>
+</div>
+<script>
+const DRINKS = [{"id":"screwdriver","name":"Screwdriver","desc":"Vodka and orange juice.","glass":"Highball / tall glass","price":5,"tags":["Vodka","Orange"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Orange Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":17.3,"price":5.0},"light":{"steps":[{"n":"Vodka","ml":33.8,"last":false},{"n":"Orange Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":21.1,"price":5.0},"regular":{"steps":[{"n":"Vodka","ml":45.0,"last":false},{"n":"Orange Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":28.1,"price":5.0},"strong":{"steps":[{"n":"Vodka","ml":56.2,"last":false},{"n":"Orange Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":35.2,"price":6.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#e8eef2","tint":0.04,"ml":45.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":135.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/screwdriver.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/12162"}}},{"id":"vodka_cranberry","name":"Vodka Cranberry","desc":"Vodka, cranberry, splash of lime (a.k.a. Cape Codder).","glass":"Highball / tall glass","price":5,"tags":["Vodka","Cranberry","Lime"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Cranberry Syrup","ml":22.5,"last":false},{"n":"Water","ml":115.8,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":17.8,"price":5.0},"light":{"steps":[{"n":"Vodka","ml":33.8,"last":false},{"n":"Cranberry Syrup","ml":22.5,"last":false},{"n":"Water","ml":115.8,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":21.1,"price":5.0},"regular":{"steps":[{"n":"Vodka","ml":45.0,"last":false},{"n":"Cranberry Syrup","ml":22.5,"last":false},{"n":"Water","ml":115.8,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":28.1,"price":5.0},"strong":{"steps":[{"n":"Vodka","ml":56.2,"last":false},{"n":"Cranberry Syrup","ml":22.5,"last":false},{"n":"Water","ml":115.8,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":35.2,"price":6.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#e8eef2","tint":0.04,"ml":45.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":135.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":5.0,"last":false}],"garnish":"lime"},"photo":{"file":"photos/vodka_cranberry.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Sea breeze)","page":"https://www.thecocktaildb.com/drink/13377"}}},{"id":"madras","name":"Madras","desc":"Vodka, cranberry, orange.","glass":"Highball / tall glass","price":6,"tags":["Vodka","Cranberry","Orange"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Orange Syrup","ml":7.5,"last":false}],"sec":17.3,"price":6.0},"light":{"steps":[{"n":"Vodka","ml":33.8,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Orange Syrup","ml":7.5,"last":false}],"sec":21.1,"price":6.0},"regular":{"steps":[{"n":"Vodka","ml":45.0,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Orange Syrup","ml":7.5,"last":false}],"sec":28.1,"price":6.0},"strong":{"steps":[{"n":"Vodka","ml":56.2,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Orange Syrup","ml":7.5,"last":false}],"sec":35.2,"price":7.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#e8eef2","tint":0.04,"ml":45.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":90.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":45.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/madras.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Sunny Holiday Punch)","page":"https://www.thecocktaildb.com/drink/13042"}}},{"id":"bay_breeze","name":"Bay Breeze","desc":"Vodka, cranberry, pineapple.","glass":"Highball / tall glass","price":6,"tags":["Vodka","Cranberry","Pineapple"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Pineapple Syrup","ml":7.5,"last":false}],"sec":17.3,"price":6.0},"light":{"steps":[{"n":"Vodka","ml":33.8,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Pineapple Syrup","ml":7.5,"last":false}],"sec":21.1,"price":6.0},"regular":{"steps":[{"n":"Vodka","ml":45.0,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Pineapple Syrup","ml":7.5,"last":false}],"sec":28.1,"price":6.0},"strong":{"steps":[{"n":"Vodka","ml":56.2,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Water","ml":112.5,"last":false},{"n":"Pineapple Syrup","ml":7.5,"last":false}],"sec":35.2,"price":7.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#e8eef2","tint":0.04,"ml":45.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":90.0,"last":false},{"color":"#f5cf3b","tint":0.9,"ml":45.0,"last":false}],"garnish":"pineapple"},"photo":{"file":"photos/bay_breeze.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Planter's Punch)","page":"https://www.thecocktaildb.com/drink/17191"}}},{"id":"sex_on_the_beach","name":"Sex on the Beach","desc":"Vodka, peach schnapps, orange, cranberry.","glass":"Highball / tall glass","price":7,"tags":["Vodka","Peach Schnapps","Orange","Cranberry"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Cranberry Syrup","ml":10.0,"last":false}],"sec":15.4,"price":7.0},"light":{"steps":[{"n":"Vodka","ml":30.0,"last":false},{"n":"Peach Schnapps","ml":15.0,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Cranberry Syrup","ml":10.0,"last":false}],"sec":18.8,"price":7.0},"regular":{"steps":[{"n":"Vodka","ml":40.0,"last":false},{"n":"Peach Schnapps","ml":20.0,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Cranberry Syrup","ml":10.0,"last":false}],"sec":25.0,"price":7.0},"strong":{"steps":[{"n":"Vodka","ml":50.0,"last":false},{"n":"Peach Schnapps","ml":25.0,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Cranberry Syrup","ml":10.0,"last":false}],"sec":31.2,"price":8.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#e8eef2","tint":0.04,"ml":40.0,"last":false},{"color":"#f3d9b5","tint":0.15,"ml":20.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":60.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":60.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/sex_on_the_beach.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/12754"}}},{"id":"cosmopolitan","name":"Cosmopolitan","desc":"Vodka, triple sec, cranberry, lime.","glass":"Martini / coupe","price":7,"tags":["Vodka","Triple Sec","Cranberry","Lime"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Cranberry Syrup","ml":5.0,"last":false},{"n":"Water","ml":35.0,"last":false},{"n":"Lime Syrup","ml":5.0,"last":false}],"sec":5.4,"price":7.0},"light":{"steps":[{"n":"Vodka","ml":30.0,"last":false},{"n":"Triple Sec","ml":11.2,"last":false},{"n":"Cranberry Syrup","ml":5.0,"last":false},{"n":"Water","ml":35.0,"last":false},{"n":"Lime Syrup","ml":5.0,"last":false}],"sec":18.8,"price":7.0},"regular":{"steps":[{"n":"Vodka","ml":40.0,"last":false},{"n":"Triple Sec","ml":15.0,"last":false},{"n":"Cranberry Syrup","ml":5.0,"last":false},{"n":"Water","ml":35.0,"last":false},{"n":"Lime Syrup","ml":5.0,"last":false}],"sec":25.0,"price":7.0},"strong":{"steps":[{"n":"Vodka","ml":50.0,"last":false},{"n":"Triple Sec","ml":18.8,"last":false},{"n":"Cranberry Syrup","ml":5.0,"last":false},{"n":"Water","ml":35.0,"last":false},{"n":"Lime Syrup","ml":5.0,"last":false}],"sec":31.2,"price":8.0}},"finish":"","art":{"glass":"martini","layers":[{"color":"#e8eef2","tint":0.04,"ml":40.0,"last":false},{"color":"#f0ead8","tint":0.05,"ml":15.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":30.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":15.0,"last":false}],"garnish":"lime"},"photo":{"file":"photos/cosmopolitan.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/17196"}}},{"id":"lemon_drop","name":"Lemon Drop","desc":"Vodka, triple sec, lemon, sugar.","glass":"Martini / coupe","price":7,"tags":["Vodka","Triple Sec","Citrus (lime)","Cane Syrup"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":9.4,"price":7.0},"light":{"steps":[{"n":"Vodka","ml":33.8,"last":false},{"n":"Triple Sec","ml":11.2,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":21.1,"price":7.0},"regular":{"steps":[{"n":"Vodka","ml":45.0,"last":false},{"n":"Triple Sec","ml":15.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":28.1,"price":7.0},"strong":{"steps":[{"n":"Vodka","ml":56.2,"last":false},{"n":"Triple Sec","ml":18.8,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":35.2,"price":8.0}},"finish":"","art":{"glass":"martini","layers":[{"color":"#e8eef2","tint":0.04,"ml":45.0,"last":false},{"color":"#f0ead8","tint":0.05,"ml":15.0,"last":false},{"color":"#f1e7a0","tint":0.35,"ml":25.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":15.0,"last":false}],"garnish":"lemon"},"photo":{"file":"photos/lemon_drop.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/14366"}}},{"id":"kamikaze","name":"Kamikaze","desc":"Vodka, triple sec, lime.","glass":"Rocks glass","price":6,"tags":["Vodka","Triple Sec","Lime"],"groups":["Vodka"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":6.7,"last":false},{"n":"Water","ml":13.3,"last":false}],"sec":4.2,"price":6.0},"light":{"steps":[{"n":"Vodka","ml":30.0,"last":false},{"n":"Triple Sec","ml":15.0,"last":false},{"n":"Lime Syrup","ml":6.7,"last":false},{"n":"Water","ml":13.3,"last":false}],"sec":18.8,"price":6.0},"regular":{"steps":[{"n":"Vodka","ml":40.0,"last":false},{"n":"Triple Sec","ml":20.0,"last":false},{"n":"Lime Syrup","ml":6.7,"last":false},{"n":"Water","ml":13.3,"last":false}],"sec":25.0,"price":6.0},"strong":{"steps":[{"n":"Vodka","ml":50.0,"last":false},{"n":"Triple Sec","ml":25.0,"last":false},{"n":"Lime Syrup","ml":6.7,"last":false},{"n":"Water","ml":13.3,"last":false}],"sec":31.2,"price":7.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#e8eef2","tint":0.04,"ml":40.0,"last":false},{"color":"#f0ead8","tint":0.05,"ml":20.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":20.0,"last":false}],"garnish":"lime"},"photo":{"file":"photos/kamikaze.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11600"}}},{"id":"daiquiri","name":"Daiquiri","desc":"Rum, lime, sugar. Over ice.","glass":"Rocks glass","price":6,"tags":["White Rum","Lime","Cane Syrup"],"groups":["Rum"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":9.4,"price":6.0},"light":{"steps":[{"n":"White Rum","ml":45.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":28.1,"price":6.0},"regular":{"steps":[{"n":"White Rum","ml":60.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":37.5,"price":6.0},"strong":{"steps":[{"n":"White Rum","ml":75.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":15.0,"last":false}],"sec":46.9,"price":7.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#efece4","tint":0.05,"ml":60.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":25.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":15.0,"last":false}],"garnish":"lime"},"photo":{"file":"photos/daiquiri.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11006"}}},{"id":"mai_tai","name":"Garage Mai Tai","desc":"Rum, coconut rum, triple sec, lime, pineapple.","glass":"Rocks glass","price":8,"tags":["White Rum","Coconut Rum","Triple Sec","Lime","Pineapple","Cane Syrup"],"groups":["Rum"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":41.7,"last":false},{"n":"Pineapple Syrup","ml":5.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":6.4,"price":8.0},"light":{"steps":[{"n":"White Rum","ml":33.8,"last":false},{"n":"Coconut Rum","ml":11.2,"last":false},{"n":"Triple Sec","ml":11.2,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":41.7,"last":false},{"n":"Pineapple Syrup","ml":5.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":21.1,"price":8.0},"regular":{"steps":[{"n":"White Rum","ml":45.0,"last":false},{"n":"Coconut Rum","ml":15.0,"last":false},{"n":"Triple Sec","ml":15.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":41.7,"last":false},{"n":"Pineapple Syrup","ml":5.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":28.1,"price":8.0},"strong":{"steps":[{"n":"White Rum","ml":56.2,"last":false},{"n":"Coconut Rum","ml":18.8,"last":false},{"n":"Triple Sec","ml":18.8,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":41.7,"last":false},{"n":"Pineapple Syrup","ml":5.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":35.2,"price":9.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#efece4","tint":0.05,"ml":45.0,"last":false},{"color":"#f2efe6","tint":0.06,"ml":15.0,"last":false},{"color":"#f0ead8","tint":0.05,"ml":15.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":25.0,"last":false},{"color":"#f5cf3b","tint":0.9,"ml":30.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":10.0,"last":false}],"garnish":"pineapple"},"photo":{"file":"photos/mai_tai.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11690"}}},{"id":"rum_punch","name":"Rum Punch","desc":"Rum, coconut rum, orange, pineapple, lime, grenadine.","glass":"Highball / tall glass","price":7,"tags":["White Rum","Coconut Rum","Orange","Pineapple","Lime","Grenadine"],"groups":["Rum"],"plans":{"virgin":{"steps":[{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":106.7,"last":false},{"n":"Pineapple Syrup","ml":10.0,"last":false},{"n":"Lime Syrup","ml":3.3,"last":false},{"n":"Grenadine","ml":10.0,"last":false}],"sec":16.4,"price":7.0},"light":{"steps":[{"n":"White Rum","ml":30.0,"last":false},{"n":"Coconut Rum","ml":7.5,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":106.7,"last":false},{"n":"Pineapple Syrup","ml":10.0,"last":false},{"n":"Lime Syrup","ml":3.3,"last":false},{"n":"Grenadine","ml":10.0,"last":false}],"sec":18.8,"price":7.0},"regular":{"steps":[{"n":"White Rum","ml":40.0,"last":false},{"n":"Coconut Rum","ml":10.0,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":106.7,"last":false},{"n":"Pineapple Syrup","ml":10.0,"last":false},{"n":"Lime Syrup","ml":3.3,"last":false},{"n":"Grenadine","ml":10.0,"last":false}],"sec":25.0,"price":7.0},"strong":{"steps":[{"n":"White Rum","ml":50.0,"last":false},{"n":"Coconut Rum","ml":12.5,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Water","ml":106.7,"last":false},{"n":"Pineapple Syrup","ml":10.0,"last":false},{"n":"Lime Syrup","ml":3.3,"last":false},{"n":"Grenadine","ml":10.0,"last":false}],"sec":31.2,"price":8.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#efece4","tint":0.05,"ml":40.0,"last":false},{"color":"#f2efe6","tint":0.06,"ml":10.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":60.0,"last":false},{"color":"#f5cf3b","tint":0.9,"ml":60.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":10.0,"last":false},{"color":"#b80f2a","tint":1.6,"ml":10.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/rum_punch.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/14978"}}},{"id":"malibu_pineapple","name":"Coconut Rum & Pineapple","desc":"Coconut rum and pineapple (Malibu-style).","glass":"Highball / tall glass","price":5,"tags":["Coconut Rum","Pineapple"],"groups":["Rum"],"plans":{"virgin":{"steps":[{"n":"Pineapple Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":17.3,"price":5.0},"light":{"steps":[{"n":"Coconut Rum","ml":33.8,"last":false},{"n":"Pineapple Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":21.1,"price":5.0},"regular":{"steps":[{"n":"Coconut Rum","ml":45.0,"last":false},{"n":"Pineapple Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":28.1,"price":5.0},"strong":{"steps":[{"n":"Coconut Rum","ml":56.2,"last":false},{"n":"Pineapple Syrup","ml":22.5,"last":false},{"n":"Water","ml":112.5,"last":false}],"sec":35.2,"price":6.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#f2efe6","tint":0.06,"ml":45.0,"last":false},{"color":"#f5cf3b","tint":0.9,"ml":135.0,"last":false}],"garnish":"pineapple"},"photo":{"file":"photos/malibu_pineapple.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Malibu Twister)","page":"https://www.thecocktaildb.com/drink/15224"}}},{"id":"malibu_bay_breeze","name":"Malibu Bay Breeze","desc":"Coconut rum, pineapple, cranberry.","glass":"Highball / tall glass","price":6,"tags":["Coconut Rum","Pineapple","Cranberry"],"groups":["Rum"],"plans":{"virgin":{"steps":[{"n":"Pineapple Syrup","ml":11.7,"last":false},{"n":"Water","ml":116.7,"last":false},{"n":"Cranberry Syrup","ml":11.7,"last":false}],"sec":17.9,"price":6.0},"light":{"steps":[{"n":"Coconut Rum","ml":33.8,"last":false},{"n":"Pineapple Syrup","ml":11.7,"last":false},{"n":"Water","ml":116.7,"last":false},{"n":"Cranberry Syrup","ml":11.7,"last":false}],"sec":21.1,"price":6.0},"regular":{"steps":[{"n":"Coconut Rum","ml":45.0,"last":false},{"n":"Pineapple Syrup","ml":11.7,"last":false},{"n":"Water","ml":116.7,"last":false},{"n":"Cranberry Syrup","ml":11.7,"last":false}],"sec":28.1,"price":6.0},"strong":{"steps":[{"n":"Coconut Rum","ml":56.2,"last":false},{"n":"Pineapple Syrup","ml":11.7,"last":false},{"n":"Water","ml":116.7,"last":false},{"n":"Cranberry Syrup","ml":11.7,"last":false}],"sec":35.2,"price":7.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#f2efe6","tint":0.06,"ml":45.0,"last":false},{"color":"#f5cf3b","tint":0.9,"ml":70.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":70.0,"last":false}],"garnish":"pineapple"},"photo":{"file":"photos/malibu_bay_breeze.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Planter\u2019s Punch)","page":"https://www.thecocktaildb.com/drink/178368"}}},{"id":"margarita","name":"Margarita","desc":"Tequila, triple sec, lime, a touch of syrup.","glass":"Rocks glass","price":7,"tags":["Tequila","Triple Sec","Lime","Cane Syrup"],"groups":["Tequila"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":6.2,"price":7.0},"light":{"steps":[{"n":"Tequila","ml":37.5,"last":false},{"n":"Triple Sec","ml":15.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":23.4,"price":7.0},"regular":{"steps":[{"n":"Tequila","ml":50.0,"last":false},{"n":"Triple Sec","ml":20.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":31.2,"price":7.0},"strong":{"steps":[{"n":"Tequila","ml":62.5,"last":false},{"n":"Triple Sec","ml":25.0,"last":false},{"n":"Lime Syrup","ml":8.3,"last":false},{"n":"Water","ml":16.7,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":39.1,"price":8.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#efe8cc","tint":0.08,"ml":50.0,"last":false},{"color":"#f0ead8","tint":0.05,"ml":20.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":25.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":10.0,"last":false}],"garnish":"lime"},"photo":{"file":"photos/margarita.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11007"}}},{"id":"tequila_sunrise","name":"Tequila Sunrise","desc":"Tequila, orange juice, grenadine sunrise.","glass":"Highball / tall glass","price":7,"tags":["Tequila","Orange","Grenadine"],"groups":["Tequila"],"plans":{"virgin":{"steps":[{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":15.0,"last":true}],"sec":24.8,"price":7.0},"light":{"steps":[{"n":"Tequila","ml":33.8,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":15.0,"last":true}],"sec":30.5,"price":7.0},"regular":{"steps":[{"n":"Tequila","ml":45.0,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":15.0,"last":true}],"sec":37.5,"price":7.0},"strong":{"steps":[{"n":"Tequila","ml":56.2,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":15.0,"last":true}],"sec":44.5,"price":8.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#efe8cc","tint":0.08,"ml":45.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":120.0,"last":false},{"color":"#b80f2a","tint":1.6,"ml":15.0,"last":true}],"garnish":"cherry"},"photo":{"file":"photos/tequila_sunrise.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/13621"}}},{"id":"whiskey_sour","name":"Whiskey Sour","desc":"Whiskey, lemon, sugar.","glass":"Rocks glass","price":7,"tags":["Whiskey","Citrus (lime)","Cane Syrup"],"groups":["Whiskey"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":20.0,"last":false}],"sec":12.5,"price":7.0},"light":{"steps":[{"n":"Whiskey","ml":45.0,"last":false},{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":20.0,"last":false}],"sec":28.1,"price":7.0},"regular":{"steps":[{"n":"Whiskey","ml":60.0,"last":false},{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":20.0,"last":false}],"sec":37.5,"price":7.0},"strong":{"steps":[{"n":"Whiskey","ml":75.0,"last":false},{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":20.0,"last":false}],"sec":46.9,"price":8.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#b8661f","tint":0.75,"ml":60.0,"last":false},{"color":"#f1e7a0","tint":0.35,"ml":30.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":20.0,"last":false}],"garnish":"lemon"},"photo":{"file":"photos/whiskey_sour.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11004"}}},{"id":"old_fashioned","name":"Old Fashioned","desc":"Whiskey, sugar, bitters, orange peel.","glass":"Rocks glass","price":8,"tags":["Whiskey","Cane Syrup"],"groups":["Whiskey"],"plans":{"virgin":{"steps":[{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":6.2,"price":8.0},"light":{"steps":[{"n":"Whiskey","ml":45.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":28.1,"price":8.0},"regular":{"steps":[{"n":"Whiskey","ml":60.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":37.5,"price":8.0},"strong":{"steps":[{"n":"Whiskey","ml":75.0,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":46.9,"price":9.0}},"finish":"Add 2\u20133 dashes of bitters and an orange peel. Big ice cube.","art":{"glass":"rocks","layers":[{"color":"#b8661f","tint":0.75,"ml":60.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":10.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/old_fashioned.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11001"}}},{"id":"amaretto_sour","name":"Amaretto Sour","desc":"Amaretto, lemon, a splash of whiskey to balance the sweetness.","glass":"Rocks glass","price":7,"tags":["Amaretto","Whiskey","Citrus (lime)","Cane Syrup"],"groups":["Amaretto","Whiskey"],"plans":{"virgin":{"steps":[{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":5.0,"last":false}],"sec":6.2,"price":7.0},"light":{"steps":[{"n":"Amaretto","ml":37.5,"last":false},{"n":"Whiskey","ml":11.2,"last":false},{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":5.0,"last":false}],"sec":23.4,"price":7.0},"regular":{"steps":[{"n":"Amaretto","ml":50.0,"last":false},{"n":"Whiskey","ml":15.0,"last":false},{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":5.0,"last":false}],"sec":31.2,"price":7.0},"strong":{"steps":[{"n":"Amaretto","ml":62.5,"last":false},{"n":"Whiskey","ml":18.8,"last":false},{"n":"Lime Syrup","ml":10.0,"last":false},{"n":"Water","ml":20.0,"last":false},{"n":"Cane Syrup","ml":5.0,"last":false}],"sec":39.1,"price":8.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#a85a1c","tint":0.7,"ml":50.0,"last":false},{"color":"#b8661f","tint":0.75,"ml":15.0,"last":false},{"color":"#f1e7a0","tint":0.35,"ml":30.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":5.0,"last":false}],"garnish":"lemon"},"photo":{"file":"photos/amaretto_sour.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/13731"}}},{"id":"godfather","name":"Godfather","desc":"Whiskey and amaretto. Smooth sipper.","glass":"Rocks glass","price":8,"tags":["Whiskey","Amaretto"],"groups":["Whiskey","Amaretto"],"plans":{"light":{"steps":[{"n":"Whiskey","ml":33.8,"last":false},{"n":"Amaretto","ml":15.0,"last":false}],"sec":21.1,"price":8.0},"regular":{"steps":[{"n":"Whiskey","ml":45.0,"last":false},{"n":"Amaretto","ml":20.0,"last":false}],"sec":28.1,"price":8.0},"strong":{"steps":[{"n":"Whiskey","ml":56.2,"last":false},{"n":"Amaretto","ml":25.0,"last":false}],"sec":35.2,"price":9.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#b8661f","tint":0.75,"ml":45.0,"last":false},{"color":"#a85a1c","tint":0.7,"ml":20.0,"last":false}],"garnish":"none"},"photo":{"file":"photos/godfather.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11423"}}},{"id":"amaretto_sunrise","name":"Amaretto Sunrise","desc":"Amaretto, orange juice, grenadine sunrise.","glass":"Highball / tall glass","price":6,"tags":["Amaretto","Orange","Grenadine"],"groups":["Amaretto"],"plans":{"virgin":{"steps":[{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":10.0,"last":true}],"sec":21.6,"price":6.0},"light":{"steps":[{"n":"Amaretto","ml":33.8,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":10.0,"last":true}],"sec":27.3,"price":6.0},"regular":{"steps":[{"n":"Amaretto","ml":45.0,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":10.0,"last":true}],"sec":34.4,"price":6.0},"strong":{"steps":[{"n":"Amaretto","ml":56.2,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false},{"n":"Grenadine","ml":10.0,"last":true}],"sec":41.4,"price":7.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#a85a1c","tint":0.7,"ml":45.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":120.0,"last":false},{"color":"#b80f2a","tint":1.6,"ml":10.0,"last":true}],"garnish":"cherry"},"photo":{"file":"photos/amaretto_sunrise.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/14578"}}},{"id":"amaretto_cranberry","name":"Amaretto Cranberry","desc":"Amaretto and cranberry, squeeze of lime.","glass":"Highball / tall glass","price":6,"tags":["Amaretto","Cranberry","Lime"],"groups":["Amaretto"],"plans":{"virgin":{"steps":[{"n":"Cranberry Syrup","ml":20.0,"last":false},{"n":"Water","ml":103.3,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":15.9,"price":6.0},"light":{"steps":[{"n":"Amaretto","ml":33.8,"last":false},{"n":"Cranberry Syrup","ml":20.0,"last":false},{"n":"Water","ml":103.3,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":21.1,"price":6.0},"regular":{"steps":[{"n":"Amaretto","ml":45.0,"last":false},{"n":"Cranberry Syrup","ml":20.0,"last":false},{"n":"Water","ml":103.3,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":28.1,"price":6.0},"strong":{"steps":[{"n":"Amaretto","ml":56.2,"last":false},{"n":"Cranberry Syrup","ml":20.0,"last":false},{"n":"Water","ml":103.3,"last":false},{"n":"Lime Syrup","ml":1.7,"last":false}],"sec":35.2,"price":7.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#a85a1c","tint":0.7,"ml":45.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":120.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":5.0,"last":false}],"garnish":"lime"},"photo":{"file":"photos/amaretto_cranberry.jpg","credit":{"artist":"Unknown","license":"CC0","license_url":"https://creativecommons.org/publicdomain/zero/1.0/","note":"Similar drink (cranberry cocktail)","page":"https://www.rawpixel.com/image/3299387/free-photo-image-ice-juice-cream-soda"}}},{"id":"black_russian","name":"Black Russian","desc":"Vodka and coffee liqueur.","glass":"Rocks glass","price":7,"tags":["Vodka","Coffee Liqueur"],"groups":["Vodka"],"plans":{"light":{"steps":[{"n":"Vodka","ml":37.5,"last":false},{"n":"Coffee Liqueur","ml":18.8,"last":false}],"sec":23.4,"price":7.0},"regular":{"steps":[{"n":"Vodka","ml":50.0,"last":false},{"n":"Coffee Liqueur","ml":25.0,"last":false}],"sec":31.2,"price":7.0},"strong":{"steps":[{"n":"Vodka","ml":62.5,"last":false},{"n":"Coffee Liqueur","ml":31.2,"last":false}],"sec":39.1,"price":8.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#e8eef2","tint":0.04,"ml":50.0,"last":false},{"color":"#2b170c","tint":1.4,"ml":25.0,"last":false}],"garnish":"none"},"photo":{"file":"photos/black_russian.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11102"}}},{"id":"brave_bull","name":"Brave Bull","desc":"Tequila and coffee liqueur.","glass":"Rocks glass","price":7,"tags":["Tequila","Coffee Liqueur"],"groups":["Tequila"],"plans":{"light":{"steps":[{"n":"Tequila","ml":33.8,"last":false},{"n":"Coffee Liqueur","ml":22.5,"last":false}],"sec":21.1,"price":7.0},"regular":{"steps":[{"n":"Tequila","ml":45.0,"last":false},{"n":"Coffee Liqueur","ml":30.0,"last":false}],"sec":28.1,"price":7.0},"strong":{"steps":[{"n":"Tequila","ml":56.2,"last":false},{"n":"Coffee Liqueur","ml":37.5,"last":false}],"sec":35.2,"price":8.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#efe8cc","tint":0.08,"ml":45.0,"last":false},{"color":"#2b170c","tint":1.4,"ml":30.0,"last":false}],"garnish":"none"},"photo":{"file":"photos/brave_bull.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Black Russian)","page":"https://www.thecocktaildb.com/drink/11102"}}},{"id":"godmother","name":"Godmother","desc":"Vodka and amaretto.","glass":"Rocks glass","price":7,"tags":["Vodka","Amaretto"],"groups":["Vodka","Amaretto"],"plans":{"light":{"steps":[{"n":"Vodka","ml":33.8,"last":false},{"n":"Amaretto","ml":15.0,"last":false}],"sec":21.1,"price":7.0},"regular":{"steps":[{"n":"Vodka","ml":45.0,"last":false},{"n":"Amaretto","ml":20.0,"last":false}],"sec":28.1,"price":7.0},"strong":{"steps":[{"n":"Vodka","ml":56.2,"last":false},{"n":"Amaretto","ml":25.0,"last":false}],"sec":35.2,"price":8.0}},"finish":"","art":{"glass":"rocks","layers":[{"color":"#e8eef2","tint":0.04,"ml":45.0,"last":false},{"color":"#a85a1c","tint":0.7,"ml":20.0,"last":false}],"garnish":"none"},"photo":{"file":"photos/godmother.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"","page":"https://www.thecocktaildb.com/drink/11424"}}},{"id":"fuzzy_navel","name":"Fuzzy Navel","desc":"Peach schnapps and orange juice.","glass":"Highball / tall glass","price":5,"tags":["Peach Schnapps","Orange"],"groups":["Other"],"plans":{"virgin":{"steps":[{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false}],"sec":15.4,"price":5.0},"light":{"steps":[{"n":"Peach Schnapps","ml":45.0,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false}],"sec":28.1,"price":5.0},"regular":{"steps":[{"n":"Peach Schnapps","ml":60.0,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false}],"sec":37.5,"price":5.0},"strong":{"steps":[{"n":"Peach Schnapps","ml":75.0,"last":false},{"n":"Orange Syrup","ml":20.0,"last":false},{"n":"Water","ml":100.0,"last":false}],"sec":46.9,"price":6.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#f3d9b5","tint":0.15,"ml":60.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":120.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/fuzzy_navel.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Orangeade)","page":"https://www.thecocktaildb.com/drink/12618"}}},{"id":"virgin_sunrise","name":"Sunrise (no alcohol)","desc":"Orange juice with a grenadine sunrise.","glass":"Highball / tall glass","price":2,"tags":["Orange","Grenadine"],"groups":["No alcohol"],"plans":{"regular":{"steps":[{"n":"Orange Syrup","ml":25.0,"last":false},{"n":"Water","ml":125.0,"last":false},{"n":"Grenadine","ml":15.0,"last":true}],"sec":28.6,"price":2.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#ff9d1c","tint":1.0,"ml":150.0,"last":false},{"color":"#b80f2a","tint":1.6,"ml":15.0,"last":true}],"garnish":"cherry"},"photo":{"file":"photos/virgin_sunrise.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Orange Crush)","page":"https://www.thecocktaildb.com/drink/15330"}}},{"id":"tropical_cooler","name":"Tropical Cooler (no alcohol)","desc":"Pineapple, orange, lime, grenadine.","glass":"Highball / tall glass","price":2,"tags":["Pineapple","Orange","Lime","Grenadine"],"groups":["No alcohol"],"plans":{"regular":{"steps":[{"n":"Pineapple Syrup","ml":15.0,"last":false},{"n":"Water","ml":131.7,"last":false},{"n":"Orange Syrup","ml":10.0,"last":false},{"n":"Lime Syrup","ml":3.3,"last":false},{"n":"Grenadine","ml":10.0,"last":false}],"sec":20.3,"price":2.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#f5cf3b","tint":0.9,"ml":90.0,"last":false},{"color":"#ff9d1c","tint":1.0,"ml":60.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":10.0,"last":false},{"color":"#b80f2a","tint":1.6,"ml":10.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/tropical_cooler.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Orange Whip)","page":"https://www.thecocktaildb.com/drink/16995"}}},{"id":"cran_orange_cooler","name":"Cran-Orange Cooler (no alcohol)","desc":"Orange, cranberry, lime, syrup.","glass":"Highball / tall glass","price":2,"tags":["Orange","Cranberry","Lime","Cane Syrup"],"groups":["No alcohol"],"plans":{"regular":{"steps":[{"n":"Orange Syrup","ml":15.0,"last":false},{"n":"Water","ml":156.7,"last":false},{"n":"Cranberry Syrup","ml":15.0,"last":false},{"n":"Lime Syrup","ml":3.3,"last":false},{"n":"Cane Syrup","ml":10.0,"last":false}],"sec":24.1,"price":2.0}},"finish":"","art":{"glass":"highball","layers":[{"color":"#ff9d1c","tint":1.0,"ml":90.0,"last":false},{"color":"#b8152f","tint":1.0,"ml":90.0,"last":false},{"color":"#cfe0a0","tint":0.35,"ml":10.0,"last":false},{"color":"#f5f2ea","tint":0.02,"ml":10.0,"last":false}],"garnish":"orange"},"photo":{"file":"photos/cran_orange_cooler.jpg","credit":{"artist":"TheCocktailDB","license":"free for non-commercial use","license_url":"https://www.thecocktaildb.com/api.php","note":"Similar drink (Cranberry Punch)","page":"https://www.thecocktaildb.com/drink/12890"}}}];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const oz = ml => { const v = Math.round(ml / 30 * 4) / 4; return (v % 1 === 0 ? v : v.toFixed(2).replace(/0$/, "")) + " oz"; };
+const STR = { virgin: "No alcohol", light: "Light", regular: "Regular", strong: "Strong" };
+const order = ["Vodka", "Rum", "Tequila", "Whiskey", "Amaretto", "Other", "No alcohol"];
+const groups = [...new Set(DRINKS.flatMap(d => d.groups))].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+let tab = "";
+function credit(d) {
+  const c = d.photo && d.photo.credit;
+  if (!c) return "";
+  const lic = c.license_url ? `<a href="${esc(c.license_url)}" rel="noopener">${esc(c.license)}</a>` : esc(c.license);
+  return `<div class="credit">${c.note ? esc(c.note) + " · " : ""}Photo: <a href="${esc(c.page)}" rel="noopener">${esc(c.artist || "Wikimedia Commons")}</a>, ${lic}</div>`;
+}
+function render() {
+  document.getElementById("filters").innerHTML = ["", ...groups].map(g =>
+    `<button type="button" data-g="${esc(g)}" class="${g === tab ? "on" : ""}">${g || "All " + DRINKS.length}</button>`).join("");
+  document.querySelectorAll("#filters button").forEach(b => b.onclick = () => { tab = b.dataset.g; render(); });
+  document.getElementById("cards").innerHTML = DRINKS.filter(d => !tab || d.groups.includes(tab)).map(d => {
+    const p = d.plans.regular || Object.values(d.plans)[0];
+    return `<article class="dcard">
+      <div class="big-art">${d.photo ? `<img src="${d.photo.file}" alt="${esc(d.name)}" loading="lazy">` : DrinkArt.svg(d.art, { label: d.name })}</div>
+      <div class="body">
+        <div class="row"><h2>${esc(d.name)}</h2><span class="price">$${Number(d.price).toFixed(2)}</span></div>
+        <div class="chips">${d.groups.map(g => `<span class="chip ${g === "No alcohol" ? "na" : ""}">${esc(g)}</span>`).join("")}</div>
+        <div class="muted">${esc(d.desc)}</div>
+        <ul class="recipe">${p.steps.map(s => `<li><span>${esc(s.n)}${s.last ? " <span class='muted small'>(poured last)</span>" : ""}</span><span class="amt">${Math.round(s.ml)} ml · ${oz(s.ml)}</span></li>`).join("")}</ul>
+        ${d.finish ? `<div class="finish">✋ ${esc(d.finish)}</div>` : ""}
+        <div class="meta"><span>${esc(d.glass)}</span><span>${Object.keys(d.plans).map(k => STR[k]).join(" · ")}</span></div>
+        ${credit(d)}
+      </div>
+    </article>`;
+  }).join("");
+}
+render();
+</script>
+
+</body>
+</html>

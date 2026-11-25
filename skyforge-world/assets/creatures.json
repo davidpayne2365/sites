@@ -1,0 +1,37 @@
+{
+ "cr_toon_horse_with_saddle_rigge_db8fe3": {
+  "file": "creatures/cr_toon_horse_with_saddle_rigge_db8fe3.glb",
+  "tris": 4036,
+  "size": [
+   0.612,
+   2.098,
+   2.721
+  ],
+  "anims": [
+   [
+    "Walk",
+    1.33
+   ],
+   [
+    "Trot",
+    0.67
+   ],
+   [
+    "Gallop",
+    0.5
+   ],
+   [
+    "Rest",
+    0
+   ]
+  ],
+  "bytes": 347828,
+  "name": "Toon Horse with Saddle (Rigged, Animated)",
+  "author": "flairetic",
+  "licence": "CC Attribution",
+  "source": "https://sketchfab.com/3d-models/none-db8fe38f93cb48e7a5c9df446a105f7a",
+  "roles": [
+   "horse"
+  ]
+ }
+}

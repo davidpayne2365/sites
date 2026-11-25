@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Lens Brand Substitution List</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f4f8;
+    color: #1a202c;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #2b6cb0;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #718096;
+    margin-bottom: 16px;
+  }
+  .search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .search-bar input {
+    width: 100%;
+    max-width: 600px;
+    padding: 10px 16px;
+    border: 2px solid #bee3f8;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    background: white;
+  }
+  .search-bar input:focus { border-color: #3182ce; }
+
+  .section {
+    max-width: 1100px;
+    margin: 0 auto 30px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.3px;
+  }
+  .coopervision .section-header { background: #2b6cb0; }
+  .bausch .section-header { background: #276749; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead th {
+    background: #ebf8ff;
+    padding: 9px 14px;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #2c5282;
+    text-align: left;
+    border-bottom: 2px solid #bee3f8;
+  }
+  .bausch thead th { background: #f0fff4; color: #22543d; border-bottom-color: #9ae6b4; }
+
+  tbody tr { border-bottom: 1px solid #e2e8f0; transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f7faff; }
+  .bausch tbody tr:hover { background: #f0fff4; }
+
+  td {
+    padding: 9px 14px;
+    font-size: 0.84rem;
+    vertical-align: top;
+  }
+  td.private-labels { color: #2d3748; line-height: 1.45; }
+  td.costco-listing {
+    font-weight: 600;
+    color: #2b6cb0;
+    white-space: nowrap;
+  }
+  .bausch td.costco-listing { color: #276749; }
+  td.item-num {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #718096;
+    white-space: nowrap;
+  }
+  .hidden { display: none; }
+
+  .no-results {
+    text-align: center;
+    padding: 30px;
+    color: #a0aec0;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  .tag {
+    display: inline-block;
+    background: #ebf8ff;
+    color: #2c5282;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 0.72rem;
+    margin-top: 3px;
+    font-weight: 600;
+  }
+  mark.hl {
+    background: #fef08a;
+    color: #1a202c;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+</style>
+</head>
+<body>
+
+<h1>📋 Contact Lens Brand Substitution List</h1>
+<p class="subtitle">Updated 02.16.2026 &nbsp;|&nbsp; Scroll or search below</p>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search by brand name, Costco listing, or item #…" oninput="filterTable()">
+</div>
+
+<!-- COOPERVISION SECTION -->
+<div class="section coopervision" id="section-cv">
+  <div class="section-header">👁 CooperVision Brand Listings (including private labels)</div>
+  <table id="table-cv">
+    <thead>
+      <tr>
+        <th style="width:55%">Private Label Brand(s)</th>
+        <th style="width:25%">Costco Listing</th>
+        <th style="width:20%">Costco Item #</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="private-labels">Avaira Vitality, Aquaclear 110, Ethos Aquatech 2 Week, iWear Balance Plus, Mediflex Aquafinity 110, Natural Eyes Hydrawear, Pearle Vision 2 Week Replacement, Serenity, Sofmed Breathables Advanced, up&up 2-week</td>
+        <td class="costco-listing">Avaira Vitality</td>
+        <td class="item-num">1097989</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Avaira Vitality Toric, Aquaclear 110 Toric, Ethos Aquatech 2 Week for Astigmatism, Pearle Vision 2 Week Replacement for Astigmatism, Serenity, iWear Balance Plus for Astigmatism, Sofmed Breathables Advanced, up&up 2-week for astigmatism</td>
+        <td class="costco-listing">Avaira Vitality Toric</td>
+        <td class="item-num">1152267</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Biofinity, Aquaclear, Ethos Aquatech Monthly, iWear Oxygen, Lenscrafters Monthly, Elite, Natural Eyes Hydrawear XW, Pearle Vision Monthly, Sofmed Breathables XW, Up&UP Monthly Performance, Voyant Monthly</td>
+        <td class="costco-listing">Biofinity</td>
+        <td class="item-num">1088274</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Biofinity XR, Ethos Aquatech Monthly XR, Sofmed Breathables XW Extended Parameters</td>
+        <td class="costco-listing">Biofinity XR</td>
+        <td class="item-num">829098</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Biofinity Energys, Aquaclear Premium, Ethos Aquatech Evolve Monthly, Lenscrafters Modern Lifestyle, Mediflex Aquatech XW Premium, Up&Up Monthly Performance, Sofmed Breathables XW Monthly Performance, Aquafinity E-Comfort, Pearle Vision Monthly Balance, +, Voyant Monthly Premium</td>
+        <td class="costco-listing">Biofinity Energys</td>
+        <td class="item-num">1146281</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Biofinity Multifocal, Aquaclear Multifocal, Ethos Aquatech Monthly Multifocal, iWear Oxygen Presbyopia, Lenscrafters Monthly Multifocal, Mediflex Elite Multifocal, Natural Eyes Hydrawear XW Multifocal, Pearle Vision Monthly Multifocal, Sofmed Breathables XW Multifocal, Up&Up Monthly Performace Multifocal, Voyant Monthly Multifocal</td>
+        <td class="costco-listing">Biofinity Multifocal</td>
+        <td class="item-num">583208</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Biofinity Toric, Aquaclear Toric, Ethos AquaTech Monthly for Astigmatism, iWear Oxygen for Astigmatism, Lenscrafters Monthly for Astigmatism, Mediflex Elite Toric, Natural Eyes Hydrawear XW Toric, Up-&Up Monthly Performance XW Toric, Up-&Up Monthly Performance for Astigmatism, Sofmed Breathables Monthly Toric for Astigmatism, Voyant Monthly Toric</td>
+        <td class="costco-listing">Biofinity Toric</td>
+        <td class="item-num">437341</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Clariti 1 Day, Ethos 1 Day, iWear Activ, Pearle Vision 1-Day, up&up 1-day, Voyant 1-Day for Astigmatism</td>
+        <td class="costco-listing">Clariti 1 Day</td>
+        <td class="item-num">1146254</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Clariti 1 Day Toric, Ethos 1 Day for Astigmatism, Fresh Day 1 Day Toric, iWear Activ for Astigmatism, up&up 1-day for Astigmatism, Pearle Vision 1-Day Toric, Voyant 1-Day</td>
+        <td class="costco-listing">Clariti 1 Day Toric</td>
+        <td class="item-num">1146268 (30pk)<br>1146271 (90pk)</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Clariti 1 Day Multifocal, Ethos Aquatech 1 Day Multifocal, Fresh Day 1 Day Multifocal, Ray-Ban 1-Day Multifocal, Sofmed Breathables 1 Day Multifocal, Pearle Vision 1-Day Multifocal, up&up 1-day multifocal, Voyant 1-Day Multifocal</td>
+        <td class="costco-listing">Clariti 1 Day Multifocal</td>
+        <td class="item-num">1146258 (30pk)<br>1146264 (90pk)</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Clariti 1 Day Multifocal 3 Add, Ethos 1 Day Multifocal 3 Add, Ethos 1 Day Multifocal Plus, iWear Activ Plus Performance, Pearle Vision 1-Day Multifocal, Sofmed Breathables Advanced 1 Day Multifocal, Voyant 1-Day Multifocal Plus</td>
+        <td class="costco-listing">Clariti 1 Day Multifocal 3 Add</td>
+        <td class="item-num">1859549 (30pk)<br>1859494 (90pk)</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Kirkland Signature 90pk, MyDay 90pk, Ethos Aquell 1 Day, Kirkland Signature 1-Day, Pearle Vision 1-Day Premium Balance, Reveal 1 Day, Premium 90pk, up&up 1 day premium</td>
+        <td class="costco-listing">Kirkland Signature 90pk</td>
+        <td class="item-num">DC Product</td>
+      </tr>
+      <tr>
+        <td class="private-labels">MyDay Energys 90pk, Ethos Aquell Evolve 1 Day, Pearle Vision 1-Day Premium Balance, Reveal Premium, up&up 1 day performance+</td>
+        <td class="costco-listing">MyDay Energys</td>
+        <td class="item-num">1020006</td>
+      </tr>
+      <tr>
+        <td class="private-labels">MyDay Multifocal, Ethos Aquell 1 Day for Astigmatism, iWear Harmony for Astigmatism, Lenscrafters One Day Premium, Mediflex Supreme 1 Day for Astigmatism, Natural Eyes Hydrawear Ultimate 1 Day for Astigmatism, Pearle Vision 1-Day Premium, up&up 1-Day Premium, up&up 1 day, Reveal 1 Day, Sofmed Breathables 1 Day Toric, Voyant 1-Day Ultimate Toric, up&up 1 day performance for astigmatism</td>
+        <td class="costco-listing">MyDay Toric</td>
+        <td class="item-num">1221460</td>
+      </tr>
+      <tr>
+        <td class="private-labels">MyDay Multifocal, Ethos Aquell 1 Day Multifocal, iWear Harmony Presbyopia, Lenscrafters One Day Premium, Natural Eyes Hydrawear Multifocal, Pearle Vision 1-Day Premium Multifocal, Sofmed Breathables 1 Day Multifocal, up&up 1 day performance multifocal, Voyant 1-Day Premium Multifocal</td>
+        <td class="costco-listing">MyDay Multifocal</td>
+        <td class="item-num">1608057</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Sofmed Breathables 1 Day, Natural Eyes Hydrawear 1 Day</td>
+        <td class="costco-listing">No Brand Equivalent</td>
+        <td class="item-num">N/A</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- BAUSCH & LOMB SECTION -->
+<div class="section bausch" id="section-bl">
+  <div class="section-header">🌿 Bausch &amp; Lomb Brand Listings (including private labels)</div>
+  <table id="table-bl">
+    <thead>
+      <tr>
+        <th style="width:55%">Private Label Brand(s)</th>
+        <th style="width:25%">Costco Listing</th>
+        <th style="width:20%">Costco Item #</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="private-labels">BioTrue 1-Day Daily Disposable, LensCrafters 1Day, Walmart Eureka Daily Disposable</td>
+        <td class="costco-listing">BioTrue 1-Day 90pk</td>
+        <td class="item-num">689871</td>
+      </tr>
+      <tr>
+        <td class="private-labels">BioTrue 1-Day Daily Disposable for Astigmatism = Walmart Eureka Daily Disposable for Astigmatism</td>
+        <td class="costco-listing">BioTrue 1-Day for Astigmatism 90pk</td>
+        <td class="item-num">1150660</td>
+      </tr>
+      <tr>
+        <td class="private-labels">Ultra 6pk = Walmart Eureka Monthly</td>
+        <td class="costco-listing">Ultra 6pk</td>
+        <td class="item-num">DC Product</td>
+      </tr>
+      <tr>
+        <td class="private-labels">SofLens Daily Disposables (sphere)</td>
+        <td class="costco-listing">UPGRADE: Biotrue ONEday</td>
+        <td class="item-num">689871</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="noResults" class="no-results hidden">No matching lenses found. Try a different search term.</div>
+
+<script>
+const originalHTML = new Map();
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function highlightNode(node, query) {
+  if (node.nodeType === Node.TEXT_NODE) {
+    const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+    if (regex.test(node.textContent)) {
+      const span = document.createElement('span');
+      span.innerHTML = node.textContent.replace(regex, '<mark class="hl">$1</mark>');
+      node.replaceWith(span);
+    }
+  } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'MARK') {
+    [...node.childNodes].forEach(child => highlightNode(child, query));
+  }
+}
+
+function highlightCell(cell, query) {
+  if (!originalHTML.has(cell)) {
+    originalHTML.set(cell, cell.innerHTML);
+  }
+  cell.innerHTML = originalHTML.get(cell);
+  if (!query) return;
+  const temp = document.createElement('div');
+  temp.innerHTML = cell.innerHTML;
+  highlightNode(temp, query);
+  cell.innerHTML = temp.innerHTML;
+}
+
+function filterTable() {
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const sections = ['cv', 'bl'];
+  let anyVisible = false;
+
+  sections.forEach(id => {
+    const table = document.getElementById('table-' + id);
+    const section = document.getElementById('section-' + id);
+    const rows = table.querySelectorAll('tbody tr');
+    let sectionVisible = false;
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const match = !query || text.includes(query);
+
+      if (match) {
+        row.classList.remove('hidden');
+        sectionVisible = true;
+        anyVisible = true;
+      } else {
+        row.classList.add('hidden');
+      }
+
+      row.querySelectorAll('td').forEach(cell => highlightCell(cell, query));
+    });
+
+    section.style.display = sectionVisible ? '' : 'none';
+  });
+
+  document.getElementById('noResults').classList.toggle('hidden', anyVisible || !query);
+}
+</script>
+
+</body>
+</html>

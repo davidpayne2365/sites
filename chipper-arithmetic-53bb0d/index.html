@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optical Procedures Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --accent: #4fd1c5;
+    --accent2: #f6ad55;
+    --text: #e2e8f0;
+    --text-muted: #718096;
+    --border: #2d3748;
+    --danger: #fc8181;
+    --success: #68d391;
+    --tag-bg: #2d3748;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  .logo span { color: var(--accent2); }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  .search-wrap {
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+  }
+  #searchInput {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px 14px 44px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #searchInput:focus { border-color: var(--accent); }
+  #searchInput::placeholder { color: var(--text-muted); }
+
+  .filter-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .chip {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .chip:hover, .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  /* ── SWIPE CARD WRAPPER ── */
+  .card-swipe-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+  }
+
+  .proc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(.4,0,.2,1), border-color 0.2s;
+    position: relative;
+    z-index: 2;
+    will-change: transform;
+  }
+
+  .card-swipe-wrapper.revealed .proc-card {
+    transform: translateX(-148px);
+    border-radius: 12px 0 0 12px;
+  }
+
+  .card-actions-reveal {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 148px;
+    display: flex;
+    align-items: stretch;
+    z-index: 1;
+    border-radius: 0 12px 12px 0;
+    overflow: hidden;
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    transition: opacity 0.15s;
+  }
+  .action-btn span {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .action-btn:active { opacity: 0.75; }
+  .action-edit  { background: #253358; color: #76a9fa; }
+  .action-delete { background: #3d1a1a; color: var(--danger); }
+
+  .proc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .proc-header:hover { background: var(--surface2); }
+  .proc-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .proc-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    background: rgba(79,209,197,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    min-width: 32px;
+    text-align: center;
+  }
+  .proc-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .proc-toggle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .proc-card.open .proc-toggle { transform: rotate(180deg); }
+
+  .proc-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .proc-card.open .proc-body { display: block; }
+
+  .section { margin-top: 18px; }
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 10px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: #cbd5e0;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  .steps li:hover { background: var(--surface2); }
+  .steps li::before {
+    content: counter(step);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(79,209,197,0.1);
+    border-radius: 3px;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .note {
+    background: rgba(246,173,85,0.08);
+    border-left: 3px solid var(--accent2);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82rem;
+    color: #e2c9a0;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .note strong { color: var(--accent2); }
+  .warning {
+    background: rgba(252,129,129,0.08);
+    border-left: 3px solid var(--danger);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.82rem;
+    color: #fca5a5;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .warning strong { color: var(--danger); }
+
+  .procedures-list { display: flex; flex-direction: column; gap: 14px; }
+
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    display: none;
+  }
+  .no-results .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .no-results p { font-size: 0.95rem; }
+
+  .result-count {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    font-family: 'Space Mono', monospace;
+  }
+  .result-count span { color: var(--accent); }
+
+  mark {
+    background: rgba(246,173,85,0.3);
+    color: var(--accent2);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  /* Hold hint */
+  .hold-hint {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    letter-spacing: 0.03em;
+  }
+
+  /* FAB */
+  .fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 50px;
+    padding: 14px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(79,209,197,0.35);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    z-index: 200;
+  }
+  .fab:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(79,209,197,0.45); }
+
+  .dl-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    padding: 7px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+  }
+  .dl-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── PASSWORD OVERLAY ── */
+  .pw-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .pw-overlay.show { display: flex; }
+  .pw-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+  .pw-lock { font-size: 2rem; margin-bottom: 10px; }
+  .pw-box h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .pw-box p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .pw-box input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem;
+    text-align: center;
+    letter-spacing: 0.2em;
+    outline: none;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .pw-box input:focus { border-color: var(--accent); }
+  .pw-error {
+    font-size: 0.78rem;
+    color: var(--danger);
+    min-height: 18px;
+    margin-bottom: 14px;
+  }
+  .pw-actions { display: flex; gap: 10px; }
+  .pw-actions .btn { flex: 1; }
+
+  /* ── EDIT/ADD MODAL ── */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    width: 100%;
+    max-width: 580px;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+  .modal h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+  .form-group textarea { min-height: 100px; }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: #4a5568; }
+  .btn-danger { background: var(--danger); color: #1a1a1a; }
+  .btn-danger:hover { opacity: 0.85; }
+
+  /* Tag checkboxes */
+  .tag-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .tag-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag-check:hover { border-color: var(--accent); color: var(--text); }
+  .tag-check input[type="checkbox"] {
+    accent-color: var(--accent);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+  }
+  .tag-check:has(input:checked) {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(79,209,197,0.08);
+  }
+
+  /* Section builder blocks */
+  .section-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .section-block input:focus,
+  .section-block textarea:focus { border-color: var(--accent) !important; }
+
+  /* Tags display on card */
+  .proc-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: var(--tag-bg);
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .tag.refund   { background: rgba(252,129,129,0.15); color: var(--danger); }
+  .tag.insurance{ background: rgba(246,173,85,0.15);  color: var(--accent2); }
+  .tag.contacts { background: rgba(104,211,145,0.15); color: var(--success); }
+  .tag.frames   { background: rgba(147,130,250,0.15); color: #9f7aea; }
+  .tag.payment  { background: rgba(79,209,197,0.15);  color: var(--accent); }
+  .tag.shipping { background: rgba(247,144,164,0.15); color: #f687b3; }
+  .tag.transfer { background: rgba(118,169,250,0.15); color: #76a9fa; }
+
+  @media (max-width: 600px) {
+    .proc-title { font-size: 0.875rem; }
+    .modal { padding: 20px; }
+    header { padding: 14px 16px; }
+    .container { padding: 20px 12px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">OPTICAL <span>// OPS</span></div>
+  <button class="dl-btn" onclick="downloadPage()">⬇ Save Page</button>
+</header>
+
+<div class="container">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Search procedures, steps, keywords…" oninput="search()" autocomplete="off">
+  </div>
+
+  <div class="filter-chips" id="filterChips">
+    <button class="chip active" onclick="filterTag('all', this)">All</button>
+    <button class="chip" onclick="filterTag('refund', this)">Refund</button>
+    <button class="chip" onclick="filterTag('insurance', this)">Insurance</button>
+    <button class="chip" onclick="filterTag('contacts', this)">Contacts</button>
+    <button class="chip" onclick="filterTag('frames', this)">Frames</button>
+    <button class="chip" onclick="filterTag('payment', this)">Payment</button>
+    <button class="chip" onclick="filterTag('shipping', this)">Shipping</button>
+    <button class="chip" onclick="filterTag('transfer', this)">Transfer</button>
+  </div>
+
+  <div class="hold-hint">Hold a card to edit or delete it</div>
+  <div class="result-count" id="resultCount"></div>
+  <div class="procedures-list" id="procedureList"></div>
+  <div class="no-results" id="noResults">
+    <div class="icon">🔎</div>
+    <p>No procedures found. Try different keywords.</p>
+  </div>
+</div>
+
+<button class="fab" onclick="requestAuth('add')">＋ Add Procedure</button>
+
+<!-- PASSWORD OVERLAY -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <div class="pw-lock">🔒</div>
+    <h3>// PROTECTED ACTION</h3>
+    <p id="pwDesc">Enter the password to continue.</p>
+    <input type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')submitPw()">
+    <div class="pw-error" id="pwError"></div>
+    <div class="pw-actions">
+      <button class="btn btn-ghost" onclick="closePw()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPw()">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="overlay" id="overlay" onclick="closeModalOnBg(event)">
+  <div class="modal" id="modal">
+    <h2 id="modalTitle">// ADD PROCEDURE</h2>
+
+    <div class="form-group">
+      <label>Procedure Title *</label>
+      <input type="text" id="newTitle" placeholder="e.g. Frame Exchange Process">
+    </div>
+
+    <div class="form-group">
+      <label>Tags — check all that apply</label>
+      <div class="tag-checks" id="tagChecks">
+        <label class="tag-check"><input type="checkbox" value="refund"> Refund</label>
+        <label class="tag-check"><input type="checkbox" value="insurance"> Insurance</label>
+        <label class="tag-check"><input type="checkbox" value="contacts"> Contacts</label>
+        <label class="tag-check"><input type="checkbox" value="frames"> Frames</label>
+        <label class="tag-check"><input type="checkbox" value="payment"> Payment</label>
+        <label class="tag-check"><input type="checkbox" value="shipping"> Shipping</label>
+        <label class="tag-check"><input type="checkbox" value="transfer"> Transfer</label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Sections</label>
+      <div id="sectionsBuilder"></div>
+      <button class="btn btn-ghost" style="margin-top:10px;width:100%;font-size:0.82rem;" onclick="addSectionBlock()">＋ Add Section</button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNewProcedure()">Save Procedure</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── PASSWORD ────────────────────────────────────────────────────────────────
+const PASS = "password";
+let pendingAction = null; // { type: 'add' | 'edit' | 'delete', id? }
+
+function requestAuth(type, id) {
+  closeAllReveals();
+  pendingAction = { type, id };
+  const desc = {
+    add:    'Enter password to add a new procedure.',
+    edit:   'Enter password to edit this procedure.',
+    delete: 'Enter password to delete this procedure.'
+  };
+  document.getElementById('pwDesc').textContent = desc[type] || 'Enter the password to continue.';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').textContent = '';
+  document.getElementById('pwOverlay').classList.add('show');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
+
+function submitPw() {
+  const val = document.getElementById('pwInput').value;
+  if (val !== PASS) {
+    document.getElementById('pwError').textContent = 'Incorrect password. Try again.';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+    return;
+  }
+  document.getElementById('pwOverlay').classList.remove('show');
+  if (!pendingAction) return;
+  const { type, id } = pendingAction;
+  pendingAction = null;
+  if (type === 'add')    showAddModal();
+  if (type === 'edit')   showEditModal(id);
+  if (type === 'delete') confirmDelete(id);
+}
+
+function closePw() {
+  document.getElementById('pwOverlay').classList.remove('show');
+  pendingAction = null;
+}
+
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const DEFAULT_PROCEDURES = [
+  {id:1,title:"Ecommerce Online Return",tags:["refund","contacts","frames"],sections:[{title:"1. Contact Lens Return",steps:["Look up the order in EOI (try order number first).","Identify warehouse item number for contacts being returned — do NOT use the e-commerce item number.","In the register, scan the membership card.","Hit Void.","(Amount) qty → Scan or key in item numbers.","Verify price matches; if OK hit Clear. Note: Override will be needed.","To remove tax: Void (amount of tax e.g. '3.14') → Manual Tax Button.","Hit Total and refund according to how the member paid."]},{title:"2. Sunglass Return",steps:["Look up the order in EOI (try order number first).","Put a 5 or X next to the order number.","Scroll to find items in the list; put a 5 or X next to the item.","Hit Print Screen on keyboard.","In the register hit VOID, enter the amount they paid (item sale price, no tax), then the price.","Type in the item number and hit Enter."]},{title:"If Over 10 Boxes Returned Unopened",steps:["Type in SWI.","Enter item number of contacts → Enter.","Fn + Print Screen.","Copy the receipt and put the copy with the contacts to be returned.","Staple the original receipt to the till sheet.","The box will be returned to the vendor."]}]},
+  {id:2,title:"Apply Insurance After Order Was Paid",tags:["insurance","payment"],sections:[{title:"Step 1 — Void the Original Sale",steps:["Sign in to register.","Scan membership.","Press Void button → Type in frame item number (or for contacts: qty + item number) → Enter.","Key flick.","Press Void button → Type in lens item number (or for contacts: qty + item number) → Enter.","Key flick.","Return payment to member's card."],warnings:"Do NOT refund anything in AS400."},{title:"Step 2 — Re-ring with Insurance",steps:["Sign in.","Scan membership.","Type in each item number where insurance was applied → Enter.","3 / Insurance Amount → Foreign Tender.","Take payment.","Staple void sheet to clipboard.","Attach receipts to optical order and put in drawer."]}]},
+  {id:3,title:"Return When Insurance Was Used",tags:["refund","insurance"],sections:[{title:"If Insurance Used TODAY",steps:["Scan the refund order as usual.","Enter the amount the member originally paid. Refund in the same method (cash, credit, etc.).","Press the 3 / Foreign Tender button.","Scan insurance → Enter. The system will process the insurance refund automatically."],notes:"This process does NOT apply to employee insurance. Employee insurance is $200 and is 'use it or lose it.' If $125 of the benefit is used, $75 is lost — it cannot be reinstated. Employees may only restyle using the amount paid by insurance."},{title:"If Insurance Used on a PREVIOUS Day",steps:["Go into OPS and locate the member's order.","Locate the amount the insurance paid.","Go into the order and refund each item with F17.","Put a Y on each item to refund it → Press F8 to send through.","Page for a key flick.","When Supervisor/Manager arrives: Scan membership card, scan refund invoice, type in what the insurance paid, press Cash button — leave cash in register and close it.","Refund the member the difference: use Total Debit if going back on a Visa; if card is not accepted, type remaining amount and press Cash.","Have the member sign the sales audit copy and put it in the drawer.","Make a copy of the receipt and write on the till sheet.","Reinstate the member's benefits afterward."]}]},
+  {id:4,title:"Ship Glasses to Member or Refund Shipping Fee",tags:["shipping","frames"],sections:[{title:"1. Ship Glasses to Member — At the Register",steps:["Scan membership card.","Scan invoice.","Enter 15 quantity, item 211629.","Apply $50 coupons and insurance if needed.","Receive payment."]},{title:"1b. Ship Glasses — In OBM",steps:["Look up the order.","Type in option 2 → Enter.","Change to bin 500."]},{title:"2. When the Glasses Arrive",steps:["Go into member's invoice with OPS and print it out; copy their membership #.","Check WII to locate the matching purchase that shows 'mailing charge' applied, then print that page.","You can search WII by item number — enter 211629.","Put both papers in a small UPS box and take to Receiving."]},{title:"3. Refund Shipping",steps:["Void 15 qty 211629."]}]},
+  {id:5,title:"Frame Transfer — Warehouse Called Us (Frame Check)",tags:["transfer","frames"],sections:[{title:"1. Locate the Frame",steps:["Find the glasses on the wall with ITMW.","Grab a supply card purchase form.","Write down: Item number, Supply card number, Profile number, Member's name, Their UPS number, Their Warehouse number.","If sending to the LAB, circle lab number 908."]},{title:"2. At the Register",steps:["Page for a key flick to optical.","Sign in to register.","Type 3 / and their supply card number → Enter.","Enter frame item number → Enter.","Key flick → Total → Misc. Tender.","Fill out till sheet.","Put the printed receipt and frame transfer sheet side by side in the scanner and make a copy.","Staple the original receipt to the till sheet on the clipboard.","Three-hole punch the copy and put it in the Frame Transfer binder under 'Frame Transfer Out' tab."]},{title:"3. Shipping",steps:["Go to WPH → Type in the destination warehouse → Fn + Print Screen.","Put the frame and the warehouse address paper in a little plastic bag and stick it in the drawer for Receiving to mail out."]},{title:"Lab 908 Orders",steps:["Option A: Enclose the frame and glasses with the original transfer sheet.","Option B: Print the invoice from the member's profile, cut out the tag, tape it to the frame, and enclose."]}]},
+  {id:6,title:"Frame Transfer — We Need to Call a Warehouse",tags:["transfer","frames"],sections:[{title:"1. Check the Depot First (RARO)",steps:["Type ITMW → Enter frame number.","Change warehouse number to 1100 (depot).","If supply shows over 10, back out and go to RARO.","Press F for Frames → Enter.","Press F6 to add a frame.","Enter item number, order quantity, member name, phone number, warranty or not paid.","Press F8 to accept."]},{title:"2. Order from Another Warehouse",steps:["Decide if the frame is needed here or directly to lab 908 (use option ia1 or iiL).","Type in item number → Enter and wait for it to load all Midwest warehouses.","Page down for more warehouses until you see 1 on hand.","If none found, remove the MW option to search all US warehouses.","Write down all warehouse numbers showing units on hand.","Call each warehouse and ask if they have time for a frame check.","Dial using # + leading 0s before the warehouse number until 5 digits (e.g., #, 0, 0, 5, 1, 2).","If sending directly to the lab, ask if they can send to lab 908.","Fill out the 'Frame Transfers In' page in the frame transfer binder.","Provide: your Supply card number, your UPS number, member's profile number."]}]},
+  {id:7,title:"Contacts Arrived Without Paperwork",tags:["contacts"],sections:[{title:"Option 1 — OCIM / IAI",steps:["Use OCIM or IAI to find the item number of contacts.","If using OCIM: type in the info → Press Enter twice → Copy item number.","Go to WII → Go to Item → Paste in number → Press Enter.","Click on the member's order that matches the contacts.","Escape 1 → Enter.","Use OPS to find the invoice with that order and print it."]},{title:"Option 2 — RHI",steps:["Type RHI → Enter item number.","This shows the date of the most recent arrival."]}]},
+  {id:8,title:"Manual Refund by Item Numbers",tags:["refund","payment"],sections:[{title:"Steps",steps:["Log in to register.","Scan membership #.","Void item # → Enter.","Key flick.","Void item # → Total.","Credit/Debit → Clear.","Manually enter member card info.","Key flick.","Fill out refund auth slip."]}]},
+  {id:9,title:"Alternative Payments",tags:["payment"],sections:[{title:"Payment Methods",steps:["Costco Wallet: Use 7 / Misc Tender.","Shop Card: Press Credit/Debit → optionally enter amount or leave blank for full balance → Press CLEAR twice → Scan barcode.","Temporary Card (Citi Visa): Verify name on paper matches member's photo ID → Press IC twice → Scan barcode on paper.","Foreign Membership: Use 7 / → Scan the membership card.","Check (over $300 requires supervisor/manager initial): Member must sign the check → Use 2 / → Select Check twice → Insert check back side up for endorsement → Insert front side up for processing → Press Enter.","Costco App: Scan membership card from app → Follow on-screen prompt → Scan order → Select 7 / Misc. Tender to charge Costco Citi Visa.","Member's Credit/Debit Card (or if FSA fails): Select Credit/Debit → Press CLEAR to enter card details on PIN pad (can hit Clear 2x and type card #) → Key flick required."]}]},
+  {id:10,title:"Contact Lens Rebate After Insurance & Payment",tags:["contacts","insurance","refund","payment"],sections:[{title:"Step 1 — Void the Original Transaction",steps:["Sign in to register.","Scan membership.","Press Void button → Press QTY (amount of that item, e.g. 4) + item number of contacts → Enter.","Key flick.","Press Void button again → Press QTY (same amount) + item number of contacts.","Type the amount the insurance paid → Press Cash button.","Return payment to member's card; if FSA, return to Shop Card."]},{title:"Step 2 — Re-ring with Rebate",steps:["Sign in.","Scan membership.","Rekey in each item number on the order → Press Enter after each.","Scan Rebate.","Key in the amount insurance paid → Press Cash button.","Press Total → Take payment.","Get member's signature on sales audit.","Copy everything, staple it together with a note explaining what happened."]}]}
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let procedures = [];
+let activeTag = 'all';
+
+function loadProcedures() {
+  try {
+    const saved = localStorage.getItem('opticalProcedures');
+    procedures = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_PROCEDURES));
+  } catch(e) {
+    procedures = JSON.parse(JSON.stringify(DEFAULT_PROCEDURES));
+  }
+}
+
+function saveProcedures() {
+  try { localStorage.setItem('opticalProcedures', JSON.stringify(procedures)); } catch(e) {}
+}
+
+// ─── CLOSE ALL REVEALS ───────────────────────────────────────────────────────
+function closeAllReveals() {
+  document.querySelectorAll('.card-swipe-wrapper.revealed').forEach(w => w.classList.remove('revealed'));
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function renderAll() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const list = document.getElementById('procedureList');
+  const noRes = document.getElementById('noResults');
+  const countEl = document.getElementById('resultCount');
+  list.innerHTML = '';
+
+  let filtered = procedures.filter(p => {
+    const matchTag = activeTag === 'all' || p.tags.includes(activeTag);
+    if (!matchTag) return false;
+    if (!q) return true;
+    const haystack = [p.title, p.tags.join(' '),
+      ...p.sections.flatMap(s => [s.title, ...(s.steps||[]), s.notes||'', s.warnings||''])
+    ].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+
+  countEl.innerHTML = filtered.length
+    ? `Showing <span>${filtered.length}</span> of ${procedures.length} procedures` : '';
+
+  if (!filtered.length) { noRes.style.display = 'block'; return; }
+  noRes.style.display = 'none';
+
+  filtered.forEach(p => {
+    const tagsHtml = p.tags.map(t => `<span class="tag ${t}">${t}</span>`).join('');
+
+    const sectionsHtml = p.sections.map(s => {
+      let stepsHtml = '';
+      if (s.steps && s.steps.length) {
+        stepsHtml = `<ul class="steps">${s.steps.map(step => `<li>${highlight(step, q)}</li>`).join('')}</ul>`;
+      }
+      const noteHtml = s.notes ? `<div class="note"><strong>Note:</strong> ${highlight(s.notes, q)}</div>` : '';
+      const warnHtml = s.warnings ? `<div class="warning"><strong>⚠ Important:</strong> ${highlight(s.warnings, q)}</div>` : '';
+      return `<div class="section">
+        <div class="section-title">${highlight(s.title, q)}</div>
+        ${warnHtml}${stepsHtml}${noteHtml}
+      </div>`;
+    }).join('');
+
+    // Wrapper with swipe-reveal
+    const wrapper = document.createElement('div');
+    wrapper.className = 'card-swipe-wrapper';
+    wrapper.dataset.id = p.id;
+
+    wrapper.innerHTML = `
+      <div class="proc-card" id="card-${p.id}">
+        <div class="proc-header" id="hdr-${p.id}">
+          <div style="flex:1;min-width:0;">
+            <div class="proc-title-row">
+              <span class="proc-num">#${p.id}</span>
+              <span class="proc-title">${highlight(p.title, q)}</span>
+            </div>
+          </div>
+          <span class="proc-toggle">▾</span>
+        </div>
+        <div class="proc-body">
+          <div class="proc-tags" style="padding:12px 20px 0;">${tagsHtml}</div>
+          ${sectionsHtml}
+        </div>
+      </div>
+      <div class="card-actions-reveal">
+        <button class="action-btn action-edit"  onclick="requestAuth('edit',${p.id})">✏️<span>Edit</span></button>
+        <button class="action-btn action-delete" onclick="requestAuth('delete',${p.id})">🗑️<span>Delete</span></button>
+      </div>
+    `;
+
+    // ── Touch: long-press to reveal ──
+    let holdTimer = null;
+    let holdFired = false;
+    let touchStartX = 0, touchStartY = 0;
+
+    wrapper.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      holdFired = false;
+      holdTimer = setTimeout(() => {
+        holdFired = true;
+        closeAllReveals();
+        wrapper.classList.add('revealed');
+        navigator.vibrate && navigator.vibrate(30);
+      }, 500);
+    }, { passive: true });
+
+    wrapper.addEventListener('touchmove', e => {
+      const dx = Math.abs(e.touches[0].clientX - touchStartX);
+      const dy = Math.abs(e.touches[0].clientY - touchStartY);
+      if (dx > 8 || dy > 8) clearTimeout(holdTimer);
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', () => { clearTimeout(holdTimer); });
+
+    // ── Mouse: long-press (desktop fallback) ──
+    wrapper.addEventListener('mousedown', e => {
+      if (e.button !== 0) return;
+      holdFired = false;
+      holdTimer = setTimeout(() => {
+        holdFired = true;
+        closeAllReveals();
+        wrapper.classList.add('revealed');
+      }, 600);
+    });
+    wrapper.addEventListener('mousemove', () => clearTimeout(holdTimer));
+    wrapper.addEventListener('mouseup',   () => clearTimeout(holdTimer));
+
+    // ── Tap header to expand (only if not a hold) ──
+    const hdr = wrapper.querySelector(`#hdr-${p.id}`);
+    hdr.addEventListener('click', e => {
+      if (holdFired) { holdFired = false; return; }
+      if (wrapper.classList.contains('revealed')) {
+        wrapper.classList.remove('revealed');
+        return;
+      }
+      wrapper.querySelector('.proc-card').classList.toggle('open');
+    });
+
+    // Close reveal when tapping elsewhere
+    document.addEventListener('click', e => {
+      if (!wrapper.contains(e.target)) wrapper.classList.remove('revealed');
+    });
+
+    list.appendChild(wrapper);
+  });
+}
+
+function highlight(text, q) {
+  if (!q || !text) return text || '';
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
+}
+
+function search() { renderAll(); }
+
+function filterTag(tag, el) {
+  activeTag = tag;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+// ─── SECTION BLOCK BUILDER ───────────────────────────────────────────────────
+let sectionCount = 0;
+
+function makeSectionBlock(data) {
+  sectionCount++;
+  const id = `sec_${sectionCount}`;
+  const block = document.createElement('div');
+  block.className = 'section-block';
+  block.id = id;
+  const titleVal   = (data && data.title   ? data.title   : '').replace(/"/g,'&quot;');
+  const stepsVal   = (data && data.steps   ? data.steps.join('\n') : '');
+  const notesVal   = (data && data.notes   ? data.notes   : '').replace(/"/g,'&quot;');
+  const warnVal    = (data && data.warnings? data.warnings: '').replace(/"/g,'&quot;');
+  block.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <span style="font-size:0.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;">Section ${sectionCount}</span>
+      <button onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;">✕</button>
+    </div>
+    <input type="text" placeholder="Section title (e.g. 'At the Register')" value="${titleVal}"
+      style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;margin-bottom:8px;">
+    <textarea placeholder="Steps — one per line:&#10;Scan the membership card.&#10;Press Void.&#10;Enter item number."
+      style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;min-height:110px;resize:vertical;">${stepsVal}</textarea>
+    <input type="text" placeholder="Note (optional)" value="${notesVal}"
+      style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;margin-top:6px;">
+    <input type="text" placeholder="Warning (optional)" value="${warnVal}"
+      style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.875rem;outline:none;margin-top:6px;">
+  `;
+  return block;
+}
+
+function addSectionBlock() {
+  document.getElementById('sectionsBuilder').appendChild(makeSectionBlock(null));
+}
+
+// ─── ADD MODAL ───────────────────────────────────────────────────────────────
+function showAddModal() {
+  document.getElementById('newTitle').value = '';
+  document.getElementById('tagChecks').querySelectorAll('input').forEach(c => c.checked = false);
+  document.getElementById('sectionsBuilder').innerHTML = '';
+  document.getElementById('modal').dataset.editId = '';
+  document.getElementById('modalTitle').textContent = '// ADD PROCEDURE';
+  sectionCount = 0;
+  document.getElementById('sectionsBuilder').appendChild(makeSectionBlock(null));
+  document.getElementById('overlay').classList.add('show');
+}
+
+// ─── EDIT MODAL ──────────────────────────────────────────────────────────────
+function showEditModal(id) {
+  const p = procedures.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('newTitle').value = p.title;
+  document.getElementById('tagChecks').querySelectorAll('input').forEach(c => { c.checked = p.tags.includes(c.value); });
+  document.getElementById('sectionsBuilder').innerHTML = '';
+  sectionCount = 0;
+  p.sections.forEach(s => document.getElementById('sectionsBuilder').appendChild(makeSectionBlock(s)));
+  document.getElementById('modal').dataset.editId = id;
+  document.getElementById('modalTitle').textContent = '// EDIT PROCEDURE';
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('show'); }
+function closeModalOnBg(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+
+function saveNewProcedure() {
+  const title = document.getElementById('newTitle').value.trim();
+  if (!title) { alert('Please enter a procedure title.'); return; }
+
+  const tags = [...document.getElementById('tagChecks').querySelectorAll('input:checked')].map(c => c.value);
+
+  const sections = [];
+  document.getElementById('sectionsBuilder').querySelectorAll('.section-block').forEach(block => {
+    const inputs = block.querySelectorAll('input');
+    const textarea = block.querySelector('textarea');
+    const sTitle = inputs[0].value.trim() || 'Steps';
+    const steps = textarea.value.trim() ? textarea.value.trim().split('\n').map(s => s.trim()).filter(Boolean) : [];
+    const note = inputs[1].value.trim();
+    const warning = inputs[2].value.trim();
+    if (steps.length) {
+      const sec = { title: sTitle, steps };
+      if (note) sec.notes = note;
+      if (warning) sec.warnings = warning;
+      sections.push(sec);
+    }
+  });
+
+  if (!sections.length) { alert('Please add at least one section with steps.'); return; }
+
+  const editId = document.getElementById('modal').dataset.editId;
+  if (editId) {
+    const idx = procedures.findIndex(x => x.id === parseInt(editId));
+    if (idx > -1) procedures[idx] = { ...procedures[idx], title, tags, sections };
+  } else {
+    const newId = Math.max(0, ...procedures.map(p => p.id)) + 1;
+    procedures.push({ id: newId, title, tags, sections });
+  }
+  saveProcedures();
+  closeModal();
+  renderAll();
+}
+
+// ─── DELETE ──────────────────────────────────────────────────────────────────
+function confirmDelete(id) {
+  const p = procedures.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete "${p.title}"?\nThis cannot be undone.`)) return;
+  procedures = procedures.filter(x => x.id !== id);
+  saveProcedures();
+  renderAll();
+}
+
+// ─── DOWNLOAD ────────────────────────────────────────────────────────────────
+function downloadPage() {
+  const html = document.documentElement.outerHTML.replace(
+    /const DEFAULT_PROCEDURES = \[[\s\S]*?\];/,
+    `const DEFAULT_PROCEDURES = ${JSON.stringify(procedures, null, 2)};`
+  );
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'optical-procedures.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+loadProcedures();
+renderAll();
+</script>
+</body>
+</html>

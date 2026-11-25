@@ -1,0 +1,120 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><title>Skylight Galleria</title><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name=theme-color content=#0b1018><meta name=mobile-web-app-capable content=yes><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-mobile-web-app-status-bar-style content=black-translucent>
+<style>
+html{background:#0c0710}
+body{position:fixed;inset:0;margin:0;overflow:hidden;background:radial-gradient(#2a4a6e,#0b1018 70%);font:700 clamp(13px,.7vw + .9vh,36px)/1.4 system-ui,sans-serif;color:#fff4e8;-webkit-user-select:none;user-select:none}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;transition:filter 1s,transform 1s,opacity 2s}
+body:not(.g) canvas{filter:blur(1vmax) brightness(.5);transform:scale(1.06)}
+.l canvas{opacity:0}
+#m{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:min(2.2em,6vmin);padding:1em 1em 3em;text-align:center;background:radial-gradient(#0c071000 30%,#0c0710cc);transition:opacity .5s,visibility .5s}
+.g #m,.r #l,body:not(.r) #g{opacity:0;visibility:hidden}
+h1{margin:0;font:900 4.4em/1 system-ui,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:#0000;background:linear-gradient(#fff 25%,#ffd27a 58%,#ff4fa3);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 .06em .2em #000c)}
+#sub{margin-top:-1.2em;font-size:.8em;letter-spacing:.35em;text-transform:uppercase;color:#ffb3d6}
+p{margin:0}
+#a{display:grid;width:27em;max-width:100%}#a>*{grid-area:1/1;transition:opacity .8s,visibility .8s}
+#s,#k,#h,#q,#tq{font-size:.8em;letter-spacing:.12em;text-transform:uppercase}
+#p{height:.5em;margin:.4em 0 1em;overflow:hidden;border-radius:1em;background:#0c0710;box-shadow:0 0 0 2px #ff9ccb80,0 0 1.5em #ff4fa3}
+#b{display:block;height:100%;background:linear-gradient(90deg,#ff4fa3,#ffd27a);transform:scaleX(0);transform-origin:0;transition:transform .2s}
+.e #p{visibility:hidden}.e #s{font-size:1.1em;letter-spacing:0;text-transform:none}
+button{display:flex;align-items:center;justify-content:center;padding:.8em 1.4em;border:0;border-radius:.5em;background:#fff;box-shadow:inset 0 -.2em #0003,0 .3em 1em #0009;font:800 1em/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#2d0320;cursor:pointer;transition:transform .12s,filter .12s}
+button:hover{transform:translateY(-.12em);filter:brightness(1.15)}button:active{transform:translateY(.1em);filter:brightness(.9)}
+:focus-visible,.padsel{outline:3px solid #fff;outline-offset:3px}
+#g{display:grid;gap:min(1.2em,3.5vmin)}
+#d{padding:.9em;background:linear-gradient(#ffe39a,#ff6fb0);font-size:1.3em;box-shadow:inset 0 -.2em #0003,0 0 2em #ff4fa3b3}
+#zm{padding:.7em;background:linear-gradient(#c6f7a8,#3f8f3c);color:#0f2a0c;box-shadow:inset 0 -.2em #0003,0 0 1.4em #4fd24a66}
+#q,#tq,#k,#h{padding:1em 1.6em;border-radius:.7em;background:#0c0710b3}
+#tq{display:flex;flex-wrap:wrap;align-items:center;gap:.4em;padding:.4em}#tq span{color:#ffb3d6;padding:0 .4em}#tq b{min-width:3em;text-align:center}#tq button{padding:.7em .8em;background:none;box-shadow:none;color:#fff4e8}#tq .on2{background:linear-gradient(#ffe39a,#ff6fb0);color:#2d0320}
+#q{display:flex;align-items:center;gap:.4em;padding:.4em}#q span{flex:1;color:#ffb3d6}
+#q button{flex:1.2;padding:.7em 0;background:none;box-shadow:none;color:#fff4e8}#q button:hover{background:#ff9ccb33}
+#q .on{background:linear-gradient(#ffe39a,#ff6fb0);box-shadow:inset 0 -.2em #0003;color:#2d0320;pointer-events:none}
+#a{width:min(36em,100%)}
+#k{display:grid;grid-template-columns:1fr 1fr;gap:1.6em;text-align:left;justify-items:center}
+#k>div+div{padding-left:1.6em;border-left:2px solid #ff9ccb40}
+#k h3{margin:0 0 .7em;font-size:1em;letter-spacing:.14em;color:#ffb3d6}
+#k p{display:grid;grid-template-columns:auto auto;align-content:start;align-items:center;gap:.5em .9em}
+#pick{display:flex;flex-direction:column;align-items:stretch;gap:.5em;margin-bottom:1em;text-align:center}#pick button{font-size:1em}
+body.zmode #m .mall,body:not(.zmode) #m .zom{display:none}
+/* the game's own overlays stay hidden while the menu is up */
+body:not(.g) .zhud,body:not(.g) #t{display:none}
+@media (max-width:640px){#k{grid-template-columns:1fr}#k>div+div{padding-left:0;border-left:0}}
+#k i{display:flex;justify-self:end;align-items:center;gap:.25em;font-style:normal}
+#k b{min-width:1.1em;padding:.2em .5em;border-radius:.35em;background:#fff4e8;box-shadow:inset 0 -.15em #0004;color:#2d0320;text-align:center}
+#h{display:none}
+@media(pointer:coarse),(max-height:30em){#k{display:none}}
+@media(pointer:coarse){#h{display:block}}
+#o{position:absolute;top:.6em;right:.6em;display:none;padding:.3em .6em;background:#2d0320d9;box-shadow:inset 0 0 0 2px #ff9ccb,0 .3em 1em #0009;font-size:1.3em;color:#fff4e8;opacity:.8}
+.g #o{display:flex}
+#i{position:absolute;top:1em;left:1.2em;margin:0;font:.8em/1.6 ui-monospace,Consolas,monospace;white-space:pre-wrap;text-shadow:0 1px 4px #000;pointer-events:none}
+#fs{position:absolute;top:.6em;right:3.4em;display:none;padding:.3em .6em;background:#2d0320d9;box-shadow:inset 0 0 0 2px #ff9ccb,0 .3em 1em #0009;font-size:1.3em;color:#fff4e8;opacity:.8}.g #fs{display:flex}
+#t{position:absolute;left:50%;top:18%;transform:translate(-50%,-.5em);font:900 2.2em/1.2 Georgia,serif;letter-spacing:.06em;color:#fff;text-shadow:0 .1em .6em #000c;opacity:0;transition:opacity 1.2s,transform 1.2s;pointer-events:none;white-space:nowrap}#t.on{opacity:1;transform:translate(-50%,0)}
+</style></head><body class=l>
+<canvas id=c></canvas>
+<div id=m>
+  <h1>Skylight Galleria</h1>
+  <p id=sub>Under a glass sky</p>
+  <div id=a>
+    <div id=l><div id=p><i id=b></i></div><p id=s>Fetching the sky…</p></div>
+    <div id=g>
+      <button id=d>Enter the mall</button>
+      <button id=zm>Zombie Mode</button>
+      <p id=q><span>Detail</span><button>Super low</button><button>Low</button><button>Medium</button><button>High</button></p>
+      <p id=tq style="display:none"><span>Look</span><button>−</button><b id=tsv>1.0×</b><button>+</button><button>Gyro</button><button>Steer</button><button>Left hand</button><button>Ink</button><button>FPS</button></p>
+      <div id=k>
+        <div><h3>Keyboard &amp; mouse</h3><p>
+          <i><b>Mouse</b></i><span>Look</span>
+          <i><b>W</b><b>A</b><b>S</b><b>D</b></i><span>Move</span>
+          <i><b>Space</b></i><span>Jump</span>
+          <i class=zom><b>Click</b></i><span class=zom>Fire (hold)</span>
+          <i class=zom><b>Wheel</b> <b>1</b>–<b>6</b></i><span class=zom>Switch gun</span>
+          <i class=zom><b>E</b></i><span class=zom>Take a gun</span>
+          <i class=zom><b>Q</b></i><span class=zom>Forge (combine guns)</span>
+          <i class=zom><b>Right click</b></i><span class=zom>Sniper zoom (hold)</span>
+          <i class=zom><b>F</b></i><span class=zom>Flashlight</span>
+          <i class=mall><b>Shift</b></i><span class=mall>Run</span>
+          <i class=mall><b>1</b>–<b>6</b></i><span class=mall>Viewpoints</span>
+          <i class=mall><b>F</b></i><span class=mall>Fly</span>
+          <i class=mall><b>N</b></i><span class=mall>Day / night</span>
+          <i class=mall><b>R</b></i><span class=mall>Back to the mall</span>
+          <i><b>M</b></i><span>Mute</span>
+          <i><b>Esc</b></i><span>Menu</span></p></div>
+        <div><h3>Controller</h3><p>
+          <i><b>L stick</b></i><span>Move</span>
+          <i><b>R stick</b></i><span>Look</span>
+          <i><b>A</b></i><span>Jump</span>
+          <i class=zom><b>RT</b></i><span class=zom>Fire</span>
+          <i class=zom><b>LB</b> <b>RB</b></i><span class=zom>Switch gun</span>
+          <i class=zom><b>X</b></i><span class=zom>Take a gun</span>
+          <i class=zom><b>Y</b></i><span class=zom>Forge</span>
+          <i class=zom><b>LT</b> / <b>RB</b></i><span class=zom>Sniper zoom (hold)</span>
+          <i class=zom><b>R3</b></i><span class=zom>Flashlight</span>
+          <i class=mall><b>RT</b></i><span class=mall>Run</span>
+          <i class=mall><b>Y</b></i><span class=mall>Fly</span>
+          <i class=mall><b>X</b></i><span class=mall>Day / night</span>
+          <i class=mall><b>Back</b></i><span class=mall>Back to the mall</span>
+          <i><b>Start</b></i><span>Menu</span></p></div>
+      </div>
+      <p id=h><span class=mall>Touch and slide: up walks, down backs up, left and right turn (slide far up to run)</span><span class=zom>Touch and slide: up walks, down backs up, left and right turn · the gun aims itself · Fire, Swap and Jump buttons · tap a gun's card to take it · Forge to combine guns</span></p>
+    </div>
+  </div>
+</div>
+<button id=o aria-label=Menu>≡</button><button id=fs aria-label="Full screen">⛶</button>
+<pre id=i></pre><div id=t></div>
+<script src="js/sky.js"></script>
+<script src="js/shaders.js"></script>
+<script src="js/models.js"></script>
+<script src="js/world.js"></script>
+<script src="js/districts/arboretum.js"></script>
+<script src="js/districts/aquarium.js"></script>
+<script src="js/districts/amusement.js"></script>
+<script src="js/districts/market.js"></script>
+<script src="js/districts/forest.js"></script>
+<script src="js/districts/dept.js"></script>
+<script src="js/districts/rink.js"></script>
+<script src="js/districts/cinema.js"></script>
+<script src="js/districts/waterpark.js"></script>
+<script src="js/districts/lot.js"></script>
+<script src="js/labels.js"></script>
+<script src="js/route.js"></script>
+<script src="js/guns.js"></script>
+<script src="js/zombies.js"></script>
+<script src="js/engine.js"></script>
+</body></html>

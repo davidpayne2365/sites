@@ -1,0 +1,3 @@
+Moss textures (moss_002.jpg, moss_003.jpg, moss_004.jpg) from ambientCG (https://ambientcg.com):
+Moss002, Moss003, Moss004 by Lennart Demes, licensed CC0 1.0 Universal (public domain).
+Resized to 256 x 256.

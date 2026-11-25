@@ -1,0 +1,540 @@
+{
+  "end": "2026-11-09",
+  "generated_at": "2026-11-10T01:00:01+00:00",
+  "markets_with_prices": 7732,
+  "method": "Method (mirrors the live paper engine as closely as the data allows):\n- Universe: markets settled in the chosen date range (combo/parlay markets excluded), up to N\n  pages per day, then at most `per_series` markets per series (seeded random sample) so a few\n  very busy series (crypto brackets, esports) cannot dominate.\n- Prices: hourly YES bid/ask candles; the book at a check time is the latest candle that ended\n  at or before it (no look-ahead). Checks happen every 6 hours, as in the live workflow.\n- Entries use the live strategies' own `candidates()` rules, pessimistic fills (ask + 1 cent),\n  taker fees, at most one position per event per strategy, held to settlement.\n- Not modelled: order-book depth (candles have none), so displayed-size rules cannot be checked;\n  the live engine's per-run caps. Results are per-trade statistics, not a bankroll simulation.",
+  "requests": 246,
+  "sampled_markets": 8000,
+  "schema_version": 1,
+  "series": 619,
+  "start": "2026-09-16",
+  "status": "ok",
+  "strategies": [
+    {
+      "breakeven_win_rate": 0.8871815718157181,
+      "by_category": [
+        {
+          "category": "Sports",
+          "pnl": -91.16,
+          "trades": 344,
+          "win_rate": 0.8604651162790697
+        },
+        {
+          "category": "Commodities",
+          "pnl": -6.63,
+          "trades": 12,
+          "win_rate": 0.8333333333333334
+        },
+        {
+          "category": "Financials",
+          "pnl": 4.2,
+          "trades": 4,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Mentions",
+          "pnl": -5.71,
+          "trades": 4,
+          "win_rate": 0.75
+        },
+        {
+          "category": "Elections",
+          "pnl": 3.17,
+          "trades": 3,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Economics",
+          "pnl": 1.31,
+          "trades": 1,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Entertainment",
+          "pnl": 1.12,
+          "trades": 1,
+          "win_rate": 1.0
+        }
+      ],
+      "fees": 29.0,
+      "id": "fav_85_90",
+      "kind": "favourite",
+      "name": "Favourite priced 85-90c",
+      "pnl_per_trade": -0.2539,
+      "roi": -0.0289,
+      "t_stat": -1.41,
+      "total_pnl": -93.7,
+      "trades": 369,
+      "weekly_pnl": [
+        [
+          "2026-09-14",
+          -16.17
+        ],
+        [
+          "2026-09-21",
+          23.5
+        ],
+        [
+          "2026-09-28",
+          18.61
+        ],
+        [
+          "2026-10-05",
+          11.79
+        ],
+        [
+          "2026-10-12",
+          -76.48
+        ],
+        [
+          "2026-10-19",
+          -15.36
+        ],
+        [
+          "2026-10-26",
+          1.6
+        ],
+        [
+          "2026-11-02",
+          -42.31
+        ],
+        [
+          "2026-11-09",
+          1.12
+        ]
+      ],
+      "win_rate": 0.8617886178861789,
+      "win_rate_ci95": [
+        0.8228310309891521,
+        0.8932907751612346
+      ],
+      "wins": 318,
+      "worst_trade": -9.07
+    },
+    {
+      "breakeven_win_rate": 0.9387567567567567,
+      "by_category": [
+        {
+          "category": "Sports",
+          "pnl": -96.41,
+          "trades": 395,
+          "win_rate": 0.9139240506329114
+        },
+        {
+          "category": "Commodities",
+          "pnl": -8.12,
+          "trades": 20,
+          "win_rate": 0.9
+        },
+        {
+          "category": "Financials",
+          "pnl": -3.8,
+          "trades": 12,
+          "win_rate": 0.9166666666666666
+        },
+        {
+          "category": "Elections",
+          "pnl": 4.87,
+          "trades": 8,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Mentions",
+          "pnl": -8.05,
+          "trades": 3,
+          "win_rate": 0.6666666666666666
+        },
+        {
+          "category": "Entertainment",
+          "pnl": 1.11,
+          "trades": 2,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Crypto",
+          "pnl": 1.02,
+          "trades": 2,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Climate and Weather",
+          "pnl": 0.46,
+          "trades": 1,
+          "win_rate": 1.0
+        }
+      ],
+      "fees": 21.34,
+      "id": "fav_90_95",
+      "kind": "favourite",
+      "name": "Favourite priced 90-95c",
+      "pnl_per_trade": -0.2434,
+      "roi": -0.0261,
+      "t_stat": -1.83,
+      "total_pnl": -108.08,
+      "trades": 444,
+      "weekly_pnl": [
+        [
+          "2026-09-14",
+          -41.54
+        ],
+        [
+          "2026-09-21",
+          -16.78
+        ],
+        [
+          "2026-09-28",
+          14.13
+        ],
+        [
+          "2026-10-05",
+          -31.15
+        ],
+        [
+          "2026-10-12",
+          -23.01
+        ],
+        [
+          "2026-10-19",
+          1.41
+        ],
+        [
+          "2026-10-26",
+          9.78
+        ],
+        [
+          "2026-11-02",
+          -21.38
+        ],
+        [
+          "2026-11-09",
+          0.46
+        ]
+      ],
+      "win_rate": 0.9144144144144144,
+      "win_rate_ci95": [
+        0.8847069280934545,
+        0.9370121797339559
+      ],
+      "wins": 406,
+      "worst_trade": -9.54
+    },
+    {
+      "breakeven_win_rate": 0.9762057522123894,
+      "by_category": [
+        {
+          "category": "Sports",
+          "pnl": -45.86,
+          "trades": 391,
+          "win_rate": 0.9641943734015346
+        },
+        {
+          "category": "Commodities",
+          "pnl": 5.19,
+          "trades": 22,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Financials",
+          "pnl": -16.37,
+          "trades": 17,
+          "win_rate": 0.8823529411764706
+        },
+        {
+          "category": "Elections",
+          "pnl": 1.59,
+          "trades": 8,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Entertainment",
+          "pnl": 1.26,
+          "trades": 7,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Mentions",
+          "pnl": 0.82,
+          "trades": 3,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Crypto",
+          "pnl": 0.83,
+          "trades": 3,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Politics",
+          "pnl": 0.09,
+          "trades": 1,
+          "win_rate": 1.0
+        }
+      ],
+      "fees": 10.41,
+      "id": "fav_95_98",
+      "kind": "favourite",
+      "name": "Near-certain 95-98c",
+      "pnl_per_trade": -0.116,
+      "roi": -0.0119,
+      "t_stat": -1.33,
+      "total_pnl": -52.45,
+      "trades": 452,
+      "weekly_pnl": [
+        [
+          "2026-09-14",
+          -3.14
+        ],
+        [
+          "2026-09-21",
+          9.57
+        ],
+        [
+          "2026-09-28",
+          -5.01
+        ],
+        [
+          "2026-10-05",
+          13.7
+        ],
+        [
+          "2026-10-12",
+          -10.08
+        ],
+        [
+          "2026-10-19",
+          -37.99
+        ],
+        [
+          "2026-10-26",
+          15.34
+        ],
+        [
+          "2026-11-02",
+          -34.84
+        ]
+      ],
+      "win_rate": 0.9646017699115044,
+      "win_rate_ci95": [
+        0.9432768975066895,
+        0.9780957898478652
+      ],
+      "wins": 436,
+      "worst_trade": -9.91
+    },
+    {
+      "breakeven_win_rate": 0.9491640625000001,
+      "by_category": [
+        {
+          "category": "Sports",
+          "pnl": 14.98,
+          "trades": 206,
+          "win_rate": 0.9563106796116505
+        },
+        {
+          "category": "Commodities",
+          "pnl": -9.44,
+          "trades": 21,
+          "win_rate": 0.9047619047619048
+        },
+        {
+          "category": "Financials",
+          "pnl": -5.47,
+          "trades": 10,
+          "win_rate": 0.9
+        },
+        {
+          "category": "Entertainment",
+          "pnl": 1.92,
+          "trades": 5,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Mentions",
+          "pnl": -7.41,
+          "trades": 5,
+          "win_rate": 0.8
+        },
+        {
+          "category": "Elections",
+          "pnl": 3.52,
+          "trades": 5,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Crypto",
+          "pnl": 0.74,
+          "trades": 2,
+          "win_rate": 1.0
+        },
+        {
+          "category": "Climate and Weather",
+          "pnl": 0.46,
+          "trades": 1,
+          "win_rate": 1.0
+        }
+      ],
+      "fees": 10.51,
+      "id": "fav_90_97_busy",
+      "kind": "favourite",
+      "name": "Favourite 90-97c, busy markets",
+      "pnl_per_trade": 0.0005,
+      "roi": 0.0001,
+      "t_stat": 0.0,
+      "total_pnl": 0.14,
+      "trades": 256,
+      "weekly_pnl": [
+        [
+          "2026-09-14",
+          -14.98
+        ],
+        [
+          "2026-09-21",
+          -8.8
+        ],
+        [
+          "2026-09-28",
+          4.44
+        ],
+        [
+          "2026-10-05",
+          1.02
+        ],
+        [
+          "2026-10-12",
+          0.27
+        ],
+        [
+          "2026-10-19",
+          5.29
+        ],
+        [
+          "2026-10-26",
+          5.79
+        ],
+        [
+          "2026-11-02",
+          6.65
+        ],
+        [
+          "2026-11-09",
+          0.46
+        ]
+      ],
+      "win_rate": 0.94921875,
+      "win_rate_ci95": [
+        0.915068172873268,
+        0.9700864751892441
+      ],
+      "wins": 243,
+      "worst_trade": -9.73
+    },
+    {
+      "breakeven_win_rate": 0.5181537402478201,
+      "by_category": [
+        {
+          "category": "Sports",
+          "pnl": -423.16,
+          "trades": 2076,
+          "win_rate": 0.49903660886319845
+        },
+        {
+          "category": "Financials",
+          "pnl": 1.04,
+          "trades": 33,
+          "win_rate": 0.48484848484848486
+        },
+        {
+          "category": "Commodities",
+          "pnl": -26.1,
+          "trades": 26,
+          "win_rate": 0.46153846153846156
+        },
+        {
+          "category": "Mentions",
+          "pnl": -26.92,
+          "trades": 14,
+          "win_rate": 0.35714285714285715
+        },
+        {
+          "category": "Elections",
+          "pnl": 8.59,
+          "trades": 14,
+          "win_rate": 0.5
+        },
+        {
+          "category": "Entertainment",
+          "pnl": -1.73,
+          "trades": 6,
+          "win_rate": 0.3333333333333333
+        },
+        {
+          "category": "Crypto",
+          "pnl": -1.88,
+          "trades": 4,
+          "win_rate": 0.25
+        },
+        {
+          "category": "Politics",
+          "pnl": 0.5,
+          "trades": 2,
+          "win_rate": 0.5
+        }
+      ],
+      "fees": 285.55,
+      "id": "random_control",
+      "kind": "random",
+      "name": "Random control (no skill)",
+      "pnl_per_trade": -0.2205,
+      "roi": -0.0437,
+      "t_stat": -2.44,
+      "total_pnl": -480.57,
+      "trades": 2179,
+      "weekly_pnl": [
+        [
+          "2026-09-14",
+          -99.45
+        ],
+        [
+          "2026-09-21",
+          -102.19
+        ],
+        [
+          "2026-09-28",
+          -44.32
+        ],
+        [
+          "2026-10-05",
+          -77.21
+        ],
+        [
+          "2026-10-12",
+          -89.84
+        ],
+        [
+          "2026-10-19",
+          -40.04
+        ],
+        [
+          "2026-10-26",
+          20.14
+        ],
+        [
+          "2026-11-02",
+          -35.95
+        ],
+        [
+          "2026-11-09",
+          -11.71
+        ]
+      ],
+      "win_rate": 0.4960991280403855,
+      "win_rate_ci95": [
+        0.4751310028275739,
+        0.5170809836033242
+      ],
+      "wins": 1081,
+      "worst_trade": -9.63
+    }
+  ],
+  "universe_markets": 163946
+}
