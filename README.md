@@ -30,11 +30,11 @@ Small static sites and games, one folder per site. Each folder is exactly what w
 | `tetrisforbria` | https://tetrisforbria.davidpayne2365.workers.dev | https://tetrisforbria.netlify.app |
 | `wondrous-kheer-8b92d0` | https://wondrous-kheer-8b92d0.davidpayne2365.workers.dev | https://wondrous-kheer-8b92d0.netlify.app |
 
-## New (not deployed yet)
+## New
 
-| Folder | What it is |
-|---|---|
-| `skyforge-reef` | Underwater block world: you are a fish on a coral reef, carry quarter-size blocks. Touch-friendly, no UI. See its README. |
+| Folder | Live on Cloudflare | What it is |
+|---|---|---|
+| `skyforge-reef` | https://skyforge-reef.davidpayne2365.workers.dev | Underwater block world: you are a fish on a coral reef, carry quarter-size blocks. Touch-friendly, no UI. Uploaded by hand from the branch `ccr-b43ac4e4-0atb7n` (not merged to `main` yet). |
 
 ## Older projects (copied in from their own repos, not deployed)
 

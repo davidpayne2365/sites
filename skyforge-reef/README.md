@@ -2,8 +2,8 @@
 
 An underwater block world. You are a little clownfish swimming a coral-reef ocean. No menus, no HUD, no map.
 
-- **Live URL:** not deployed yet (see "Deploying" below)
-- **Branch:** built on `ccr-b43ac4e4-0atb7n`; `main` is what goes live once merged and uploaded
+- **Live URL:** https://skyforge-reef.davidpayne2365.workers.dev (Cloudflare Worker `skyforge-reef`)
+- **Branch:** built on `ccr-b43ac4e4-0atb7n`. The live copy was uploaded by hand from that branch; pushing to a branch does not change it.
 
 ## How to play
 
@@ -64,5 +64,7 @@ python3 -m http.server 8000
 
 ## Deploying
 
-Same as the other sites: upload this folder as its own Cloudflare Worker (static assets). It is a plain static site, no build step.
+It is a plain static site, no build step. Uploaded to Cloudflare account `davidpayne2365` as the Worker `skyforge-reef`.
+This first upload was packaged as a single Worker with every file embedded inside it (about 0.5 MB compressed), because Cloudflare's usual "static assets" upload was refused from the cloud session (it needs a short-lived upload pass that the session's connection overwrites).
+It behaves the same for players. To move it to normal static-assets hosting later, run `npx wrangler deploy --assets ./skyforge-reef --name skyforge-reef` from a normal computer.
 Changes you make in the ocean (moved blocks) are not saved; reloading gives the same fresh ocean.
