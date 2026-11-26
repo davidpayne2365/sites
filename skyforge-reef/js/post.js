@@ -62,7 +62,9 @@ export class Post {
   pass(mat, target) { this.quad.material = mat; this.r.setRenderTarget(target); this.r.render(this.scn, this.cam); }
   render(scene, camera, t) {
     const r = this.r, R = this.rts;
-    r.setRenderTarget(R.scene); r.clear(); r.render(scene, camera);
+    r.setRenderTarget(R.scene);
+    if (scene.fog) r.setClearColor(scene.fog.color);   // set while the off-screen target is bound, so it is stored as linear light
+    r.clear(); r.render(scene, camera);
     if (this.bloomOn) {
       const bu = this.mBright.uniforms; bu.tex.value = R.scene.texture; bu.px.value.set(1 / R.scene.width, 1 / R.scene.height); this.pass(this.mBright, R.a);
       const bl = this.mBlur.uniforms;

@@ -26,8 +26,8 @@ uniform vec3 fogColor;
 vec3 waterLight(float y) {
   float d = max(surfY - y, 0.0);
   vec3 sun = exp(-d * vec3(0.060, 0.034, 0.022)) * mix(vec3(1.0), vec3(1.3, 0.8, 0.5), dusk * 0.7);
-  vec3 moon = exp(-d * vec3(0.08, 0.05, 0.035)) * vec3(0.10, 0.18, 0.32);
-  return max(sun * dayK + moon * (1.0 - dayK), vec3(0.03, 0.075, 0.13) * (0.3 + 0.7 * dayK));
+  vec3 moon = exp(-d * vec3(0.07, 0.045, 0.03)) * vec3(0.17, 0.28, 0.46);
+  return max(sun * dayK + moon * (1.0 - dayK), vec3(0.05, 0.1, 0.17) * (0.5 + 0.5 * dayK));
 }
 float caustic(vec2 p, float t) {
   float s = 0.0;

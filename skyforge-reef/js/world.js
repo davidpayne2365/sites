@@ -177,6 +177,59 @@ export class World {
     this.spawn = SPAWN;
     mark(SPAWN.x, SPAWN.z, 22);          // keep the start area clear
 
+    // ---- caves inside the seamounts, ending in glowing crystal rooms with treasure ----
+    this.caves = [];
+    const carve = (cx, cy, cz, r) => {
+      const r2 = r * r, x0 = Math.floor(cx - r), x1 = Math.ceil(cx + r), y0 = Math.floor(cy - r), y1 = Math.ceil(cy + r), z0 = Math.floor(cz - r), z1 = Math.ceil(cz + r);
+      for (let z = z0; z <= z1; z++) for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+        if (x < 3 || x >= NX - 3 || z < 3 || z >= NZ - 3 || y < 8 || y >= NY - 8) continue;
+        const dx = x - cx, dy = (y - cy) * 1.25, dz = z - cz; if (dx * dx + dy * dy + dz * dz > r2) continue;
+        const i = this.idx(x, y, z); if (ids[i] !== B.BEDROCK) ids[i] = 0;
+      }
+    };
+    for (const m of MOUNTS) for (let k = 0; k < 2; k++) {
+      const a = rng() * 6.2832;
+      let x = m.x + Math.cos(a) * m.r * 1.3, z = m.z + Math.sin(a) * m.r * 1.3;
+      if (x < 40 || z < 40 || x > NX - 40 || z > NZ - 40) continue;
+      let y = hm[Math.round(x) + NX * Math.round(z)] + 3, yaw = a + Math.PI + (rng() - 0.5) * 0.5, pitch = 0.08, r = 3.6;
+      const len = RI(55, 85);
+      for (let st = 0; st < len; st++) {
+        carve(x, y, z, r);
+        yaw += (rng() - 0.5) * 0.3; pitch = Math.max(-0.3, Math.min(0.28, pitch + (rng() - 0.5) * 0.14)); r = Math.max(2.8, Math.min(4.6, r + (rng() - 0.5) * 0.5));
+        x += Math.cos(yaw) * Math.cos(pitch) * 1.4; z += Math.sin(yaw) * Math.cos(pitch) * 1.4; y += Math.sin(pitch) * 1.4;
+        if (rng() < 0.05) put(Math.round(x), Math.round(y - r + 1), Math.round(z), B.LAMP, true);
+      }
+      carve(x, y, z, 9);
+      const rx = Math.round(x), ry = Math.round(y), rz = Math.round(z);
+      for (let n = 0; n < 520; n++) { // crystals, gold and lanterns studding the walls of the room
+        const cx = rx + RI(-11, 11), cy = ry + RI(-10, 10), cz = rz + RI(-11, 11);
+        if (!this.inb(cx, cy, cz)) continue;
+        const i = this.idx(cx, cy, cz); if (ids[i] === 0 || ids[i] === B.BEDROCK) continue;
+        if (ids[this.idx(cx, cy + 1, cz)] === 0 || ids[this.idx(cx + 1, cy, cz)] === 0 || ids[this.idx(cx - 1, cy, cz)] === 0 || ids[this.idx(cx, cy, cz + 1)] === 0 || ids[this.idx(cx, cy, cz - 1)] === 0 || ids[this.idx(cx, cy - 1, cz)] === 0)
+          ids[i] = pick([B.ORE_DIAMOND, B.ORE_DIAMOND, B.MESE, B.LAMP, B.ORE_GOLD, B.DIAMOND]);
+      }
+      let fy = ry; while (fy > 9 && ids[this.idx(rx, fy, rz)] === 0) fy--;
+      put(rx, fy + 1, rz, B.CHEST, true); put(rx + 1, fy + 1, rz, B.GOLD, true); put(rx, fy + 1, rz + 1, B.GOLD, true); put(rx + 1, fy + 2, rz, B.DIAMOND, true);
+      this.caves.push({ x: rx, y: ry, z: rz });
+    }
+
+    // ---- warm vents on the trench floor: dark chimneys with glowing tops and plumes of bubbles ----
+    this.vents = [];
+    const trenchZ = x => 168 + 40 * Math.sin(x / 65) + 18 * Math.sin(x / 27 + 2);
+    for (let v = 0; v < 16; v++) {
+      const x = RI(40, NX - 40), z = Math.round(trenchZ(x) + RI(-8, 8));
+      if (z < 12 || z >= NZ - 12) continue;
+      const gy = topY(x, z); if (gy > 38) continue;
+      const h = RI(7, 15);
+      for (let y = 1; y <= h; y++) {
+        const rad = Math.max(1, Math.round(3.3 * (1 - y / (h + 3))));
+        for (let dz = -rad; dz <= rad; dz++) for (let dx = -rad; dx <= rad; dx++) if (dx * dx + dz * dz <= rad * rad + 0.5) put(x + dx, gy + y, z + dz, rng() < 0.35 ? B.ROCK : B.SEASIDE, true);
+      }
+      put(x, gy + h, z, B.MAGMA, true); put(x + 1, gy + h - 1, z, B.MAGMA, true); put(x, gy + h - 2, z - 1, B.MAGMA, true);
+      for (let n = 0; n < 6; n++) put(x + RI(-5, 5), topY(x, z) + 0, z + RI(-5, 5), B.MAGMA, false);
+      this.vents.push({ x, y: gy + h + 1, z });
+    }
+
     // ---- sunken ruins (marble, with treasure) ----
     {
       const rx = 296, rz = 246, L = topY(rx, rz);
@@ -278,6 +331,34 @@ export class World {
       for (let dx = -2; dx <= 2; dx++) for (let dz = -2; dz <= 2; dz++) if (rng() < 0.7) put(cx + dx, y0 + 1, cz + dz, B.CORAL_PINK, false);
     };
 
+    // ---- three bleached groves, each with an altar that wants one colour of block (the quest) ----
+    this.groves = [];
+    const GROVES = [
+      { x: 222, z: 304, need: B.WOOL_ORANGE, pal: [B.WOOL_ORANGE, B.WOOL_RED, B.WOOL_YELLOW, B.CORAL_ORANGE, B.WOOL_PINK] },
+      { x: 240, z: 212, need: B.WOOL_CYAN, pal: [B.WOOL_CYAN, B.WOOL_BLUE, B.WOOL_VIOLET, B.WOOL_GREEN] },
+      { x: 96, z: 128, need: B.WOOL_MAGENTA, pal: [B.WOOL_MAGENTA, B.WOOL_PINK, B.WOOL_VIOLET, B.WOOL_RED] },
+    ];
+    for (const G of GROVES) {
+      const L = topY(G.x, G.z);
+      flatten(G.x - 17, G.z - 17, 35, 35, L, B.SAND);
+      for (let dz = -3; dz <= 3; dz++) for (let dx = -3; dx <= 3; dx++) put(G.x + dx, L, G.z + dz, ((dx + dz) & 1) ? B.MARBLE : B.SANDBRICK, true);
+      for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) put(G.x + dx, L + 1, G.z + dz, B.WHITEBRICK, true);
+      put(G.x, L + 2, G.z, B.WHITEBRICK, true);
+      for (const [dx, dz] of [[-3, -3], [3, -3], [-3, 3], [3, 3]]) put(G.x + dx, L + 1, G.z + dz, B.LAMP, true);
+      const SK = B.CORAL_SKELETON;
+      for (let k = 0; k < 30; k++) {
+        const a = rng() * 6.2832, d = R(6, 16), x = Math.round(G.x + Math.cos(a) * d), z = Math.round(G.z + Math.sin(a) * d), gy = topY(x, z), kind = rng();
+        if (kind < 0.45) staghorn(x, gy + 1, z, RI(-1, 1), RI(-1, 1), RI(8, 18), 2, SK);
+        else if (kind < 0.7) dome(x, gy + 1, z, RI(3, 6), SK, SK);
+        else if (kind < 0.85) tubes(x, gy + 1, z, [SK]);
+        else fan(x, gy + 1, z, SK);
+      }
+      mark(G.x, G.z, 20);
+      const bleached = [];
+      for (let y = L + 1; y < L + 40; y++) for (let z = G.z - 22; z <= G.z + 22; z++) for (let x = G.x - 22; x <= G.x + 22; x++) { const i = this.idx(x, y, z); if (ids[i] === SK) bleached.push(i); }
+      this.groves.push({ x: G.x, y: L + 3, z: G.z, base: L, need: G.need, pal: G.pal, bleached, healed: false });
+    }
+
     // ---- scatter coral formations over the reefs ----
     for (const reef of REEFS) {
       const attempts = Math.floor(reef.r * reef.r * 0.2);
@@ -340,6 +421,7 @@ export class World {
     {
       const gx = SPAWN.x + 16, gz = SPAWN.z;
       const g0 = topY(gx, gz);
+      this.garden = { x: gx, y: g0 + 1, z: gz };
       flatten(gx - 8, gz - 8, 17, 17, g0, B.SAND);
       const cols = [B.WOOL_ORANGE, B.WOOL_YELLOW, B.WOOL_MAGENTA, B.WOOL_PINK, B.WOOL_VIOLET, B.WOOL_BLUE, B.WOOL_CYAN, B.WOOL_GREEN, B.WOOL_RED, B.WOOL_WHITE];
       for (let i = 0; i < 4; i++) for (let dx = 0; dx < 4 - i; dx++) for (let dz = 0; dz < 4 - i; dz++) put(gx - 2 + dx + i, g0 + 1 + i, gz - 2 + dz + i, cols[(dx + dz + i * 3) % cols.length], true);

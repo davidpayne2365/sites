@@ -27,6 +27,11 @@ function fishCubes() {
   return c;
 }
 
+// Fish skins: [body picture, band picture, dark colour]. The golden one is a reward for restoring the reef.
+export const SKINS = [
+  ['wool_orange', 'wool_white', 0x15171c], ['wool_blue', 'wool_yellow', 0x0b1030], ['wool_magenta', 'wool_pink', 0x240c26],
+  ['wool_green', 'wool_white', 0x08210f], ['wool_yellow', 'wool_orange', 0x3a1c00], ['gold', 'diamond', 0x4a3200],
+];
 export class PlayerFish {
   constructor(scene, images) {
     this.group = new THREE.Group();
@@ -35,6 +40,7 @@ export class PlayerFish {
     // A little self-lit, so you stay bright and colourful even in deep water.
     const lit = key => { const map = singleTexture(images, key); return new THREE.MeshLambertMaterial({ map, emissive: 0xffffff, emissiveMap: map, emissiveIntensity: 0.42 }); };
     const mats = [lit('wool_orange'), lit('wool_white'), new THREE.MeshLambertMaterial({ color: 0x15171c, emissive: 0x222a33 })];
+    this.mats = mats; this.images = images; this.skin = 0;
     this.parts = mats.map((m, i) => {
       const n = this.cubes.filter(q => q[3] === i).length;
       const mesh = new THREE.InstancedMesh(box, m, n); mesh.frustumCulled = false; this.group.add(mesh);
@@ -43,6 +49,11 @@ export class PlayerFish {
     this.inner = this.group; scene.add(this.group);
     this.phase = 0; this.dummy = new THREE.Object3D();
     this.mouth = new THREE.Vector3(0, -0.02, -1.15); // where the carried block sits, in fish space
+  }
+  setSkin(i) {
+    const [a, b, dark] = SKINS[i]; this.skin = i;
+    for (const [m, key] of [[this.mats[0], a], [this.mats[1], b]]) { const t = singleTexture(this.images, key); m.map = t; m.emissiveMap = t; m.needsUpdate = true; }
+    this.mats[2].color.setHex(dark);
   }
   // speed: 0..1 how hard it is swimming.
   update(dt, speed01, t) {
@@ -95,7 +106,9 @@ export class Life {
     const geo = mergedFishGeometry();
     this.mat = new THREE.MeshLambertMaterial({ color: 0xffffff });
     this.fish = [];
-    const total = SCHOOLS.reduce((a, s) => a + s.n, 0);
+    const EXTRA = 80;
+    this.EXTRA = EXTRA;
+    const total = SCHOOLS.reduce((a, s) => a + s.n, 0) + EXTRA + 5;
     this.mesh = new THREE.InstancedMesh(geo, this.mat, total); this.mesh.frustumCulled = false;
     let i = 0; const col = new THREE.Color();
     SCHOOLS.forEach((s, si) => {
@@ -105,6 +118,15 @@ export class Life {
         this.mesh.setColorAt(i, col.setHex(s.c[k % s.c.length]));
       }
     });
+    // spare fish, switched on when a grove blooms (a school moves in)
+    for (let k = 0; k < EXTRA; k++, i++) {
+      this.fish.push({ s: SCHOOLS[0], on: false, a: Math.random() * 6.28, b: Math.random() * 6.28, sp: 0.35 + Math.random() * 0.25, r: 1, yo: (Math.random() - 0.5) * 2.2, p: new THREE.Vector3(), prev: new THREE.Vector3(), sc: 1, si: 9, push: new THREE.Vector3(), idx: i });
+      this.mesh.setColorAt(i, col.setHex(0xffffff));
+    }
+    // four little companions that follow you around
+    this.pals = [];
+    for (let k = 0; k < 5; k++, i++) { this.pals.push({ p: new THREE.Vector3(), prev: new THREE.Vector3(), idx: i, ph: Math.random() * 6.28, init: false }); this.mesh.setColorAt(i, col.setHex([0xffd23a, 0xff8a1f, 0xff5d8f, 0x4aa8ff, 0x7cffd2][k])); }
+    for (const f of this.fish) if (f.on === undefined) { f.on = true; f.push = new THREE.Vector3(); }
     this.mesh.instanceColor.needsUpdate = true;
     scene.add(this.mesh);
     // Jellyfish: glowing pulsing bells.
@@ -121,10 +143,21 @@ export class Life {
     scene.add(this.jelly);
     this.d = new THREE.Object3D();
   }
-  update(t) {
+  // A new school moves in at (x, z), in block units.
+  attract(x, z, colours) {
+    let n = 0; const col = new THREE.Color();
+    for (const f of this.fish) {
+      if (f.on || n >= 36) continue;
+      f.on = true; f.s = { x, z, w: 10, h: 2.5, r: 3, s: 1, c: colours }; f.si = 11 + (n % 3); f.sc = 0.9 + Math.random() * 0.4; f.r = 1.2 + Math.random() * 2.2;
+      this.mesh.setColorAt(f.idx, col.setHex(colours[n % colours.length])); n++;
+    }
+    this.mesh.instanceColor.needsUpdate = true;
+  }
+  update(t, dt = 0.016, player = null, fwd = null) {
     const d = this.d, w = this.world;
     for (let i = 0; i < this.fish.length; i++) {
       const f = this.fish[i], s = f.s;
+      if (!f.on) { d.position.set(0, -50, 0); d.scale.setScalar(0); d.rotation.set(0, 0, 0); d.updateMatrix(); this.mesh.setMatrixAt(f.idx ?? i, d.matrix); continue; }
       const tt = t * f.sp;
       const cx = s.x * VS + Math.sin(t * 0.045 * (1 + f.si * 0.3) + f.si) * s.w * VS * 0.5, cz = s.z * VS + Math.cos(t * 0.037 * (1 + f.si * 0.2) + f.si * 2) * s.w * VS * 0.5;
       const x = cx + Math.cos(tt + f.a) * f.r, z = cz + Math.sin(tt * 1.1 + f.a) * f.r * 0.8;
@@ -132,12 +165,31 @@ export class Life {
       let y = gy + s.h * 0.5 + 0.8 + Math.sin(tt * 0.8 + f.b) * 0.5 + f.yo * 0.5;
       y = Math.min(y, SURF - 1.2);
       f.prev.copy(f.p); f.p.set(x, y, z);
+      if (player && f.si !== 5) { // little fish scatter when you swim at them
+        const dx = x - player.x, dy = y - player.y, dz = z - player.z, dd = Math.hypot(dx, dy, dz);
+        const k = dd < 3.2 ? (3.2 - dd) / Math.max(dd, 0.3) * 0.8 : 0;
+        f.push.x += (dx * k - f.push.x) * Math.min(1, dt * 4); f.push.y += (dy * k * 0.5 - f.push.y) * Math.min(1, dt * 4); f.push.z += (dz * k - f.push.z) * Math.min(1, dt * 4);
+        f.p.add(f.push);
+      }
       if (f.prev.lengthSq() === 0) f.prev.copy(f.p);
       d.position.copy(f.p);
       d.lookAt(f.p.x + (f.p.x - f.prev.x) * 50 + 1e-4, f.p.y + (f.p.y - f.prev.y) * 50, f.p.z + (f.p.z - f.prev.z) * 50 + 1e-4);
       d.rotateZ(Math.sin(t * 9 * f.sp + f.a) * 0.12);
       d.scale.setScalar(f.sc);
-      d.updateMatrix(); this.mesh.setMatrixAt(i, d.matrix);
+      d.updateMatrix(); this.mesh.setMatrixAt(f.idx ?? i, d.matrix);
+    }
+    // companions trail behind you
+    if (player && fwd) {
+      this.pals.forEach((q, k) => {
+        const back = 1.8 + k * 0.55, side = Math.sin(t * 0.9 + q.ph) * (0.8 + k * 0.25);
+        const tx = player.x - fwd.x * back + fwd.z * side, ty = player.y - fwd.y * back + 0.25 * Math.sin(t * 1.3 + q.ph), tz = player.z - fwd.z * back - fwd.x * side;
+        if (!q.init) { q.p.set(tx, ty, tz); q.prev.copy(q.p); q.init = true; }
+        q.prev.copy(q.p); q.p.x += (tx - q.p.x) * Math.min(1, dt * 2.2); q.p.y += (ty - q.p.y) * Math.min(1, dt * 2.2); q.p.z += (tz - q.p.z) * Math.min(1, dt * 2.2);
+        d.position.copy(q.p);
+        d.lookAt(q.p.x + (q.p.x - q.prev.x) * 40 + fwd.x * 0.2, q.p.y + (q.p.y - q.prev.y) * 40, q.p.z + (q.p.z - q.prev.z) * 40 + fwd.z * 0.2);
+        d.rotateZ(Math.sin(t * 10 + q.ph) * 0.14); d.scale.setScalar(1.1);
+        d.updateMatrix(); this.mesh.setMatrixAt(q.idx, d.matrix);
+      });
     }
     this.mesh.instanceMatrix.needsUpdate = true;
     for (let k = 0; k < this.jn; k++) {

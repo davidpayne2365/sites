@@ -34,7 +34,7 @@ Small static sites and games, one folder per site. Each folder is exactly what w
 
 | Folder | Live on Cloudflare | What it is |
 |---|---|---|
-| `skyforge-reef` | https://skyforge-reef.davidpayne2365.workers.dev | Underwater block world: you are a fish on a coral reef, carry quarter-size blocks. Touch-friendly, no UI. Uploaded by hand from the branch `ccr-b43ac4e4-0atb7n` (not merged to `main` yet). |
+| `skyforge-reef` | https://skyforge-reef.davidpayne2365.workers.dev | Underwater block world: you are a fish on a coral reef, carry quarter-size blocks, heal bleached groves. Touch-friendly, no UI, saves itself, installable. Uploaded by hand from the branch `ccr-b43ac4e4-0atb7n` (not merged to `main` yet). |
 
 ## Older projects (copied in from their own repos, not deployed)
 
