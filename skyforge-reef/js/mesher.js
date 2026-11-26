@@ -2,7 +2,7 @@
 // Each face gets baked shading: soft corner darkening (ambient occlusion), a little per-block variation so every
 // tiny cube reads as its own cube, and "is the sun reaching this?" so reef overhangs and caves are darker.
 import * as THREE from '../vendor/three.module.min.js';
-import { BLOCKS, IS_CUBE, IS_SPRITE, B } from './blocks.js';
+import { BLOCKS, IS_CUBE, IS_SPRITE, B, LIGHT } from './blocks.js';
 import { FACE_LAYER } from './textures.js';
 import { VS, NX, NY, NZ, CH, NCX, NCY, NCZ } from './world.js';
 
@@ -21,11 +21,13 @@ for (let i = 1; i < BLOCKS.length; i++) {
 // ---- shaders -----------------------------------------------------------------------------------------------------
 // Water takes light away with depth (red first), so the reef is bright and warm and the trench is deep blue.
 export const WATER_GLSL = /* glsl */`
-uniform float time, surfY, fogDensity;
+uniform float time, surfY, fogDensity, dayK, dusk;
 uniform vec3 fogColor;
 vec3 waterLight(float y) {
   float d = max(surfY - y, 0.0);
-  return max(exp(-d * vec3(0.060, 0.034, 0.022)), vec3(0.03, 0.075, 0.13));
+  vec3 sun = exp(-d * vec3(0.060, 0.034, 0.022)) * mix(vec3(1.0), vec3(1.3, 0.8, 0.5), dusk * 0.7);
+  vec3 moon = exp(-d * vec3(0.08, 0.05, 0.035)) * vec3(0.10, 0.18, 0.32);
+  return max(sun * dayK + moon * (1.0 - dayK), vec3(0.03, 0.075, 0.13) * (0.3 + 0.7 * dayK));
 }
 float caustic(vec2 p, float t) {
   float s = 0.0;
@@ -40,6 +42,7 @@ float caustic(vec2 p, float t) {
   }
   return s;
 }
+vec3 toLinear(vec3 c) { return pow(max(c, vec3(0.0)), vec3(2.2)); }   // the scene is drawn in linear light; the last pass converts back for the screen
 vec3 applyFog(vec3 col, float dist) {
   float f = 1.0 - exp(-pow(fogDensity * dist, 2.0));
   return mix(col, fogColor, clamp(f, 0.0, 1.0));
@@ -53,6 +56,7 @@ out vec3 vP;
 out vec2 vUV;
 out float vShade;
 out float vDist;
+out float vBL;
 flat out float vLayer;
 flat out int vFlags;
 void main() {
@@ -63,7 +67,7 @@ void main() {
     p.z += cos(time * 0.9 + p.y * 1.9 + p.x * 0.8) * 0.028;
   }
   vec4 mv = viewMatrix * vec4(p, 1.0);
-  vP = p; vFlags = fl; vLayer = aB.y; vShade = aB.z / 255.0; vDist = length(mv.xyz);
+  vP = p; vFlags = fl; vLayer = aB.y; vShade = aB.z / 255.0; vBL = aB.w / 255.0; vDist = length(mv.xyz);
   vUV = vec2(float((fl >> 5) & 1), float((fl >> 6) & 1));
   gl_Position = projectionMatrix * mv;
 }`;
@@ -79,6 +83,7 @@ in vec3 vP;
 in vec2 vUV;
 in float vShade;
 in float vDist;
+in float vBL;
 flat in float vLayer;
 flat in int vFlags;
 void main() {
@@ -103,13 +108,15 @@ void main() {
     float lit = smoothstep(0.62, 1.0, vShade);                          // sunlit, not in shadow
     float up = face == 2 ? 1.0 : (face == 7 ? 0.6 : 0.3);
     col = t.rgb * vShade * wl * vec3(1.08, 1.04, 0.96) * 1.6;
-    col += t.rgb * wl * caustic(p.xz, time) * 0.75 * up * lit;           // rippling light from the surface
+    col += t.rgb * wl * caustic(p.xz, time) * 0.75 * up * lit * dayK;    // rippling light from the surface (daytime)
+    col += t.rgb * vec3(1.0, 0.8, 0.45) * vBL * mix(1.6, 0.28, dayK * clamp(wl.g * 1.6, 0.0, 1.0));  // lanterns matter in the dark, hardly at all in sunlight
+    if (face == 7) col += t.rgb * (1.0 - dayK) * vec3(0.25, 0.7, 0.8) * 0.8;  // plants glow faintly at night
   }
-  gl_FragColor = vec4(applyFog(col, vDist), 1.0);
+  gl_FragColor = vec4(toLinear(applyFog(col, vDist)), 1.0);
 }`;
 
 export function makeMaterials(atlas, U) {
-  const uniforms = { atlas: { value: atlas }, hdScale: { value: 0.85 }, time: U.time, surfY: U.surfY, fogDensity: U.fogDensity, fogColor: U.fogColor };
+  const uniforms = { atlas: { value: atlas }, hdScale: { value: 0.85 }, time: U.time, surfY: U.surfY, fogDensity: U.fogDensity, fogColor: U.fogColor, dayK: U.dayK, dusk: U.dusk };
   const solid = new THREE.ShaderMaterial({ glslVersion: THREE.GLSL3, uniforms, vertexShader: VERT, fragmentShader: FRAG });
   const sprite = new THREE.ShaderMaterial({ glslVersion: THREE.GLSL3, uniforms, vertexShader: VERT, fragmentShader: FRAG, side: THREE.DoubleSide });
   return { solid, sprite };
@@ -119,6 +126,8 @@ export function makeMaterials(atlas, U) {
 const MAXV = CH * CH * CH * 6 * 4;
 const sPos = new Float32Array(MAXV * 3), sAB = new Uint8Array(MAXV * 4), sIdx = new Uint32Array(MAXV / 4 * 6);
 const pPos = new Float32Array(CH * CH * CH * 8 * 3), pAB = new Uint8Array(CH * CH * CH * 8 * 4), pIdx = new Uint32Array(CH * CH * CH * 12);
+const EM_SCRATCH = [];
+const LIGHT_R = 12;
 const hash3 = (x, y, z) => { let h = Math.imul(x, 73856093) ^ Math.imul(y, 19349663) ^ Math.imul(z, 83492791); h = Math.imul(h ^ h >>> 13, 1274126177); return ((h ^ h >>> 16) >>> 0) / 4294967296; };
 
 export function buildChunk(world, cx, cy, cz) {
@@ -129,6 +138,7 @@ export function buildChunk(world, cx, cy, cz) {
     if (y < 0 || x < 0 || x >= NX || z < 0 || z >= NZ) return 1;
     return IS_CUBE[ids[x + NX * (z + NZ * y)]];
   };
+  const em = world.nearEmitters(cx, cy, cz, EM_SCRATCH);
   let sv = 0, si = 0, pv = 0, pi = 0, any = false;
   for (let ly = 0; ly < CH; ly++) {
     const y = y0 + ly;
@@ -153,6 +163,17 @@ export function buildChunk(world, cx, cy, cz) {
               ao[q] = s1 && s2 ? 0 : 3 - (s1 + s2 + c);
             }
             const bx = n[0] > 0 ? 1 : 0, by = n[1] > 0 ? 1 : 0, bz = n[2] > 0 ? 1 : 0;
+            let bl = 0;
+            if (em.length) {
+              const fx0 = x + 0.5 + n[0] * 0.5, fy0 = y + 0.5 + n[1] * 0.5, fz0 = z + 0.5 + n[2] * 0.5;
+              for (let k = 0; k < em.length; k++) {
+                const e = em[k], ex = e[0] + 0.5 - fx0, ey = e[1] + 0.5 - fy0, ez = e[2] + 0.5 - fz0, d2 = ex * ex + ey * ey + ez * ez;
+                if (d2 > LIGHT_R * LIGHT_R) continue;
+                const d = Math.sqrt(d2) || 0.01, fall = 1 - d / LIGHT_R, ndl = Math.max(0, (ex * n[0] + ey * n[1] + ez * n[2]) / d);
+                bl += fall * fall * e[3] * (0.35 + 0.65 * ndl);
+              }
+              bl = Math.min(255, Math.round(bl * 255));
+            }
             const layer = FACE_LAYER[id * 6 + f], flags = f | WORLD_FLAG[id] | EMIT_FLAG[id];
             const base = sv;
             for (let q = 0; q < 4; q++) {
@@ -161,7 +182,7 @@ export function buildChunk(world, cx, cy, cz) {
               sPos[sv * 3 + 1] = (y + by + u[1] * su + v[1] * svv) * VS;
               sPos[sv * 3 + 2] = (z + bz + u[2] * su + v[2] * svv) * VS;
               sAB[sv * 4] = flags; sAB[sv * 4 + 1] = layer;
-              sAB[sv * 4 + 2] = Math.min(255, Math.round(255 * FSHADE[f] * AO[ao[q]] * lit * jit)); sAB[sv * 4 + 3] = 0;
+              sAB[sv * 4 + 2] = Math.min(255, Math.round(255 * FSHADE[f] * AO[ao[q]] * lit * jit)); sAB[sv * 4 + 3] = bl;
               sv++;
             }
             if (ao[0] + ao[2] > ao[1] + ao[3]) { sIdx[si++] = base; sIdx[si++] = base + 1; sIdx[si++] = base + 2; sIdx[si++] = base; sIdx[si++] = base + 2; sIdx[si++] = base + 3; }

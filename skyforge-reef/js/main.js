@@ -8,6 +8,7 @@ import { loadTextures, singleTexture } from './textures.js';
 import { makeMaterials, ChunkView, WATER_GLSL } from './mesher.js';
 import { FX } from './fx.js';
 import { PlayerFish, Life } from './fish.js';
+import { Post } from './post.js';
 import { Sound } from './audio.js';
 
 const $ = id => document.getElementById(id);
@@ -18,11 +19,18 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const sound = new Sound();
 
 async function boot() {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !mobile, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
   if (!renderer.capabilities.isWebGL2) { status.textContent = 'This needs WebGL 2. Try a newer browser.'; return; }
-  let pixelRatio = Math.min(window.devicePixelRatio || 1, mobile ? 2 : 2);
+  const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
   renderer.setPixelRatio(pixelRatio);
   renderer.setSize(innerWidth, innerHeight);
+  renderer.autoClear = false;
+  // Quality steps (the game drops a step by itself if the device is struggling): 3 full, 2 balanced, 1 light, 0 lightest.
+  const post = new Post(renderer, { mobile });
+  let quality = mobile ? 2 : 3;
+  const QUAL = [{ scale: 0.55, bloom: false, chroma: false }, { scale: 0.7, bloom: false, chroma: false }, { scale: 0.85, bloom: true, chroma: false }, { scale: 1, bloom: true, chroma: true }];
+  const applyQuality = () => { const q = QUAL[quality], d = renderer.getDrawingBufferSize(new THREE.Vector2()); post.bloomOn = q.bloom; post.U.chroma.value = q.chroma ? 1 : 0; post.setSize(d.x, d.y, q.scale); };
+  applyQuality();
 
   status.textContent = 'Filling the ocean…';
   await new Promise(r => setTimeout(r, 30));
@@ -38,7 +46,7 @@ async function boot() {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(76, innerWidth / innerHeight, 0.04, 150);
   const fogDensity = mobile ? 0.042 : 0.032;
-  const U = { time: { value: 0 }, surfY: { value: SURF }, fogDensity: { value: fogDensity }, fogColor: { value: new THREE.Vector3(0.1, 0.5, 0.6) } };
+  const U = { time: { value: 0 }, dayK: { value: 1 }, dusk: { value: 0 }, surfY: { value: SURF }, fogDensity: { value: fogDensity }, fogColor: { value: new THREE.Vector3(0.1, 0.5, 0.6) } };
   scene.fog = new THREE.FogExp2(0x1a8099, fogDensity);
   const hemi = new THREE.HemisphereLight(0xcdeeff, 0x2a5a6a, 1.9); scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xfff2cf, 1.5); sun.position.set(0.3, 1, 0.2); scene.add(sun);
@@ -124,7 +132,7 @@ async function boot() {
   });
   addEventListener('keyup', e => inp.keys.delete(e.code));
   addEventListener('blur', () => { inp.keys.clear(); inp.swim = false; inp.mouseSwim = false; ptrs.clear(); steerId = null; inp.steerX = inp.steerY = 0; });
-  addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); });
+  addEventListener('resize', () => { renderer.setSize(innerWidth, innerHeight); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); applyQuality(); });
   document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
   document.addEventListener('gesturestart', e => e.preventDefault());
 
@@ -201,7 +209,7 @@ async function boot() {
     const hit = world.raycast(m.x, m.y, m.z, fwd.x, fwd.y, fwd.z, 1.15);   // let go right against a surface and it snaps on, like building
     if (hit && hit.dist > 0.02) {
       const cx = hit.x + hit.nx, cy = hit.y + hit.ny, cz = hit.z + hit.nz;
-      if (world.inb(cx, cy, cz) && cy >= 2 && !world.isSolid(cx, cy, cz) && !overlapsFish(cx, cy, cz)) { world.set(cx, cy, cz, id); sound.land(); return; }
+      if (world.inb(cx, cy, cz) && cy >= 2 && !world.isSolid(cx, cy, cz) && !overlapsFish(cx, cy, cz)) { world.set(cx, cy, cz, id); sound.land(); fx.puff((cx + 0.5) * VS, (cy + 0.2) * VS, (cz + 0.5) * VS); return; }
     }
     const mesh = makeBlockMesh(id); mesh.position.copy(carryPos); scene.add(mesh);
     falling.push({ id, mesh, pos: carryPos.clone(), vel: P.vel.clone().multiplyScalar(0.4).addScaledVector(fwd, 0.7), spin: (Math.random() - 0.5) * 2 });
@@ -211,7 +219,7 @@ async function boot() {
     let cx = Math.floor(px / VS), cy = Math.floor(py / VS), cz = Math.floor(pz / VS);
     cx = clamp(cx, 1, NX - 2); cz = clamp(cz, 1, NZ - 2);
     let guard = 0; while (guard++ < 60 && world.isSolid(cx, cy, cz)) cy++;
-    world.set(cx, cy, cz, e.id); scene.remove(e.mesh); sound.land();
+    world.set(cx, cy, cz, e.id); scene.remove(e.mesh); sound.land(); fx.puff((cx + 0.5) * VS, (cy + 0.2) * VS, (cz + 0.5) * VS);
     const i = falling.indexOf(e); if (i >= 0) falling.splice(i, 1);
   }
   function updateFalling(dt) {
@@ -250,8 +258,13 @@ async function boot() {
 
   // ---- frame ----
   let last = performance.now(), tAcc = 0, slow = 0, frames = 0, tmpV = new THREE.Vector3();
-  const fogShallow = new THREE.Vector3(0.12, 0.56, 0.66), fogDeep = new THREE.Vector3(0.012, 0.06, 0.15);
+  const fogShallow = new THREE.Vector3(0.07, 0.47, 0.6), fogDeep = new THREE.Vector3(0.012, 0.06, 0.15);
   const col = new THREE.Color();
+  const fogNight = new THREE.Vector3(0.012, 0.05, 0.1), fogNightDeep = new THREE.Vector3(0.004, 0.012, 0.035), fogDusk = new THREE.Vector3(0.16, 0.05, -0.02);
+  const DAY_LEN = 720; let tod = 0.3, flashAmt = 0;
+  const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 });
+  const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.55, 24), shadowMat); shadow.rotation.x = -Math.PI / 2; shadow.renderOrder = 2; shadow.scale.set(1, 1.7, 1);
+  const shadowRoot = new THREE.Group(); scene.add(shadowRoot); shadowRoot.add(shadow);
 
   function frame(now) {
     requestAnimationFrame(frame);
@@ -259,7 +272,7 @@ async function boot() {
     const dt = Math.min(dtRaw, 0.05); tAcc += dt; U.time.value = tAcc;
     // adaptive resolution: if the phone is struggling, draw fewer pixels
     frames++; slow = slow * 0.97 + dtRaw * 0.03;
-    if (frames % 90 === 0 && slow > 0.03 && pixelRatio > 0.7) { pixelRatio = Math.max(0.7, pixelRatio - 0.2); renderer.setPixelRatio(pixelRatio); renderer.setSize(innerWidth, innerHeight); }
+    if (frames % 120 === 0 && slow > 0.034 && quality > 0) { quality--; applyQuality(); view.radius = Math.max(7, view.radius - 2); console.log('quality ->', quality); }
 
     // steering
     const k = inp.keys;
@@ -329,24 +342,37 @@ async function boot() {
     if (window.__camOverride) { const o = window.__camOverride; camera.position.set(o[0], o[1], o[2]); camera.lookAt(o[3], o[4], o[5]); }
     camera.updateProjectionMatrix();
 
-    // water colour depends on how deep you are
+    // time of day: a full day and night takes 12 minutes
+    tod = (tod + dt / DAY_LEN) % 1;
+    const sunH = Math.sin((tod - 0.25) * Math.PI * 2);
+    const sstep = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+    const dayK = sstep(-0.2, 0.3, sunH), dusk = Math.exp(-(((sunH - 0.02) / 0.22) ** 2));
+    U.dayK.value = dayK; U.dusk.value = dusk;
+    // water colour depends on how deep you are, and the time of day
     const depth = SURF - camera.position.y, kd = 1 - Math.exp(-depth * 0.05);
-    U.fogColor.value.lerpVectors(fogShallow, fogDeep, kd);
+    tmpV.lerpVectors(fogShallow, fogDeep, kd); tmpD.lerpVectors(fogNight, fogNightDeep, kd);
+    U.fogColor.value.lerpVectors(tmpD, tmpV, dayK).addScaledVector(fogDusk, dusk * (1 - kd * 0.7));
     const fc = U.fogColor.value; scene.fog.color.setRGB(fc.x, fc.y, fc.z, THREE.SRGBColorSpace); renderer.setClearColor(scene.fog.color);
     const wl = Math.max(Math.exp(-depth * 0.04), 0.12);
-    hemi.intensity = 1.9 * (0.35 + 0.65 * wl); sun.intensity = 1.5 * wl;
-    col.setRGB(0.8 * (0.5 + 0.5 * wl), 0.95, 1.0, THREE.SRGBColorSpace); hemi.color.copy(col);
+    hemi.intensity = 1.9 * (0.35 + 0.65 * wl) * (0.16 + 0.84 * dayK); sun.intensity = 1.5 * wl * dayK;
+    col.setRGB((0.8 * (0.5 + 0.5 * wl)) * (0.5 + 0.5 * dayK), 0.95 * (0.7 + 0.3 * dayK), 1.0, THREE.SRGBColorSpace); hemi.color.copy(col);
     sound.muffle(kd);
+    // post effects: the picture wobbles near the surface and when you swim hard
+    post.U.wobble.value = clamp(1 - depth / 4.5, 0, 1) * 0.9 + speed01 * 0.2; post.U.dayK.value = dayK;
+    flashAmt *= Math.exp(-2.2 * dt); post.flash.set(1.0, 0.85, 0.5).multiplyScalar(flashAmt * 0.35);
+    // a soft shadow on the seabed under the fish
+    const sh = world.raycast(P.pos.x, P.pos.y, P.pos.z, 0, -1, 0, 7);
+    if (sh && viewMode === 'third') { shadow.visible = true; shadowRoot.position.set(P.pos.x, (sh.y + 1) * VS + 0.012, P.pos.z); shadowRoot.rotation.y = P.vis; shadowMat.opacity = 0.38 * (1 - sh.dist / 7) * (0.35 + 0.65 * dayK); } else shadow.visible = false;
 
     life.update(tAcc);
-    fx.update(dt, camera.position, renderer.getDrawingBufferSize(tmpV2).y / (2 * Math.tan(camera.fov * Math.PI / 360)));
+    fx.update(dt, camera.position, post.size.y / (2 * Math.tan(camera.fov * Math.PI / 360)));
     view.update(camera.position, mobile ? 2.5 : 4, now);
-    renderer.render(scene, camera);
+    post.render(scene, camera, tAcc);
   }
   const tmpV2 = new THREE.Vector2();
   status.textContent = '';
   intro.classList.add('ready');
   requestAnimationFrame(t => { last = t; frame(t); });
-  window.__reef = { P, world, camera, scene, renderer, view, inp, setView: m => { viewMode = m; camInit.done = false; }, grab: toggleGrab, falling, fish, life, get carrying() { return carrying; }, target, start, fx };
+  window.__reef = { P, world, camera, scene, renderer, view, inp, setView: m => { viewMode = m; camInit.done = false; }, grab: toggleGrab, falling, fish, life, post, get tod() { return tod; }, set tod(v) { tod = v; }, flash: a => { flashAmt = a; }, get carrying() { return carrying; }, target, start, fx };
 }
 boot().catch(err => { console.error(err); status.textContent = 'Something went wrong: ' + err.message; });

@@ -9,7 +9,7 @@ const FRAG_HEAD = `precision highp float;\nlayout(location = 0) out highp vec4 p
 export class FX {
   constructor(scene, U, rng = Math.random) {
     this.U = U; this.scene = scene;
-    const shared = { time: U.time, surfY: U.surfY, fogDensity: U.fogDensity, fogColor: U.fogColor };
+    const shared = { time: U.time, surfY: U.surfY, fogDensity: U.fogDensity, fogColor: U.fogColor, dayK: U.dayK, dusk: U.dusk };
 
     // The surface seen from below: a bright "window" straight up (Snell's window), mirror-dark toward the sides.
     this.surface = new THREE.Mesh(new THREE.PlaneGeometry(700, 700), new THREE.ShaderMaterial({
@@ -25,11 +25,15 @@ void main() {
   float rip = (r1 + r2) * 0.5 + r3 * 0.25;
   float c = V.y + rip * 0.06;
   float win = smoothstep(0.58, 0.74, c);
-  vec3 sky = vec3(0.80, 0.96, 1.0) * (0.86 + 0.14 * sin(r1 * 2.0 + r2));
-  sky += vec3(1.0, 0.98, 0.85) * pow(max(rip, 0.0), 6.0) * 0.6;
+  vec3 skyDay = mix(vec3(0.80, 0.96, 1.0), vec3(1.0, 0.62, 0.38), dusk * 0.7) * (0.86 + 0.14 * sin(r1 * 2.0 + r2));
+  skyDay += vec3(1.0, 0.98, 0.85) * pow(max(rip, 0.0), 6.0) * 0.6;
+  vec3 mdir = normalize(vec3(0.25, 0.92, 0.18));
+  float md = max(dot(normalize(V + vec3(rip * 0.03, 0.0, rip * 0.02)), mdir), 0.0);
+  vec3 skyNight = vec3(0.025, 0.06, 0.15) + vec3(0.75, 0.85, 1.0) * (pow(md, 900.0) * 3.0 + pow(md, 40.0) * 0.18);
+  vec3 sky = mix(skyNight, skyDay, dayK);
   vec3 mirror = fogColor * 0.95 + vec3(0.02, 0.05, 0.07) * (0.5 + 0.5 * rip);
   vec3 col = mix(mirror, sky, win);
-  gl_FragColor = vec4(applyFog(col, dist), 1.0);
+  gl_FragColor = vec4(toLinear(applyFog(col, dist)), 1.0);
 }` }));
     this.surface.rotation.x = Math.PI / 2; this.surface.frustumCulled = false; this.surface.renderOrder = -1;
     scene.add(this.surface);
@@ -70,9 +74,10 @@ void main() {
   a *= 0.55 + 0.45 * sin(time * 0.5 + vUV.z * 3.0 + vUV.y * 2.0);
   a *= exp(-vDepthCam * 0.045);
   a *= smoothstep(0.3, 2.5, vDist);                         // never a hard wall right at the camera
-  vec3 col = vec3(0.55, 1.0, 0.9) * a * 0.34;
+  a *= 0.25 + 0.75 * dayK;
+  vec3 col = mix(vec3(0.3, 0.5, 1.0), vec3(0.55, 1.0, 0.9), dayK) * a * 0.34;
   float f = 1.0 - exp(-pow(fogDensity * vDist, 2.0));
-  gl_FragColor = vec4(col * (1.0 - f), 1.0);
+  gl_FragColor = vec4(col * (1.0 - f) * 0.17, 1.0);   // added straight onto the (linear) picture
 }` }));
     this.shafts.frustumCulled = false; this.shafts.renderOrder = 5;
     scene.add(this.shafts);
@@ -95,12 +100,14 @@ void main() {
 }`,
       fragmentShader: FRAG_HEAD + `precision highp int;\n${WATER_GLSL}\nin float vA; in float vY;
 void main() { vec2 p = gl_PointCoord - 0.5; float r = dot(p, p) * 4.0; if (r > 1.0) discard;
-  vec3 wl = waterLight(vY); gl_FragColor = vec4(vec3(0.85, 1.0, 1.0) * wl * 1.3, vA * 0.55 * (1.0 - r)); }` }));
+  vec3 wl = waterLight(vY); float pulse = 0.6 + 0.4 * sin(time * 2.0 + vY * 7.0);
+  vec3 col = mix(vec3(0.15, 0.85, 1.0) * pulse * 1.4, vec3(0.85, 1.0, 1.0) * wl * 1.3, dayK);
+  gl_FragColor = vec4(toLinear(col), vA * (0.55 + 0.4 * (1.0 - dayK)) * (1.0 - r)); }` }));
     this.snow.frustumCulled = false; this.snow.renderOrder = 6;
     scene.add(this.snow);
 
     // Bubbles (pooled).
-    this.NB = 80; this.bpos = new Float32Array(this.NB * 3); this.bsize = new Float32Array(this.NB); this.bvel = new Float32Array(this.NB * 2); this.blife = new Float32Array(this.NB);
+    this.NB = 260; this.bpos = new Float32Array(this.NB * 3); this.bsize = new Float32Array(this.NB); this.bvel = new Float32Array(this.NB * 2); this.blife = new Float32Array(this.NB);
     const bg = new THREE.BufferGeometry();
     this.bposAttr = new THREE.BufferAttribute(this.bpos, 3); this.bsizeAttr = new THREE.BufferAttribute(this.bsize, 1);
     bg.setAttribute('position', this.bposAttr); bg.setAttribute('aSize', this.bsizeAttr);
@@ -116,8 +123,31 @@ void main() { vec2 p = (gl_PointCoord - 0.5) * 2.0; float r = length(p); if (r >
   gl_FragColor = vec4(vec3(0.85, 1.0, 1.0), clamp(ring * 0.75 + hl + (1.0 - r) * 0.08, 0.0, 1.0)); }` }));
     this.bubbles.frustumCulled = false; this.bubbles.renderOrder = 7;
     scene.add(this.bubbles);
-    this.bn = 0;
+    this.bn = 0; this.sources = [];
+
+    // Sediment puffs when a block lands: sandy clouds that billow out and fade.
+    this.ND = 90; this.dpos = new Float32Array(this.ND * 3); this.dage = new Float32Array(this.ND).fill(9); this.dvel = new Float32Array(this.ND * 3);
+    const dg = new THREE.BufferGeometry(); this.dposAttr = new THREE.BufferAttribute(this.dpos, 3); this.dageAttr = new THREE.BufferAttribute(this.dage, 1);
+    dg.setAttribute('position', this.dposAttr); dg.setAttribute('aAge', this.dageAttr);
+    this.dust = new THREE.Points(dg, new THREE.ShaderMaterial({
+      ...GL3, uniforms: { ...shared, ...this.snowU }, transparent: true, depthWrite: false,
+      vertexShader: `precision highp float; uniform float pxScale; in float aAge; out float vA; out float vY;
+void main() { vec4 mv = viewMatrix * vec4(position, 1.0); float d = length(mv.xyz); vY = position.y; vA = aAge < 2.0 ? (1.0 - aAge / 2.0) : 0.0;
+  gl_PointSize = vA > 0.0 ? clamp((0.12 + aAge * 0.18) * pxScale / d, 2.0, 120.0) : 0.0; gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: FRAG_HEAD + `precision highp int;\n${WATER_GLSL}\nin float vA; in float vY;
+void main() { vec2 p = gl_PointCoord - 0.5; float r = dot(p, p) * 4.0; if (r > 1.0) discard;
+  gl_FragColor = vec4(toLinear(vec3(0.8, 0.74, 0.58) * waterLight(vY) * 1.5), vA * vA * 0.45 * (1.0 - r)); }` }));
+    this.dust.frustumCulled = false; this.dust.renderOrder = 6; scene.add(this.dust); this.dn = 0;
   }
+  puff(x, y, z) {
+    for (let k = 0; k < 14; k++) {
+      const i = this.dn++ % this.ND, a = Math.random() * 6.28, sp = 0.25 + Math.random() * 0.4;
+      this.dpos[i * 3] = x; this.dpos[i * 3 + 1] = y; this.dpos[i * 3 + 2] = z;
+      this.dvel[i * 3] = Math.cos(a) * sp; this.dvel[i * 3 + 1] = 0.1 + Math.random() * 0.25; this.dvel[i * 3 + 2] = Math.sin(a) * sp; this.dage[i] = 0;
+    }
+  }
+  // A steady stream of bubbles from a spot (vents, beacons). rate = bubbles per second.
+  addSource(x, y, z, rate, size = 0.05, spread = 0.1) { const o = { x, y, z, rate, size, spread, acc: 0, on: true }; this.sources.push(o); return o; }
   emitBubble(x, y, z, size = 0.05, vx = 0, vz = 0) {
     const i = this.bn++ % this.NB;
     this.bpos[i * 3] = x; this.bpos[i * 3 + 1] = y; this.bpos[i * 3 + 2] = z;
@@ -125,6 +155,12 @@ void main() { vec2 p = (gl_PointCoord - 0.5) * 2.0; float r = length(p); if (r >
   }
   update(dt, cam, pxScale) {
     this.snowU.pxScale.value = pxScale;
+    for (const o of this.sources) {
+      if (!o.on) continue;
+      if (Math.hypot(o.x - cam.x, o.z - cam.z) > 60) continue;
+      o.acc += o.rate * dt;
+      while (o.acc >= 1) { o.acc -= 1; this.emitBubble(o.x + (Math.random() - 0.5) * o.spread, o.y, o.z + (Math.random() - 0.5) * o.spread, o.size); }
+    }
     this.surface.position.set(cam.x, SURF, cam.z);
     for (let i = 0; i < this.NB; i++) {
       if (this.bsize[i] <= 0) continue;
@@ -136,5 +172,12 @@ void main() { vec2 p = (gl_PointCoord - 0.5) * 2.0; float r = length(p); if (r >
       if (this.blife[i] <= 0 || this.bpos[i * 3 + 1] > SURF - 0.05) this.bsize[i] = 0;
     }
     this.bposAttr.needsUpdate = true; this.bsizeAttr.needsUpdate = true;
+    for (let i = 0; i < this.ND; i++) {
+      if (this.dage[i] >= 2) continue;
+      this.dage[i] += dt; const k = Math.exp(-2.4 * dt);
+      this.dvel[i * 3] *= k; this.dvel[i * 3 + 1] *= k; this.dvel[i * 3 + 2] *= k;
+      this.dpos[i * 3] += this.dvel[i * 3] * dt; this.dpos[i * 3 + 1] += this.dvel[i * 3 + 1] * dt; this.dpos[i * 3 + 2] += this.dvel[i * 3 + 2] * dt;
+    }
+    this.dposAttr.needsUpdate = true; this.dageAttr.needsUpdate = true;
   }
 }

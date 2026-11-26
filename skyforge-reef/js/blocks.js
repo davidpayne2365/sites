@@ -20,7 +20,7 @@ export const TEX = {
   wool_orange: 'blocks/wool_orange.png', wool_yellow: 'blocks/wool_yellow.png', wool_magenta: 'blocks/wool_magenta.png',
   wool_pink: 'blocks/wool_pink.png', wool_violet: 'blocks/wool_violet.png', wool_blue: 'blocks/wool_blue.png',
   wool_cyan: 'blocks/wool_cyan.png', wool_green: 'blocks/wool_green.png', wool_dark_green: 'blocks/wool_dark_green.png',
-  wool_red: 'blocks/wool_red.png', wool_white: 'blocks/wool_white.png', ore_gold: 'blocks/ore_gold.png', ore_diamond: 'blocks/ore_diamond.png',
+  wool_red: 'blocks/wool_red.png', wool_white: 'blocks/wool_white.png', lava: 'blocks/lava.png', ore_gold: 'blocks/ore_gold.png', ore_diamond: 'blocks/ore_diamond.png',
   coral_orange: 'minetest/coral_orange.png', coral_brown: 'minetest/coral_brown.png', coral_skeleton: 'minetest/coral_skeleton.png',
   coral_pink: 'minetest/coral_pink.png', coral_cyan: 'minetest/coral_cyan.png', coral_green: 'minetest/coral_green.png',
   kelp: 'minetest/kelp.png', seagrass: 'minetest/junglegrass.png', reed: 'minetest/papyrus.png',
@@ -69,6 +69,7 @@ add('MESE', 'Mese Block', 'mese');
 add('LAMP', 'Sea Lantern', 'meselamp', 'meselamp', 'meselamp', { emit: true });
 add('CHEST', 'Treasure Chest', 'chest_side', 'chest_top', 'chest_top');
 add('ORE_GOLD', 'Gold Ore', 'ore_gold');
+add('MAGMA', 'Warm Vent Rock', 'lava', 'lava', 'lava', { emit: true });
 add('ORE_DIAMOND', 'Diamond Ore', 'ore_diamond');
 // Sprites (see-through plants you can swim through): crossed pictures one block wide.
 add('CORAL_PINK', 'Pink Coral', 'coral_pink', 'coral_pink', 'coral_pink', { sprite: true });
@@ -79,6 +80,14 @@ add('SEAGRASS', 'Sea Grass', 'seagrass', 'seagrass', 'seagrass', { sprite: true 
 add('REED', 'Reed', 'reed', 'reed', 'reed', { sprite: true });
 
 export const NBLOCKS = BLOCKS.length;
+// How strongly a block lights up the blocks around it (0 = not at all).
+export const LIGHT = new Float32Array(NBLOCKS);
+LIGHT[B.LAMP] = 1; LIGHT[B.MAGMA] = 0.9; LIGHT[B.MESE] = 0.45; LIGHT[B.ORE_DIAMOND] = 0.3; LIGHT[B.DIAMOND] = 0.25;
+// How fast each block sinks when you let go of it (units per second). Light coral drifts down, gold plummets.
+export const SINK = new Float32Array(NBLOCKS).fill(1.0);
+for (const k of Object.keys(B)) if (k.startsWith('WOOL_') || k.startsWith('CORAL_')) SINK[B[k]] = 0.55;
+for (const k of ['LAMP', 'SHELL', 'SAND', 'DENSESAND']) SINK[B[k]] = 0.8;
+for (const k of ['GOLD', 'DIAMOND', 'MESE', 'ORE_GOLD', 'ORE_DIAMOND', 'CHEST', 'ROCK', 'SEASIDE', 'BEDROCK', 'MARBLE', 'RUIN']) SINK[B[k]] = 1.9;
 // Lookup tables used by the mesher and physics.
 export const IS_CUBE = new Uint8Array(NBLOCKS), IS_SPRITE = new Uint8Array(NBLOCKS), CAN_PICK = new Uint8Array(NBLOCKS);
 for (let i = 1; i < NBLOCKS; i++) {

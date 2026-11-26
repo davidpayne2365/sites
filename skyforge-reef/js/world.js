@@ -1,6 +1,6 @@
 // The ocean world: a grid of quarter-size cubes. Open water is id 0. Everything is generated from a fixed seed,
 // so it is the same ocean every time (but blocks you move are not saved).
-import { B, IS_CUBE, IS_SPRITE, NBLOCKS } from './blocks.js';
+import { B, IS_CUBE, IS_SPRITE, NBLOCKS, LIGHT } from './blocks.js';
 
 export const VS = 0.25;            // one block is 0.25 world units: a quarter of the old full-size block
 export const NX = 384, NY = 112, NZ = 384;
@@ -25,6 +25,23 @@ export class World {
     this.ids = new Uint8Array(NX * NY * NZ);
     this.colTop = new Int16Array(NX * NZ).fill(-1); // highest solid cube in each column (for sunlight)
     this.dirty = new Set();                         // chunk indices that need re-meshing after an edit
+    this.emitters = new Map();                      // chunk index -> glowing blocks in it: [x, y, z, strength]
+    this.edits = new Map();                         // what the player changed (block index -> id), for saving
+    this.onSet = null;                              // callback(x, y, z, id) after the player changes a block
+  }
+  ckey(cx, cy, cz) { return cx + NCX * (cz + NCZ * cy); }
+  rebuildEmitters() {
+    this.emitters.clear(); const ids = this.ids;
+    for (let i = 0; i < ids.length; i++) if (LIGHT[ids[i]] > 0) { const x = i % NX, z = ((i / NX) | 0) % NZ, y = (i / (NX * NZ)) | 0; this.addEmitter(x, y, z, ids[i]); }
+  }
+  addEmitter(x, y, z, id) { const k = this.ckey(x >> 4, y >> 4, z >> 4); let a = this.emitters.get(k); if (!a) this.emitters.set(k, a = []); a.push([x, y, z, LIGHT[id]]); }
+  removeEmitter(x, y, z) { const k = this.ckey(x >> 4, y >> 4, z >> 4), a = this.emitters.get(k); if (a) { const i = a.findIndex(e => e[0] === x && e[1] === y && e[2] === z); if (i >= 0) a.splice(i, 1); } }
+  nearEmitters(cx, cy, cz, out) { // glowing blocks in this chunk and the 26 around it
+    out.length = 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) {
+      const a = this.emitters.get(this.ckey(cx + dx, cy + dy, cz + dz)); if (a) for (const e of a) out.push(e);
+    }
+    return out;
   }
   idx(x, y, z) { return x + NX * (z + NZ * y); }
   inb(x, y, z) { return x >= 0 && x < NX && y >= 0 && y < NY && z >= 0 && z < NZ; }
@@ -35,9 +52,17 @@ export class World {
     return IS_CUBE[this.ids[x + NX * (z + NZ * y)]] === 1;
   }
   // Change one block (used when you pick one up or it lands) and mark the chunks that show it.
-  set(x, y, z, id) {
+  set(x, y, z, id, record = true) {
     if (!this.inb(x, y, z)) return;
+    const old = this.ids[this.idx(x, y, z)];
     this.ids[this.idx(x, y, z)] = id;
+    if (record) this.edits.set(this.idx(x, y, z), id);
+    if (LIGHT[old] > 0 || LIGHT[id] > 0) {
+      if (LIGHT[old] > 0) this.removeEmitter(x, y, z);
+      if (LIGHT[id] > 0) this.addEmitter(x, y, z, id);
+      for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) for (let dx = -1; dx <= 1; dx++) this.markDirty((x >> 4) + dx, (y >> 4) + dy, (z >> 4) + dz);
+    }
+    if (record && this.onSet) this.onSet(x, y, z, id);
     const c = x + NX * z, oldTop = this.colTop[c];
     if (IS_CUBE[id]) { if (y > this.colTop[c]) this.colTop[c] = y; }
     else if (y === this.colTop[c]) { let t = y - 1; while (t >= 0 && !IS_CUBE[this.ids[this.idx(x, t, z)]]) t--; this.colTop[c] = t; }
@@ -331,6 +356,7 @@ export class World {
       let y = NY - 1; while (y >= 0 && !IS_CUBE[ids[x + NX * (z + NZ * y)]]) y--; this.colTop[x + NX * z] = y;
     }
     this.hm = hm;
+    this.rebuildEmitters();
     return this;
   }
   groundTop(x, z) { // y (in blocks) of the first open cell above the seabed
