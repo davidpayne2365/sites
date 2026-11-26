@@ -1,0 +1,119 @@
+🧠 Topic: SAM & FAP (Lens Power Adjustments for NCLE Exam)
+🔑 What are SAM and FAP?
+These are memory tricks (acronyms) to help you on the NCLE exam when you're adjusting a contact lens prescription:
+
+SAM = Steeper Add Minus
+
+FAP = Flatter Add Plus
+
+You use these when the question says something like:
+
+“Fit the contact lens 0.50 diopters steeper than K.”
+
+You need to know:
+
+If the fit is steeper than K readings → Add Minus (SAM)
+
+If the fit is flatter than K readings → Add Plus (FAP)
+
+K = Keratometry, the corneal curvature readings that tell you how steep or flat the cornea is.
+
+📏 Example K Readings: 42.00 / 43.50 @ 90
+These two numbers are your corneal powers.
+
+Lower number = Flatter (42.00)
+
+Higher number = Steeper (43.50)
+
+At axis 90, you’re seeing the steepest point. That means this is with-the-rule astigmatism (steep vertically like a football lying flat).
+
+🧪 Now the Prescription Example:
+Given Rx:
+-9.00 +1.50 x 90
+
+Step 1: Transpose to minus cylinder form
+You always want to work in minus cylinder form for fitting.
+
+Here’s how:
+
+Add the sphere and cylinder:
+-9.00 + 1.50 = -7.50
+
+Change the sign of the cylinder:
++1.50 → -1.50
+
+Rotate the axis 90°:
+90° → 180°
+
+✅ New Rx (in minus cylinder):
+-7.50 -1.50 x 180
+
+👁 Vertex Distance – What is That?
+When a patient is refracted, they are looking through lenses about 12–13 mm away from their eye (in the phoropter or glasses).
+
+But contact lenses sit right on the eye.
+
+Because of this change in distance, the actual power needed for the contact lens is different. This difference is called vertex compensation.
+
+🧮 How to Adjust for Vertex Distance
+If a prescription is stronger than ±4.00 D, you must adjust it.
+
+Example:
+We had -7.50 D from transposition. That's strong enough to need vertex compensation.
+
+You can use a calculator, but on the test you usually estimate.
+
+Here’s the shortcut:
+
+When moving a minus lens closer to the eye (like from glasses to contacts), it becomes less minus
+
+So: -7.50 becomes something like -6.85
+
+Estimate rule of thumb:
+
+-7.50 → becomes -6.85 (due to 13 mm vertex distance)
+
+⬇️ Now Apply SAM or FAP
+The question says:
+
+"Fit the lens 0.50 diopters steeper than K"
+
+That's where SAM comes in:
+
+Steeper Add Minus
+
+So now, from the vertex-compensated power -6.85, you add another -0.50 D
+
+Final answer:
+-6.85 + (-0.50) = -7.35
+
+So the final lens power to fit = −7.37 D
+
+✅ What if It Said “Flatter Than K”?
+That’s FAP:
+
+Flatter Add Plus
+
+So you would add +0.50 to -6.85:
+
+Final answer:
+-6.85 + (+0.50) = -6.35 → lens power = −6.37 D
+
+💡 Why Use a Flatter or Steeper Lens?
+Steeper lens = tighter fit
+
+Flatter lens = looser fit
+
+Lower base curve = steeper lens
+
+(e.g. 8.3 mm is steeper than 8.7 mm)
+
+So if a patient’s lens is moving too much or too little, you might change base curve or use SAM/FAP to adjust power accordingly.
+
+📌 Summary
+
+Situation	What To Do	Why
+Fit is steeper than K	Add minus (SAM)	Steeper = more minus needed
+Fit is flatter than K	Add plus (FAP)	Flatter = more plus needed
+Rx stronger than ±4.00	Compensate	Contact sits closer than glasses
+Always transpose Rx first	Use minus cyl	That’s the format NCLE uses

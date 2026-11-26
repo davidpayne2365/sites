@@ -1,0 +1,117 @@
+🧠 What is "Over-Refraction"?
+Imagine this:
+
+You've given a patient a pair of contact lenses.
+
+They’re wearing them, but they say, “I still can’t see clearly.”
+
+You now need to re-check their vision — with the contacts still in — to see what extra power they might need.
+
+That re-check is called an over-refraction.
+
+👉 It's like putting glasses on top of the contacts to "fine-tune" their vision.
+
+🔢 When It's Simple – Spherical Only
+Example:
+
+Patient has a contact lens that’s –3.00.
+
+You over-refract (using the phoropter), and they see better with an extra –0.50.
+
+Answer: Just add it: –3.00 + (–0.50) = –3.50
+
+✅ That means the new lens power should be –3.50.
+
+🔍 But What If There's Cylinder (Astigmatism)?
+Now it gets trickier. You can't just add numbers like before.
+
+You need a tool called the Optical Cross. Here's how it works:
+
+📐 What’s an Optical Cross?
+It’s just a way to break a prescription into two directions:
+
+180 degrees (horizontal)
+
+90 degrees (vertical)
+
+Each direction can have its own power. This helps with astigmatism.
+
+🧮 Example with Astigmatism:
+Let’s say the original prescription (in the contact lens) is: –2.00 –0.50 × 180
+
+➡️ This means:
+
+Power along 180° = –2.00
+
+Power along 90° = –2.00 + (–0.50) = –2.50
+
+Now let’s say during over-refraction, the patient sees better with a –0.50 sphere.
+
+A sphere affects all directions equally, so you add –0.50 to both meridians:
+
+180°: –2.00 + (–0.50) = –2.50
+
+90°: –2.50 + (–0.50) = –3.00
+
+Now, you need to turn these values back into a written prescription:
+
+Start with the less minus (–2.50), that's the sphere.
+
+Find how much more minus the other meridian is: –3.00 – (–2.50) = –0.50 → That’s your cylinder.
+
+The axis stays where the sphere power was: 180
+
+✅ Final Prescription: –2.50 –0.50 × 180
+
+🎯 What’s the Point of All This?
+You do over-refraction when:
+
+The patient’s not seeing clearly with their contacts
+
+You want to know what change in power will help — without taking their contacts out
+
+You just:
+
+Take their original lens power
+
+Find the over-refraction (what they see better with on top)
+
+Add it up (use optical cross if it’s not just sphere)
+
+Write the new corrected prescription
+
+🧠 One More Example – Sphero-Cylindrical Over-Refraction
+Lens on eye:
+–1.00 –1.00 × 180
+
+Over-refraction result:
+–1.00 –0.50 × 180
+
+Steps:
+
+Use the optical cross to break both into 180° and 90° meridians.
+
+Add each meridian’s numbers together.
+
+Along 180: –1.00 + (–1.00) = –2.00
+
+Along 90: (–1.00 –1.00) = –2.00 + (–0.50) = –2.50
+
+Now rewrite:
+
+Sphere: –2.00
+
+Cylinder: –0.50
+
+Axis: 180
+✅ New lens: –2.00 –0.50 × 180
+
+📏 Bonus: What if You Change the Curve?
+If you change the base curve (shape) of the lens, you also change the power:
+
+Steeper = more minus (SAM: Steeper Add Minus)
+
+Flatter = more plus (FAP: Flatter Add Plus)
+
+But if you don’t change the curve, all you're adjusting is the power.
+

@@ -1,0 +1,114 @@
+🧠 Topic: Front Surface Toric RGP Contact Lenses
+(“RGP” = Rigid Gas Permeable)
+
+1. 🥽 What is a Front Surface Toric RGP Lens?
+Think of an RGP lens like a tiny hard piece of plastic that sits on the eye and helps correct your vision.
+
+“Toric” just means it corrects for astigmatism.
+
+“Front surface” means the cylinder power (the part that fixes astigmatism) is added to the front of the lens.
+
+The back of the lens (the part touching the eye) is spherical (same curve all around).
+
+🟡 WHY use it? When the patient has astigmatism in their vision prescription, but not on their cornea.
+
+2. 👀 How Do We Know if It’s the Right Lens?
+You start by looking at two things:
+
+Glasses prescription (manifest refraction)
+
+K-readings (corneal shape/power)
+
+3. 🧾 Step-by-Step Breakdown:
+A. Start with the glasses prescription
+Let’s say the Rx is:
+
+diff
+Copy
+Edit
+-2.50 -1.50 x 180
+That’s already in minus cylinder form — good!
+
+If it were in plus cylinder, you’d need to transpose it:
+
+Add the sphere and cylinder
+
+Flip the sign of the cylinder
+
+Rotate the axis by 90°
+
+B. Check vertex distance
+If the power is over ±4.00D, you might need to adjust it a bit.
+
+Example: -4.00 glasses Rx becomes around -3.87 when on the eye.
+
+Why? Because lenses behave differently depending on how far they are from the eye.
+
+C. Look at K-readings
+K-readings measure how curved the cornea is.
+
+Example: K = 44/44 → no astigmatism on the cornea.
+
+K = 42/44 → 2 diopters of corneal astigmatism.
+
+4. 🧪 Compare Prescription and K-Readings
+Let’s say:
+
+Prescription: -2.50 -1.50 x180 (this person needs astigmatism correction)
+
+K-readings: 44/44 → no corneal astigmatism
+
+So the question is: Where is the astigmatism coming from if not the cornea?
+
+Answer: It’s probably lenticular astigmatism (from inside the eye)
+
+That’s when a Front Surface Toric RGP is helpful.
+
+5. 🧱 Base Curve vs. Front Toric
+Base curve = the back curve of the lens (touches the eye)
+
+In a front toric lens:
+
+Back = round (spherical)
+
+Front = has cylinder added
+
+That way it sits comfortably without adding astigmatism to the cornea — it just corrects what’s missing in the vision.
+
+6. ❌ When Not to Use RGPs
+If:
+
+The cornea has astigmatism, but
+
+The vision prescription is spherical (no astigmatism),
+
+…then a spherical RGP might induce astigmatism by accident. Bad match.
+
+✅ Instead, use a soft lens (HEMA or silicone hydrogel), which just drapes over the eye and doesn’t mess with the corneal shape.
+
+7. 🧠 When Are Front Toric RGPs Best?
+Use them when:
+
+The patient has over 1.25D of astigmatism in their prescription
+
+But their K-readings show no corneal astigmatism
+
+Otherwise, it’s often better to just use a spherical RGP or soft lens.
+
+8. 🔺 Bonus: Prism Ballast
+Front toric RGPs must stay in place, so:
+
+They include 1.5 prism diopters base-down.
+
+This helps them rotate correctly and stay aligned.
+
+Often marked at 6 o'clock with a dot for orientation.
+
+📝 Summary Checklist (for NCLE):
+✅ Always convert Rx to minus cylinder form
+✅ Check if vertex compensation is needed (if Rx > ±4.00)
+✅ Compare Rx vs. K-readings
+✅ If Rx has cylinder but K-readings don’t, think Front Toric RGP
+✅ Front toric = spherical back, cylinder on front
+✅ Add prism ballast for stabilization
+✅ Use when astigmatism is lenticular, not corneal

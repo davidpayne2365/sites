@@ -30,6 +30,25 @@ Small static sites and games, one folder per site. Each folder is exactly what w
 | `tetrisforbria` | https://tetrisforbria.davidpayne2365.workers.dev | https://tetrisforbria.netlify.app |
 | `wondrous-kheer-8b92d0` | https://wondrous-kheer-8b92d0.davidpayne2365.workers.dev | https://wondrous-kheer-8b92d0.netlify.app |
 
+## Older projects (copied in from their own repos, not deployed)
+
+Each folder was its own small GitHub repo. The old repos still exist and can be archived on GitHub.
+
+| Folder | Was repo |
+|---|---|
+| `tetris` | `tetris` |
+| `galaga` | `galaga` |
+| `wages` | `wages` |
+| `sleepapp` | `sleepapp` |
+| `siblingsday` | `SiblingsDay` |
+| `industrybar` | `IndustryBar` |
+| `ncle` | `NCLE` |
+| `ncle2` | `NCLE2` |
+| `costco` | `costco` |
+| `breakout` | `breakout` (the Netlify site `retro-breakout` still deploys from the old `breakout` repo) |
+
+`faxapp` stays its own repo because it is a Next.js app with a backend.
+
 ## How they deploy
 
 - Live host: Cloudflare Workers (account `davidpayne2365`). Each folder is uploaded as its own Worker named after the folder.

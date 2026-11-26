@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCLE Study Content</title>
+  <style>
+    :root {
+      --primary: #3a86ff;
+      --bg-dark: #121212;
+      --card-bg: #1f1f1f;
+      --card-hover: #2d2d2d;
+      --text-light: #f0f0f0;
+      --text-secondary: #b0b0b0;
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 0.75rem;
+      --spacing: 1rem;
+      --spacing-lg: 1.5rem;
+      --spacing-xl: 2rem;
+      --border-radius: 12px;
+      --shadow: 0 4px 8px rgba(0,0,0,0.2);
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      padding: var(--spacing);
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-bottom: var(--spacing-xl);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+      color: var(--text-light);
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .file-list {
+      margin-bottom: var(--spacing);
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .file-item:hover, .file-item:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .file-checkbox {
+      margin: 0 var(--spacing);
+      height: 20px;
+      width: 20px;
+      accent-color: var(--primary);
+    }
+
+    .file-button {
+      background: transparent;
+      color: var(--text-light);
+      border: none;
+      padding: var(--spacing);
+      cursor: pointer;
+      font-size: 1rem;
+      text-align: left;
+      flex: 1;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .file-button::after {
+      content: "→";
+      margin-left: var(--spacing);
+      font-size: 1.2rem;
+      opacity: 0.7;
+    }
+
+    .file-detail {
+      display: none;
+      margin-bottom: var(--spacing);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 200;
+      background: var(--bg-dark);
+    }
+
+    .file-header {
+      display: flex;
+      align-items: center;
+      background: var(--card-bg);
+      padding: var(--spacing);
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
+    .file-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0;
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .file-content {
+      background: #1e1e1e;
+      padding: var(--spacing);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: inherit;
+      font-size: 1rem;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      height: calc(100% - 60px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .back-button {
+      position: fixed;
+      bottom: var(--spacing);
+      right: var(--spacing);
+      width: 56px;
+      height: 56px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .back-button:hover, .back-button:focus {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+
+    .loading {
+      text-align: center;
+      padding: var(--spacing);
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      margin-right: var(--spacing-xs);
+      border: 3px solid rgba(255,255,255,0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Media queries for better responsiveness */
+    @media (max-width: 480px) {
+      :root {
+        --spacing: 0.75rem;
+        --spacing-lg: 1.25rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .file-button {
+        font-size: 0.95rem;
+      }
+
+      .file-content {
+        font-size: 0.95rem;
+      }
+      
+      .back-button {
+        width: 48px;
+        height: 48px;
+      }
+    }
+
+    /* Dark scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #1e1e1e;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>NCLE Study Content</h1>
+    </header>
+
+    <!-- File list view -->
+    <div class="file-list" id="listView">
+      <div id="fileList" class="loading">
+        <div class="loading-spinner"></div>
+        Loading study materials...
+      </div>
+    </div>
+
+    <!-- Detail view -->
+    <div class="file-detail" id="detailView">
+      <div class="file-header">
+        <h2 class="file-title" id="detailTitle"></h2>
+      </div>
+      <pre class="file-content" id="detailContent">
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          Loading content...
+        </div>
+      </pre>
+      <button class="back-button" id="backToList" aria-label="Back to file list">←</button>
+    </div>
+  </div>
+
+  <script>
+    const owner = 'davidpayne2365';
+    const repo = 'NCLE2';
+    const branch = 'main';
+    
+    // Local storage key for checkboxes
+    const STORAGE_KEY = 'ncle-study-checkboxes';
+
+    // Load checkbox states from localStorage
+    function loadCheckboxStates() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        return saved ? JSON.parse(saved) : {};
+      } catch (err) {
+        console.error('Error loading checkbox states', err);
+        return {};
+      }
+    }
+
+    // Save checkbox states to localStorage
+    function saveCheckboxStates(states) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
+      } catch (err) {
+        console.error('Error saving checkbox states', err);
+      }
+    }
+
+    // Fetch list of .txt files from GitHub API
+    async function loadFileList() {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents?ref=${branch}`);
+        const items = await res.json();
+        
+        const txtFiles = items
+          .filter(i => i.type === 'file' && i.name.toLowerCase().endsWith('.txt'))
+          .map(i => i.name);
+        
+        const listEl = document.getElementById('fileList');
+        listEl.innerHTML = '';
+        listEl.classList.remove('loading');
+        
+        if (txtFiles.length === 0) {
+          listEl.innerHTML = '<p>No study materials found.</p>';
+          return;
+        }
+        
+        // Load saved checkbox states
+        const checkboxStates = loadCheckboxStates();
+        
+        txtFiles.forEach(file => {
+          const item = document.createElement('div');
+          item.className = 'file-item';
+          
+          const chk = document.createElement('input');
+          chk.type = 'checkbox';
+          // Use saved state if available, otherwise default to checked
+          chk.checked = checkboxStates.hasOwnProperty(file) ? checkboxStates[file] : true;
+          chk.className = 'file-checkbox';
+          chk.id = `chk-${file}`;
+          
+          // Save checkbox state when changed
+          chk.addEventListener('change', () => {
+            const states = loadCheckboxStates();
+            states[file] = chk.checked;
+            saveCheckboxStates(states);
+          });
+          
+          const btn = document.createElement('button');
+          btn.textContent = file;
+          btn.className = 'file-button';
+          btn.setAttribute('aria-label', `Open ${file}`);
+          btn.addEventListener('click', () => openDetail(file));
+          
+          item.appendChild(chk);
+          item.appendChild(btn);
+          listEl.appendChild(item);
+        });
+      } catch (err) {
+        console.error('Error fetching file list', err);
+        const listEl = document.getElementById('fileList');
+        listEl.innerHTML = '<p>Error loading files. Please try again later.</p>';
+        listEl.classList.remove('loading');
+      }
+    }
+
+    function openDetail(fileName) {
+      document.getElementById('listView').style.display = 'none';
+      const detailView = document.getElementById('detailView');
+      detailView.style.display = 'block';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+
+      const titleEl = document.getElementById('detailTitle');
+      const contentEl = document.getElementById('detailContent');
+      titleEl.textContent = fileName;
+      contentEl.innerHTML = '<div class="loading"><div class="loading-spinner"></div>Loading content...</div>';
+
+      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${encodeURIComponent(fileName)}`;
+      fetch(rawUrl)
+        .then(r => r.text())
+        .then(txt => contentEl.textContent = txt)
+        .catch(() => contentEl.textContent = 'Error loading file. Please try again.');
+    }
+
+    document.getElementById('backToList').addEventListener('click', () => {
+      document.getElementById('detailView').style.display = 'none';
+      document.getElementById('listView').style.display = 'block';
+      document.body.style.overflow = ''; // Restore scrolling
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', loadFileList);
+  </script>
+</body>
+</html>

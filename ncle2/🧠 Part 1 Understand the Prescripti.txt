@@ -1,0 +1,173 @@
+🧠 Part 1: Understand the Prescription (Manifest Refraction)
+Example Prescription:
+
+Copy
+Edit
+–3.50 –1.25 ×180
+This means:
+
+–3.50 = sphere (how nearsighted you are)
+
+–1.25 = cylinder (how much astigmatism)
+
+×180 = axis (where the astigmatism is located)
+
+🟢 Good news: It's already in minus cylinder form, which is what we want for contact lens fitting.
+
+🔁 What if it's not in minus cylinder form?
+Say you get:
+
+Copy
+Edit
+–4.75 +1.25 ×90
+That’s plus cylinder form. We need to transpose it.
+
+✏️ How to Transpose:
+Add the sphere and cylinder together
+–4.75 + 1.25 = –3.50
+
+Change the sign of the cylinder
++1.25 becomes –1.25
+
+Rotate the axis 90°
+90 + 90 = 180
+
+✅ New transposed Rx:
+
+Copy
+Edit
+–3.50 –1.25 ×180
+🧮 Part 2: Vertex Compensation (When & How)
+❓What is vertex distance?
+It’s the space between the glasses lens and your eyeball — about 12 mm. When you put a contact lens directly on the eye, the power changes slightly.
+
+🚨 When do you compensate?
+Only if EITHER meridian is 4.00D or more in power.
+
+Let’s break this Rx down with an optical cross:
+
+You have –3.50 sphere at 180°
+
+And –1.25 cylinder, which applies at 90°
+
+So at:
+
+180° = –3.50
+
+90° = –3.50 –1.25 = –4.75
+
+✅ Since –4.75 is more than 4.00, we need to compensate for vertex distance.
+
+📉 How much do we compensate?
+Use this rule of thumb:
+
+Every 5 diopters = change by 0.25 diopter
+
+Always gets less minus (or more plus)
+
+So:
+
+–4.75 → –4.50 (goes up by +0.25)
+
+Now we update the optical cross:
+
+180° = –3.50
+
+90° = –4.50
+
+🧮 How much cylinder now? –3.50 to –4.50 = –1.00
+
+✅ Compensated Rx:
+
+Copy
+Edit
+–3.50 –1.00 ×180
+🔍 Part 3: What Do K-Readings Tell You?
+K readings = the power of the cornea in two directions
+In this example:
+
+graphql
+Copy
+Edit
+43.00 @180 / 44.25 @90
+Means:
+
+Flattest curve (least power) = 43.00D at 180°
+
+Steepest curve (most power) = 44.25D at 90°
+
+Difference = 44.25 – 43.00 = 1.25D astigmatism
+
+✅ This matches the refraction’s cylinder (–1.25), so this is corneal astigmatism.
+
+Also:
+
+Steepest at 90° → called with-the-rule astigmatism
+
+👓 Part 4: What Lens Do You Pick?
+Options:
+
+Soft toric contact lens
+
+Needed because it must correct for cylinder.
+
+Gas permeable (GP) spherical lens
+
+Works because:
+
+Astigmatism is <3.00D
+
+It’s corneal astigmatism only
+
+GP lenses can “mask” corneal irregularities by floating over them
+
+🧠 Part 5: What if They Say "Steeper Than K" or "Flatter Than K"?
+Use this:
+
+
+Term	Rule
+SAM	Steeper → Add Minus
+FAP	Flatter → Add Plus
+Example:
+
+Final lens: –3.50
+
+They say “fit 0.50D steeper than K”
+
+Steeper = SAM
+
+Add –0.50
+
+✅ New power = –4.00
+
+If they said “flatter than K”, then:
+
+Flatter = FAP
+
+Add +0.50
+
+New power = –3.00
+
+🧾 Final Checklist for NCLE Fitting Questions
+Is the Rx in minus cylinder form? If not, transpose.
+
+Do either meridians have 4.00D or more? If so, compensate.
+
+Compare Rx and K-readings:
+
+Does the cylinder match? → Corneal astigmatism
+
+Doesn’t match? → Possibly lenticular astigmatism
+
+What kind of lens to use?
+
+Soft toric → for cylinder
+
+GP sphere → if corneal astigmatism is <3.00D
+
+Did they say steeper or flatter than K?
+
+SAM = Steeper Add Minus
+
+FAP = Flatter Add Plus
+

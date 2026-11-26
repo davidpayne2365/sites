@@ -1,0 +1,77 @@
+
+🧠 THE CORE IDEA:
+When you're fitting gas permeable (GP) lenses, changing the curve of the lens creates optical power you didn't plan for — so you need to cancel it out by adjusting the lens prescription.
+
+👓 Step 1: What is “SAM” and “FAP”?
+Think of SAM FAP as your magic rule for fixing power changes caused by curve changes:
+
+S.A.M. = Steeper Add Minus
+→ If the lens is steeper than the cornea, add minus power to cancel the extra plus.
+
+F.A.P. = Flatter Add Plus
+→ If the lens is flatter than the cornea, add plus to cancel the minus that shows up.
+
+🧪 Why does this happen?
+When a GP lens is placed on the eye, it creates a tiny "tear lens" (a layer of tears) between the lens and the cornea.
+
+If the lens is steeper than the cornea, it creates a plus-power tear lens
+→ You need to cancel it by adding minus.
+
+If the lens is flatter, the tear lens acts like a minus lens
+→ You need to cancel it by adding plus.
+
+🔍 Step 2: What is "Fitting On K"?
+K-readings tell us how steep or flat the cornea is.
+
+“Fitting on K” means you choose a lens base curve that matches the flattest K-reading.
+
+If the K-reading is 43.00 @ 180 and 43.75 @ 90, then 43.00 is the flatter curve, so “on K” means using a 43.00 base curve.
+
+🔢 Step 3: The Example
+Given:
+
+K-readings: 43.00 @ 180 / 43.75 @ 90 → this is with-the-rule astigmatism (steeper vertically).
+
+Refraction: –4.50 –0.75 × 180
+
+🔁 Step 4: Do We Transpose the Prescription?
+Nope! It’s already in minus cylinder form, which is what you want. If it had a plus cylinder, you'd convert it.
+
+📏 Step 5: Vertex Distance
+Vertex distance is the space between the phoropter and the eye (~12 mm).
+
+For powers greater than ±4.00, we must adjust the power.
+
+Rule: Contact lenses sit closer to the eye, so:
+
+They need to be less minus / more plus than glasses.
+
+–4.50 becomes –4.25 when adjusted for vertex distance.
+
+🧮 Step 6: Apply SAM or FAP
+Let’s say we’re NOT fitting on K. We change the base curve:
+
+📉 If fitting flatter than K (e.g., by 0.50D):
+Use F.A.P. = Flatter Add Plus
+
+Start with –4.25
+
+Add +0.50
+→ Final power: –3.75
+
+📈 If fitting steeper than K (e.g., by 0.50D):
+Use S.A.M. = Steeper Add Minus
+
+Start with –4.25
+
+Add –0.50
+→ Final power: –4.75
+
+🎯 Bonus Teaching Points
+The K-reading difference of 0.75D tells us the patient has corneal astigmatism.
+
+Since the refraction matches the corneal astigmatism, there’s no lenticular astigmatism (it’s all from the cornea).
+
+With-the-rule astigmatism (steeper vertically) is correctable with spherical GP lenses up to 3.00D.
+
+✏️ Summary Cheat Sheet

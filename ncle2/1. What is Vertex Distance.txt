@@ -1,0 +1,64 @@
+1. What is Vertex Distance?
+Imagine someone sitting in a chair getting an eye test. They look through that big device (called a phoropter) that measures the strength of glasses they need.
+
+The distance between the front surface of their eye (cornea) and the back of the lens in the testing machine or their eyeglasses is called vertex distance.
+
+Usually, this vertex distance is around 12 millimeters (about half an inch).
+
+2. Why Does Vertex Distance Matter?
+When you move a lens closer or further from your eye, it changes how strong the lens feels or how you perceive its strength (perceived power).
+
+The actual power number written on the lens doesn't change, but how it acts on your eye does.
+
+3. Eyeglasses vs. Contact Lenses
+Glasses usually sit about 12mm away from your eye, so the prescription (the lens power) includes this distance.
+
+Contact lenses sit directly on your eye, meaning the vertex distance is zero. They're right on your eye, not 12mm away.
+
+4. How Does Vertex Distance Affect Lens Power?
+Simple Rule: Moving a lens further away from your eye makes it behave more "plus" (think: more magnifying).
+
+Moving a lens closer to your eye makes it behave more "minus" (think: less magnifying or shrinking).
+
+5. Easy-to-Understand Examples
+Minus lenses (like -4.00 or -10.00) correct nearsightedness (you see badly far away):
+
+A -10.00 lens at glasses distance (12mm away) will act more minus when moved onto the eye, becoming closer to -9.00.
+
+In other words, minus lenses lose strength (get weaker, less negative) as they move closer to the eye.
+
+Plus lenses (like +8.00 or +10.00) correct farsightedness (you see badly up close):
+
+A +10.00 lens at glasses distance (12mm away) acts more plus when placed onto the eye, becoming about +11.00.
+
+In other words, plus lenses gain strength (get stronger, more positive) as they move closer to the eye.
+
+6. Quick Memory Trick
+Think of older people who lower their reading glasses down their noses to see better. When they push lenses away from their eyes, they're increasing plus power (magnification) to help them see small print. That’s a great way to remember the relationship.
+
+7. Practical Example for Exams
+A common example you'll see on the NCLE exam:
+
+A patient has a glasses prescription of -10.00. What's the contact lens prescription?
+
+Answer: -9.00, because the lens moves closer to the eye, becoming less negative.
+
+8. Exam Tips (NCLE)
+You don't usually need to memorize complicated formulas for your NCLE exam.
+
+Just remember these simple rules:
+
+Closer = more minus, less plus.
+
+Further = more plus, less minus.
+
+Exam questions often give two obviously wrong answers and two closer answers. Using these rules helps you quickly identify the right one.
+
+Summary of Simple Rules
+Glasses → Contacts:
+
+Minus lens: Number goes down (less minus, more plus).
+
+Plus lens: Number goes up (more plus).
+
+That's all you really need to understand about vertex distance for your NCLE exam!

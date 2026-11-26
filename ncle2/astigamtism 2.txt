@@ -1,0 +1,71 @@
+🌽 Imagine Your Eye Like a Cornfield...
+Astigmatism just means your eye is shaped more like a football than a basketball — not perfectly round. This messes with how light focuses inside your eye.
+
+Now, let's break it down super simply.
+
+🧠 Basic Terms You Need First:
+✅ Astigmatism = Light doesn't focus in just one perfect spot.
+Your eye has two main directions:
+
+Vertical (up-down) = 90°
+
+Horizontal (side-to-side) = 180°
+
+✅ K Readings = Measuring how steep your eye is in two directions.
+Bigger number (e.g. 46) = steeper.
+
+Smaller number (e.g. 44) = flatter.
+
+🔍 1. What is “With-the-Rule” Astigmatism?
+👁️ Think of the football laying down flat.
+It's steeper vertically (90°), flatter horizontally (180°).
+
+The vertical part of your eye is bending light more.
+
+🔑 Clues:
+The steepest K reading is at 90° (or near it — between 60° and 120°).
+
+Your glasses/contact lens axis will be close to 180° (horizontal), because lenses correct across the steep part.
+
+📘 Example:
+Rx: -1.00 -1.00 ×180 → Steeper at 90°, flatter at 180° → classic with-the-rule.
+
+🔍 2. What is “Against-the-Rule” Astigmatism?
+👁️ Now the football is standing upright.
+It's steeper horizontally (180°), flatter vertically (90°).
+
+Light is bent more side-to-side.
+
+🔑 Clues:
+The steepest K reading is at 180° (or nearby: 150° to 30°).
+
+The prescription axis is around 90°, correcting across the steepest part.
+
+📘 Example:
+Rx: -1.00 -0.25 ×90 → Steeper at 180°, axis at 90° = against-the-rule.
+
+🔍 3. What is “Oblique” Astigmatism?
+🌀 Now the football is twisted diagonally.
+Steepest part is not near 90° or 180°, but off-angle.
+
+🔑 Clues:
+Axis is between 30°–60° or 120°–150°.
+
+Still regular astigmatism (still has two main powers 90° apart).
+
+📘 Example:
+Rx: -1.00 -1.00 ×135 → That axis is oblique, because it’s not near 90° or 180°.
+
+🧪 K Reading Cheat Sheet:
+K values like 44@180 / 46@90 = with-the-rule (steeper at 90)
+
+K values like 43@90 / 43.75@180 = against-the-rule (steeper at 180)
+
+K values like 43@45 / 44@135 = oblique (not near 90 or 180)
+
+🧱 Final Tips (Just Memorize These):
+
+Astigmatism Type	Steepest Meridian	Rx Axis Location
+With-the-Rule	90° (vertical)	Around 180°
+Against-the-Rule	180° (horizontal)	Around 90°
+Oblique	Diagonal (not 90/180)	30–60° or 120–150°

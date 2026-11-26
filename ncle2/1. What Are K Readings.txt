@@ -1,0 +1,92 @@
+1. What Are K Readings?
+Think of "K readings" as cornea measurements.
+They tell us how curved your cornea is, and whether there's astigmatism (a condition causing blurry vision).
+
+Cornea = Clear dome-shaped surface at the front of your eye.
+
+2. How Do We Get K Readings?
+We use a machine called a "keratometer."
+It measures how powerful (curved) different parts of your cornea are.
+
+Cornea normally provides about +43 "units" (diopters) of focusing power.
+We measure variations from this number to spot astigmatism.
+
+3. What Do the Numbers Mean?
+K readings look like this:
+"44.00 / 46.00 @180" or "43.50 @90 / 43.50 @180".
+
+Numbers (like 44.00, 46.00) = Cornea's power at certain angles (meridians).
+
+"@" followed by a number (e.g., @180, @90) means the angle/direction where we measured.
+
+Higher number = steeper (more curved) cornea.
+
+Lower number = flatter (less curved) cornea.
+
+4. How Do You Spot Astigmatism from K Readings?
+No Astigmatism (perfectly round cornea):
+K readings are identical, for example:
+
+43.50 @90 and 43.50 @180 (same number everywhere).
+
+Astigmatism (uneven cornea shape):
+K readings are different, for example:
+
+44.00 @180 and 46.00 @90 (two different numbers).
+
+This means one direction (meridian) is flatter and one is steeper.
+
+5. Types of Astigmatism:
+We name astigmatism by which direction (angle) is steeper:
+
+With-the-rule:
+Vertical direction (90°) is steeper.
+
+Example: 44.00 horizontally, 46.00 vertically (@90).
+(Most common type.)
+
+Against-the-rule:
+Horizontal direction (180°) is steeper.
+
+Example: 46.00 horizontally (@180), 44.00 vertically.
+
+Oblique (diagonal):
+Steepest direction is at odd angles (not close to 90° or 180°).
+
+Example: steepest curve at 45° or 135° angles.
+
+6. Real-life Example Clearly Explained:
+Example K reading:
+
+44.00 @180 / 46.00 @90
+
+This shows:
+
+Steeper vertically (46.00)
+
+Flatter horizontally (44.00)
+
+This is called "with-the-rule" astigmatism (vertical is steeper).
+
+Difference (46.00 - 44.00) = 2 diopters of astigmatism.
+(Means there’s significant astigmatism present.)
+
+7. Corneal vs. Lenticular Astigmatism:
+Sometimes the cornea (front of eye) isn't the only source of astigmatism.
+
+You also have an internal lens ("crystalline lens") behind the cornea. It can also cause astigmatism—called "lenticular astigmatism."
+
+If a patient's glasses prescription shows more astigmatism than the K readings suggest, it's because the internal lens is adding more astigmatism.
+
+Lenticular astigmatism can happen if the lens is displaced (called "subluxation").
+
+Simple Summary:
+K readings measure your cornea’s curvature.
+
+Different numbers = astigmatism.
+
+Steeper vertical = "with-the-rule" (most common).
+
+Steeper horizontal = "against-the-rule."
+
+Astigmatism can come from cornea or lens inside your eye.

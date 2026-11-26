@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Breakout Mobile</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --accent-color: #00ffee;
+        }
+
+        body {
+            background: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            touch-action: none; /* Crucial for mobile gameplay */
+        }
+
+        /* Responsive Container: Maintains Aspect Ratio */
+        #game-wrapper {
+            position: relative;
+            width: 95vw;
+            height: calc(95vw * (640 / 480));
+            max-height: 95vh;
+            max-width: calc(95vh * (480 / 640));
+            box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 0 2px #333;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: block;
+            image-rendering: pixelated; /* Keeps that crisp retro look */
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.8);
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+
+        h1 { font-size: 8vw; margin: 0; color: #ff0044; text-shadow: 3px 3px #fff; }
+        p { font-size: 4vw; margin: 10px 0; }
+        .hidden { display: none !important; }
+
+        @media (min-width: 768px) {
+            h1 { font-size: 3rem; }
+            p { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div id="start-screen" class="ui-overlay">
+            <h1>BREAKOUT</h1>
+            <p>DRAG TO MOVE PADDLE</p>
+            <p style="color: var(--accent-color); font-weight: bold; animation: blink 1s infinite;">TAP TO START</p>
+        </div>
+
+        <div id="game-over-screen" class="ui-overlay hidden">
+            <h1 id="status-text">GAME OVER</h1>
+            <p>Score: <span id="final-score">0</span></p>
+            <p style="color: var(--accent-color);">TAP TO PLAY AGAIN</p>
+        </div>
+    </div>
+
+<script>
+/**
+ * SENIOR DEV LOG:
+ * Logic: Fixed internal resolution (480x640) for physics stability.
+ * Input: Viewport-to-Canvas coordinate translation.
+ */
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const startScreen = document.getElementById('start-screen');
+const gameOverScreen = document.getElementById('game-over-screen');
+const finalScoreDisp = document.getElementById('final-score');
+const statusText = document.getElementById('status-text');
+
+// Internal resolution (Physics constant)
+canvas.width = 480;
+canvas.height = 640;
+
+let score = 0;
+let lives = 3;
+let gameState = 'START';
+let bricks = [];
+let particles = [];
+
+const paddle = {
+    x: canvas.width / 2 - 40,
+    y: canvas.height - 50,
+    width: 80,
+    height: 12,
+    speed: 10
+};
+
+const ball = {
+    x: 0, y: 0, dx: 0, dy: 0, radius: 6, speed: 6
+};
+
+// --- INPUT HANDLING ---
+
+function handleInput(clientX) {
+    const rect = canvas.getBoundingClientRect();
+    // Translate screen X to canvas X based on current scaling
+    const scaleX = canvas.width / rect.width;
+    const canvasX = (clientX - rect.left) * scaleX;
+    
+    paddle.x = canvasX - paddle.width / 2;
+    
+    // Bounds check
+    if (paddle.x < 0) paddle.x = 0;
+    if (paddle.x + paddle.width > canvas.width) paddle.x = canvas.width - paddle.width;
+
+    if (gameState !== 'PLAYING') startGame();
+}
+
+window.addEventListener('mousemove', e => { if(e.buttons > 0 || gameState === 'PLAYING') handleInput(e.clientX); });
+window.addEventListener('touchmove', e => { handleInput(e.touches[0].clientX); e.preventDefault(); }, {passive: false});
+window.addEventListener('touchstart', e => { handleInput(e.touches[0].clientX); e.preventDefault(); }, {passive: false});
+window.addEventListener('mousedown', e => handleInput(e.clientX));
+
+// --- GAME LOGIC ---
+
+function initBricks() {
+    bricks = [];
+    const rows = 8;
+    const cols = 7;
+    const colors = ['#FF0044', '#FF8D00', '#FFEE00', '#00FF44', '#00FFEE', '#008DFF', '#7B00FF', '#FF00FF'];
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            bricks.push({
+                x: c * (canvas.width / cols) + 4,
+                y: r * 24 + 60,
+                w: (canvas.width / cols) - 8,
+                h: 20,
+                color: colors[r],
+                active: true
+            });
+        }
+    }
+}
+
+function startGame() {
+    if (gameState === 'PLAYING') return;
+    score = 0;
+    lives = 3;
+    gameState = 'PLAYING';
+    startScreen.classList.add('hidden');
+    gameOverScreen.classList.add('hidden');
+    initBricks();
+    resetBall();
+}
+
+function resetBall() {
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height - 70;
+    ball.dx = (Math.random() - 0.5) * 8;
+    ball.dy = -ball.speed;
+}
+
+function update() {
+    if (gameState !== 'PLAYING') return;
+
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+
+    // Walls
+    if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) ball.dx *= -1;
+    if (ball.y - ball.radius < 0) ball.dy *= -1;
+
+    // Paddle
+    if (ball.y + ball.radius > paddle.y && ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+        let hitPos = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+        ball.dy = -ball.speed;
+        ball.dx = hitPos * ball.speed;
+        ball.y = paddle.y - ball.radius; // Snap to top of paddle
+    }
+
+    // Bricks
+    bricks.forEach(b => {
+        if (b.active && ball.x > b.x && ball.x < b.x + b.w && ball.y > b.y && ball.y < b.y + b.h) {
+            b.active = false;
+            ball.dy *= -1;
+            score += 10;
+            createExplosion(b.x + b.w/2, b.y + b.h/2, b.color);
+        }
+    });
+
+    // Death
+    if (ball.y > canvas.height) {
+        lives--;
+        if (lives <= 0) endGame(false);
+        else resetBall();
+    }
+
+    // Particles
+    particles.forEach((p, i) => {
+        p.x += p.vx; p.y += p.vy; p.a -= 0.02;
+        if (p.a <= 0) particles.splice(i, 1);
+    });
+
+    if (bricks.every(b => !b.active)) endGame(true);
+}
+
+function endGame(win) {
+    gameState = 'GAMEOVER';
+    gameOverScreen.classList.remove('hidden');
+    statusText.innerText = win ? "VICTORY!" : "GAME OVER";
+    finalScoreDisp.innerText = score;
+}
+
+function createExplosion(x, y, color) {
+    for(let i=0; i<8; i++) {
+        particles.push({x, y, vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10, a: 1, color});
+    }
+}
+
+// --- RENDERING ---
+
+function draw() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Bricks
+    bricks.forEach(b => {
+        if (!b.active) return;
+        ctx.fillStyle = b.color;
+        ctx.fillRect(b.x, b.y, b.w, b.h);
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(b.x, b.y, b.w, 4); // Shading
+    });
+
+    // Paddle
+    ctx.fillStyle = '#00ffee';
+    ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+
+    // Ball
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+
+    // Particles
+    particles.forEach(p => {
+        ctx.globalAlpha = p.a;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, 4, 4);
+    });
+    ctx.globalAlpha = 1;
+
+    // HUD
+    ctx.fillStyle = '#fff';
+    ctx.font = '20px Courier New';
+    ctx.fillText(`SCORE: ${score}`, 20, 30);
+    ctx.fillText(`LIVES: ${lives}`, canvas.width - 110, 30);
+
+    requestAnimationFrame(() => { update(); draw(); });
+}
+
+draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+1. What is Astigmatism?
+Normal eye (no astigmatism):
+Think of a soccer ball — it’s round, and the curve is the same in every direction. When light enters, it focuses to a sharp point in the back of your eye (on the retina). That’s good vision.
+
+Astigmatism:
+Now think of a football (American football). It’s round in one direction and flatter in the other. Light entering the eye now focuses in two different spots or in a line, not a point. That makes things look blurry or stretched.
+
+2. Where Does Astigmatism Come From?
+Two parts of your eye can cause it:
+
+The cornea (the clear front part of your eye). It’s supposed to be smooth and round, like a clean dome.
+
+The lens inside your eye (behind your iris).
+
+If either of them is shaped more like a football than a soccer ball, the light bends unevenly. That’s astigmatism.
+
+3. How Do We Measure Astigmatism?
+We use a tool called a keratometer.
+
+It looks at only the middle part of your cornea — the center 3 to 4 mm.
+
+It checks how steep or flat your cornea is in different directions (called “meridians”).
+
+You’ll see measurements like this:
+
+42 @ 180 (flat direction)
+
+43.50 @ 90 (steep direction)
+
+We subtract:
+43.50 - 42 = 1.50 diopters of astigmatism
+(That’s how much cylinder we’d correct for.)
+
+4. What’s “Regular” vs “Irregular” Astigmatism?
+Regular Astigmatism:
+Steep and flat are exactly 90 degrees apart. It’s very common. You can fix it with glasses or soft contacts.
+
+Irregular Astigmatism:
+Steep and flat are not nicely spaced, or the cornea is misshapen, maybe from:
+
+An eye disease like keratoconus (thinning & bulging of the cornea)
+
+An injury
+
+Surgery problems
+
+Or natural defects
+
+This kind can’t be fixed with regular lenses. It needs a rigid gas permeable (RGP) lens, which creates a new smooth surface over your misshaped eye by trapping a tear layer under the lens.
+
+5. Fun Word: Ectasia
+Means the cornea has thinned and bulged like a weak balloon.
+
+Often seen in keratoconus or after trauma.
+
+Leads to irregular astigmatism.
+
+6. Recap Like You’re 5
+Eye’s like a camera.
+
+Lens or cornea shaped weird = blurry pictures.
+
+Round = good. Football-shaped = not good.
+
+We measure how weird it is with special numbers.
+
+Some problems can be fixed with glasses.
+
+Some need hard special lenses.

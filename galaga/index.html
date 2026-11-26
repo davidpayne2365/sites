@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Galaga Bar Blast Lite - Vampire Emoji Edition</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    #lives {
+      display: none; /* Hide the score display */
+    }
+    #gameOverScreen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 20;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 2rem;
+    }
+    #gameOverScreen .message {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+    }
+    #restartBtn {
+      padding: 1rem 2rem;
+      font-size: 1.8rem;
+      background-color: #222;
+      color: #fff;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #restartBtn:hover {
+      background-color: #444;
+    }
+    /* No story container needed as it will be drawn on canvas */
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <div id="lives">Score: 0</div>
+  <div id="bossWarning">WARNING! BOSS APPROACHING!</div>
+  <!-- Story will be drawn directly on canvas -->
+  <div id="gameOverScreen">
+    <div class="message" id="gameOverMessage"></div>
+    <button id="restartBtn" onclick="location.reload()">Restart</button>
+  </div>
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Add side padding to create invisible boundaries
+    const sidePadding = Math.min(80, canvas.width * 0.1);
+    
+    let score = 0; // We'll keep this variable but won't display it
+    let lives = 3;
+    let gameOver = false;
+    let fallSpeed = 1.0;
+    let shootTimer = 0;
+    let globalSlowTimer = 0;
+    let finalBossSpawned = false; // Track if final boss has spawned
+    let storyComplete = false; // Track if story is complete
+
+    // Story variables for background narrative
+    const storySegments = [
+  "There is a Vampire Boss in this game",
+  "He is so scary,",
+  "He is coming here!",
+  "Get ready to challenge him,",
+  "if he win he will take our blood!",
+  "I'm so scared,",
+  "I can hear him,",
+  "He smell our blood!",
+  "Oh no, he's here...",
+];
+
+
+    let currentStoryText = "";
+    let storyIndex = 0; // Track which story segment we're on
+    // No background images, just using black background
+    let useBlackBackground = true;
+
+    const player = {
+      x: canvas.width / 2 - 15,
+      y: canvas.height - 80,
+      width: 30,
+      height: 30,
+      color: "cyan"
+    };
+
+    const bullets = [];
+    const enemies = [];
+    const bosses = [];
+    const bossBullets = [];
+
+    const bulletEmojis = {
+      regular: "🌹",
+      slow: "🌹",
+      explosive: "🌹",
+      piercing: "🌹"
+    };
+
+    let currentBulletType = "regular";
+    let currentEnemyInterval = null;
+
+    function updateUI() {
+      // We won't update the score display anymore
+    }
+
+    function drawPlayer() {
+      ctx.fillStyle = player.color;
+      ctx.beginPath();
+      ctx.moveTo(player.x + player.width / 2, player.y);
+      ctx.lineTo(player.x, player.y + player.height);
+      ctx.lineTo(player.x + player.width, player.y + player.height);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawBullet(b) {
+      ctx.font = "24px sans-serif";
+      ctx.fillText(b.emoji, b.x, b.y);
+    }
+
+    function drawBossBullet(b) {
+      ctx.font = "24px sans-serif";
+      ctx.fillText(b.emoji, b.x, b.y);
+    }
+
+    function drawEnemy(e) {
+      ctx.font = "24px Arial";
+      ctx.fillText(e.emoji, e.x, e.y);
+    }
+
+    // Spawns normal enemy rows at a fixed interval
+    function dropEnemyRows() {
+      const interval = 300;
+      let x = sidePadding + 60;
+      let direction = 1;
+      
+      const enemyInterval = setInterval(() => {
+        if (!gameOver && enemies.length < 50) {
+          const emojiOptions = ["🦇", "🩸"];
+          const emoji = emojiOptions[Math.floor(Math.random() * emojiOptions.length)];
+          enemies.push({
+            x: Math.min(canvas.width - sidePadding - 24, Math.max(sidePadding, x)),
+            y: -30,
+            speed: fallSpeed + Math.random() * 0.5,
+            dx: direction * 0.3,
+            emoji: emoji
+          });
+          x += 40 * direction;
+          if (x > canvas.width - sidePadding - 24 || x < sidePadding) direction *= -1;
+          x = Math.max(sidePadding, Math.min(canvas.width - sidePadding - 24, x));
+        }
+      }, interval);
+      
+      return enemyInterval;
+    }
+
+    function shoot() {
+      const bullet = {
+        x: player.x + player.width / 2 - 12,
+        y: player.y,
+        type: currentBulletType,
+        emoji: bulletEmojis[currentBulletType]
+      };
+      if (currentBulletType === "piercing") {
+        bullet.pierce = 2;
+      }
+      bullets.push(bullet);
+    }
+
+    function endGame() {
+      gameOver = true;
+      document.getElementById("gameOverMessage").innerHTML = "Game Over!";
+      document.getElementById("gameOverScreen").style.display = "flex";
+    }
+
+    // Spawns the final boss after the story is complete
+    function spawnFinalBoss() {
+      if (finalBossSpawned) return;
+      
+      // Display a final boss warning message in the story text
+      currentStoryText = "THE VAMPIRE LORD APPROACHES! PREPARE FOR THE FINAL BATTLE!";
+      
+      // Clear all enemies
+      enemies.length = 0;
+      
+      // No special background for boss
+      
+      // Create the final boss with more health and abilities
+      setTimeout(() => {
+        if (!gameOver) {
+          const boss = {
+            x: canvas.width / 2 - 70,
+            y: 80,
+            width: 140,
+            height: 140,
+            health: 50,  // CHANGED: Reduced boss health from 100 to 50
+            dx: 2,       // CHANGED: Reduced movement speed from 3 to 2
+            attackTimer: 120, // CHANGED: Start with a longer delay before first attack
+            emoji: "🧛",
+            color: "crimson",
+            scale: 2.5,
+            isFinalBoss: true
+          };
+          bosses.push(boss);
+          finalBossSpawned = true;
+        }
+      }, 3000);
+    }
+
+    // We no longer need the regular boss spawn function since we only want the final boss
+    function spawnBoss() {
+      // This function is kept for compatibility but does nothing now
+    }
+
+    // Progress the background story and change background image
+    function progressStory() {
+      if (storyIndex < storySegments.length) {
+        currentStoryText = storySegments[storyIndex];
+        storyIndex++;
+        
+        // If we've reached the last story segment, prepare to spawn the final boss
+        if (storyIndex >= storySegments.length && !storyComplete) {
+          storyComplete = true;
+          // Spawn the final boss after the last story segment is fully displayed
+          setTimeout(() => {
+            if (!gameOver && !finalBossSpawned) {
+              spawnFinalBoss();
+            }
+          }, 8000); // Wait for the player to read the final story segment
+        }
+      } else {
+        // If story is already complete, don't cycle back
+        return;
+      }
+      
+      // No background images to change
+    }
+
+    // Story will be drawn directly in the draw function
+
+    function update() {
+      if (gameOver) return;
+
+      // Player shooting mechanism
+      if (shootTimer <= 0) {
+        shoot();
+        shootTimer = 8; // CHANGED: Shoot faster (was 10)
+      } else {
+        shootTimer--;
+      }
+
+      // Update player bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        let b = bullets[i];
+        b.y -= 7; // CHANGED: Bullets move faster (was 5)
+        if (b.y < 0) bullets.splice(i, 1);
+      }
+
+      // Slow effect timer for enemies
+      if (globalSlowTimer > 0) globalSlowTimer--;
+
+      // Update normal enemies
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        let e = enemies[i];
+        const speedFactor = (globalSlowTimer > 0) ? 0.5 : 1;
+        e.y += e.speed * speedFactor;
+        e.x += e.dx || 0;
+        if (e.x < sidePadding || e.x > canvas.width - sidePadding - 24) e.dx *= -1;
+        if (e.y > canvas.height) {
+          enemies.splice(i, 1);
+          endGame();
+          return;
+        }
+      }
+
+      // Check collisions for player bullets and normal enemies
+      for (let bi = bullets.length - 1; bi >= 0; bi--) {
+        const b = bullets[bi];
+        let bulletHit = false;
+        
+        for (let ei = enemies.length - 1; ei >= 0; ei--) {
+          const e = enemies[ei];
+          if (b.x < e.x + 24 && b.x + 24 > e.x && b.y < e.y + 24 && b.y + 24 > e.y) {
+            bulletHit = true;
+            switch (b.type) {
+              case "regular":
+                enemies.splice(ei, 1);
+                score++; // Still increment score for game logic
+                // No UI update for score
+                
+                // No more boss spawning based on score
+                break;
+              case "slow":
+                enemies.splice(ei, 1);
+                globalSlowTimer = 120;
+                score++; // Still increment score for game logic
+                // No UI update for score
+                
+                // No more boss spawning based on score
+                break;
+              case "explosive":
+                enemies.splice(ei, 1);
+                const explosionRadius = 50;
+                for (let j = enemies.length - 1; j >= 0; j--) {
+                  const other = enemies[j];
+                  const dx = other.x - b.x;
+                  const dy = other.y - b.y;
+                  if (Math.sqrt(dx * dx + dy * dy) < explosionRadius) {
+                    enemies.splice(j, 1);
+                    score++; // Still increment score for game logic
+                  }
+                }
+                score++; // Still increment score for game logic
+                // No UI update for score
+                
+                // No more boss spawning based on score
+                break;
+              case "piercing":
+                enemies.splice(ei, 1);
+                score++; // Still increment score for game logic
+                // No UI update for score
+                
+                // Check if we should progress the story based on score
+                if (score > 0 && score % 20 === 0) {
+                  progressStory();
+                }
+                
+                b.pierce--;
+                bulletHit = b.pierce <= 0;
+                break;
+            }
+            if (bulletHit) {
+              bullets.splice(bi, 1);
+              break;
+            }
+          }
+        }
+      }
+
+      // Update bosses
+      bosses.forEach((boss, bossIndex) => {
+        boss.x += boss.dx;
+        if (boss.x < sidePadding || boss.x > canvas.width - sidePadding - boss.width) {
+          boss.dx *= -1;
+        }
+        
+        boss.attackTimer--;
+        if (boss.attackTimer <= 0) {
+          // CHANGED: Boss attack pattern - now fires 3 bullets in a spread pattern
+          // but does it less frequently
+          const centerAngle = Math.atan2(player.y - (boss.y + boss.height / 2), player.x - (boss.x + boss.width / 2));
+          const bulletSpeed = 0.8; // CHANGED: Further reduced from 1 to 0.8 for even slower bullets
+          
+          // Center bullet aimed at player
+          bossBullets.push({
+            x: boss.x + boss.width / 2,
+            y: boss.y + boss.height / 2,
+            vx: Math.cos(centerAngle) * bulletSpeed,
+            vy: Math.sin(centerAngle) * bulletSpeed,
+            emoji: "☠️"
+          });
+          
+          // Reset attack timer based on if it's the final boss or not
+          boss.attackTimer = boss.isFinalBoss ? 120 : 150; // CHANGED: Increased from 60 to 120 for final boss
+        }
+        
+        // Check collision between player's bullets and the boss
+        for (let bi = bullets.length - 1; bi >= 0; bi--) {
+          const b = bullets[bi];
+          if (b.x < boss.x + boss.width && b.x + 24 > boss.x &&
+              b.y < boss.y + boss.height && b.y + 24 > boss.y) {
+            bullets.splice(bi, 1);
+            boss.health -= 2; // CHANGED: Each hit does 2 damage instead of 1
+            if (boss.health <= 0) {
+              bosses.splice(bossIndex, 1);
+              score += 30; // Still add bonus for defeating a boss
+              
+              // Final boss defeated means game won
+              if (boss.isFinalBoss) {
+                gameOver = true;
+                document.getElementById("gameOverMessage").innerHTML = "VICTORY!<br>You defeated the Vampire Lord!";
+                document.getElementById("gameOverScreen").style.display = "flex";
+              }
+              
+              bosses.splice(bossIndex, 1);
+              break;
+            }
+          }
+        }
+      });
+
+      // Update boss bullets and check collision with player
+      for (let i = bossBullets.length - 1; i >= 0; i--) {
+        const bb = bossBullets[i];
+        bb.x += bb.vx;
+        bb.y += bb.vy;
+        if (bb.x < 0 || bb.x > canvas.width || bb.y < 0 || bb.y > canvas.height) {
+          bossBullets.splice(i, 1);
+          continue;
+        }
+        
+        // CHANGED: Add small hitbox to make dodging easier
+        const playerHitboxWidth = player.width * 0.8;
+        const playerHitboxHeight = player.height * 0.8;
+        const playerHitboxX = player.x + player.width * 0.1;
+        const playerHitboxY = player.y + player.height * 0.1;
+        
+        if (bb.x < playerHitboxX + playerHitboxWidth && bb.x + 16 > playerHitboxX &&
+            bb.y < playerHitboxY + playerHitboxHeight && bb.y + 16 > playerHitboxY) {
+          bossBullets.splice(i, 1);
+          endGame();
+          return;
+        }
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw black background
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw the background story text without typewriter effect
+      if (currentStoryText) {
+        ctx.save();
+        ctx.globalAlpha = 1.0; // Full opacity for better visibility
+        ctx.font = "italic bold 24px Georgia, serif";
+        
+        // Text with black outline for better readability
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        
+        // Calculate line breaks to wrap text nicely
+        const maxWidth = canvas.width * 0.7;
+        const lineHeight = 36;
+        const lines = [];
+        let line = '';
+        const words = currentStoryText.split(' ');
+        
+        for (const word of words) {
+          const testLine = line + word + ' ';
+          const metrics = ctx.measureText(testLine);
+          const testWidth = metrics.width;
+          
+          if (testWidth > maxWidth && line !== '') {
+            lines.push(line);
+            line = word + ' ';
+          } else {
+            line = testLine;
+          }
+        }
+        lines.push(line);
+        
+        // Draw text centered vertically at 1/3 of the canvas height
+        const totalTextHeight = lines.length * lineHeight;
+        const startY = canvas.height / 3 - totalTextHeight / 2;
+        
+        // Draw text with black outline for better visibility
+        lines.forEach((line, index) => {
+          // Draw text outline
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = "black";
+          ctx.strokeText(line, canvas.width / 2, startY + index * lineHeight);
+          
+          // Draw text
+          ctx.fillStyle = "#888888"; // Gray color
+          ctx.fillText(line, canvas.width / 2, startY + index * lineHeight);
+        });
+        
+        ctx.restore();
+      }
+      
+      drawPlayer();
+      bullets.forEach(drawBullet);
+      enemies.forEach(drawEnemy);
+      bosses.forEach(boss => {
+        ctx.font = boss.isFinalBoss ? "140px Arial" : "80px Arial";
+        ctx.fillStyle = boss.color;
+        
+        // Add special effects for final boss
+        if (boss.isFinalBoss) {
+          ctx.shadowColor = "red";
+          ctx.shadowBlur = 25;
+          ctx.fillText(boss.emoji, boss.x, boss.y + boss.height / 2);
+          
+          // Add a fiery glow effect
+          ctx.shadowColor = "orange";
+          ctx.shadowBlur = 15;
+          ctx.fillText(boss.emoji, boss.x, boss.y + boss.height / 2);
+        } else {
+          ctx.shadowColor = "red";
+          ctx.shadowBlur = 15;
+          ctx.fillText(boss.emoji, boss.x, boss.y + boss.height / 2);
+        }
+        
+        ctx.shadowBlur = 0;
+        ctx.font = "18px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("BOSS HP: " + boss.health, boss.x, boss.y - 15);
+      });
+      bossBullets.forEach(drawBossBullet);
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      if (!gameOver) requestAnimationFrame(gameLoop);
+    }
+
+    canvas.addEventListener("mousemove", (e) => {
+      player.x = Math.max(sidePadding, Math.min(e.clientX - player.width / 2, canvas.width - sidePadding - player.width));
+      player.y = e.clientY - player.height * 3;
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        player.x = Math.max(sidePadding, Math.min(touch.clientX - player.width / 2, canvas.width - sidePadding - player.width));
+        player.y = touch.clientY - player.height * 4;
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Handle window resize
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Initialize with first story segment to welcome the player
+    currentStoryText = "Welcome, vampire hunter. Prepare to face the darkness...";
+    storyIndex = 0;
+    
+    // Set a timer to automatically progress story for inactive players
+    setInterval(() => {
+      if (!gameOver) {
+        // Progress the story every 6 seconds
+        progressStory();
+      }
+    }, 6000);
+    
+    currentEnemyInterval = dropEnemyRows();
+    updateUI();
+    gameLoop();
+  </script>
+</body>
+</html>

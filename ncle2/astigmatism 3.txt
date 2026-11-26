@@ -1,0 +1,102 @@
+🧠 First, What’s Astigmatism?
+Your eye is like a camera.
+
+In a perfect eye, light focuses at one clean point on the back of the eye (the retina).
+
+With astigmatism, light focuses in two different spots — like a blurry photo.
+
+Why? Because your cornea (front of the eye) is shaped more like a football than a basketball.
+
+We fix it by measuring the steep and flat parts — called the two main meridians.
+
+🔍 What Are These Weird Astigmatism Names?
+All these “simple” and “compound” names just tell you where the light focuses in those two main directions (meridians).
+
+1. 🟥 Simple Myopic Astigmatism
+Myopia = Nearsighted = Light focuses in front of the retina.
+
+In simple myopic, one meridian focuses in front, one is perfect (on the retina).
+
+Example:
+-1.00 +1.00 x 180 → Transpose = Plano -1.00 x 90
+→ One meridian is 0, the other is -1 → that’s simple myopic.
+
+2. 🟥 Compound Myopic Astigmatism
+Both meridians focus in front of the retina.
+
+Example:
+-0.25 -0.25 x 90 → Already in minus cylinder → both meridians are minus
+→ That’s compound myopic.
+
+3. 🟩 Simple Hyperopic Astigmatism
+Hyperopia = Farsighted = Light focuses behind the retina.
+
+In simple hyperopic, one meridian is perfect, one is too far (behind the retina).
+
+Example:
++2.00 -2.00 x 180 → Transpose = Plano +2.00 x 90
+→ One meridian is 0, the other is +2 → simple hyperopic.
+
+4. 🟩 Compound Hyperopic Astigmatism
+Both meridians focus behind the retina.
+
+Example:
++0.75 +0.75 x 180 → Transpose = +1.50 -0.75 x 90
+→ Both meridians are + → compound hyperopic.
+
+5. 🟪 Mixed Astigmatism
+One meridian is nearsighted (−), the other is farsighted (+).
+
+They’re focusing on opposite sides of the retina.
+
+Example:
+-1.00 +2.00 x 90 → Transpose = +1.00 -2.00 x 180
+→ One is +1.00, one is −1.00 → mixed astigmatism.
+
+🔁 BONUS: How to Classify "With the Rule" vs "Against the Rule"
+Imagine a football:
+
+With the Rule (WTR) = Steeper up-and-down (90°), flatter side-to-side (180°)
+→ Like a football lying down.
+
+Against the Rule (ATR) = Steeper side-to-side (180°), flatter up-and-down (90°)
+→ Like a football standing on end.
+
+How do you know?
+Look at which meridian has more minus power.
+
+If 90° has more minus → With the Rule
+
+If 180° has more minus → Against the Rule
+
+🧪 Quick Formula Recap (Transpose Practice)
+When you're given a prescription and need to classify it, here’s what you do:
+
+Transpose it (if it's not already in minus cylinder form):
+
+Add Sphere + Cylinder = new Sphere
+
+Flip the sign of the Cylinder
+
+Change the Axis by 90°
+
+Compare the two meridians:
+
+One zero, one minus → Simple Myopic
+
+One zero, one plus → Simple Hyperopic
+
+Both minus → Compound Myopic
+
+Both plus → Compound Hyperopic
+
+One plus, one minus → Mixed
+
+🧠 Summary You Can Memorize:
+
+Name	Sphere Signs After Transpose
+Simple Myopic	0 and −
+Compound Myopic	− and −
+Simple Hyperopic	0 and +
+Compound Hyperopic	+ and +
+Mixed Astigmatism	− and + (or + and −)

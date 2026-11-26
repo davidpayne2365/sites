@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INDUSTRY BAR</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #f5f5f5;
+            background-color: #1d1e22; /* Dark charcoal background instead of navy */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #d47a37; /* Copper/orange color instead of gold */
+            letter-spacing: 2px;
+        }
+        
+        /* Header styles */
+        header {
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://scontent.ffar1-2.fna.fbcdn.net/v/t39.30808-6/485643556_978483717818974_4000370132209584181_n.jpg?stp=cp6_dst-jpg_tt6&_nc_cat=106&ccb=1-7&_nc_sid=833d8c&_nc_ohc=vBLBinEqq8cQ7kNvwH0j7mR&_nc_oc=AdmpU1HHGLKiqaF7hx5mpbcINHAXi3vokuyw4pBCza1niST1-rSw6XaY9HEciIJumqm7vPMdVKDUYKbUx-7Goo6z&_nc_zt=23&_nc_ht=scontent.ffar1-2.fna&_nc_gid=UIRH0JsxftYoIzYjAUvWXg&oh=00_AfFQUSll0sk8CQscpmwHZuspM7C9b7iJ42loLEaptAJXag&oe=67F8CB12) center/cover no-repeat fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            transition: background-color 0.3s;
+            background-color: rgba(29, 30, 34, 0.95); /* Dark charcoal with transparency */
+        }
+        
+        .nav-scrolled {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: #d47a37; /* Copper/orange color */
+        }
+        
+        .logo-image {
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        
+        .nav-links {
+            display: flex;
+        }
+        
+        .nav-links li {
+            list-style: none;
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            color: #f5f5f5;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+            display: block;
+            padding: 10px 15px;
+        }
+        
+        .nav-links a:hover {
+            color: #d47a37; /* Copper/orange color */
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #f5f5f5;
+        }
+        
+        .hero-text h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+            color: #d47a37; /* Copper/orange color */
+        }
+        
+        .hero-text p {
+            font-size: 24px;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #d47a37; /* Copper/orange color */
+            color: #1d1e22; /* Dark background color */
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .cta-button:hover {
+            background-color: #f5f5f5;
+        }
+        
+        /* Menu Section */
+        #menu {
+            background-color: #1d1e22; /* Dark charcoal */
+        }
+        
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .menu-category {
+            margin-bottom: 40px;
+        }
+        
+        .category-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #d47a37; /* Copper/orange color */
+            text-align: center;
+        }
+        
+        .menu-item {
+            background-color: #25262a; /* Slightly lighter charcoal */
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid #d47a37; /* Copper/orange color */
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .menu-item-content {
+            padding: 20px;
+        }
+        
+        .menu-item-title {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #d47a37; /* Copper/orange color */
+        }
+        
+        .menu-item-description {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .menu-item-price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #d47a37; /* Copper/orange color */
+        }
+        
+        /* Contact Section */
+        #contact {
+            background-color: #25262a; /* Slightly lighter charcoal */
+        }
+        
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .contact-detail {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .contact-info h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #d47a37; /* Copper/orange color */
+        }
+        
+        .map {
+            height: 300px;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .map iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto 30px auto;
+        }
+        
+        .social-link {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            background-color: #d47a37; /* Copper/orange color */
+            color: #1d1e22; /* Dark background */
+            margin: 0 15px;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .social-link:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-link:hover {
+            background-color: #d47a37; /* Copper/orange color */
+            color: #1d1e22; /* Dark charcoal */
+        }
+        
+        .directions-link {
+            color: #d47a37;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .directions-link:hover {
+            color: #f5f5f5;
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #16171a; /* Darkest charcoal */
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #d47a37; /* Copper/orange color */
+            margin-bottom: 20px;
+        }
+        
+        .copyright {
+            font-size: 16px;
+            color: #888;
+        }
+        
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: rgba(29, 30, 34, 0.95);
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+                display: none;
+            }
+            
+            .nav-links li {
+                margin: 5px 0;
+                width: 100%;
+                text-align: center;
+            }
+            
+            .nav-links a {
+                padding: 15px 20px;
+                width: 100%;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-text h1 {
+                font-size: 40px;
+            }
+            
+            .hero-text p {
+                font-size: 18px;
+            }
+            
+            .map iframe {
+                height: 250px;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .social-link {
+                margin: 10px 0;
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="logo">
+            <img src="https://scontent.ffar1-2.fna.fbcdn.net/v/t39.30808-6/458302910_122127337796359299_8395567893590239252_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=LreG9HE2cIoQ7kNvwEdHpXI&_nc_oc=AdlJ2K-48QWtopEMI_YL6hJjvxm9FAc-2xV0SzPihhb-SJVK8KKLP2kRKGeMONw3Q4m9Q3rGnryJu7My5guCOw0d&_nc_zt=23&_nc_ht=scontent.ffar1-2.fna&_nc_gid=619keAjWwKVIbLA9gECGUg&oh=00_AfHtjE8va0DMRKTIrOkyedm2I5F6tTfHE2Uqn41ghVKb-w&oe=67F92168" alt="Industry Bar Logo" class="logo-image">
+            INDUSTRY BAR
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="mobile-menu-btn">☰</div>
+    </nav>
+    
+    <header id="home">
+        <div class="hero-text">
+            <h1>INDUSTRY BAR</h1>
+            <p>A relaxed bar located in Downtown Evansville. Come play some pool or darts, grab a drink and make some friends at the Industry Bar.</p>
+            <a href="#menu" class="cta-button">VIEW OUR DRINKS</a>
+        </div>
+    </header>
+    
+    <section id="menu">
+        <div class="container">
+            <h2 class="section-title">OUR MENU</h2>
+            <div class="menu-category">
+                <h3 class="category-title">HOUSE COCKTAILS</h3>
+                <div class="menu-container">
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <h4 class="menu-item-title">SAZERAC OLD FASHIONED</h4>
+                            <p class="menu-item-description">Sazerac Rye, brown sugar, Angostura bitters, garnished with cocktail cherry and orange peel</p>
+                            <p class="menu-item-price">$10</p>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <h4 class="menu-item-title">FUNKY MONKEY</h4>
+                            <p class="menu-item-description">Planteray Fiji Rum, Banana Liqueur, Fresh squeezed orange</p>
+                            <p class="menu-item-price">$11</p>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <h4 class="menu-item-title">ROSÉ 75</h4>
+                            <p class="menu-item-description">Citadelle Jardien Gin, Housemade lemon syrup topped with LaMarca Sparkling Rose</p>
+                            <p class="menu-item-price">$11</p>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <h4 class="menu-item-title">SOUR CHERRY MULE</h4>
+                            <p class="menu-item-description">Wheatley Vodka, Sour Cherry Liqueur, lime juice topped with Ginger Beer. Garnished with lime and cocktail cherry</p>
+                            <p class="menu-item-price">$10</p>
+                        </div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <h4 class="menu-item-title">HOUSE MARG</h4>
+                            <p class="menu-item-description">Libelula Tequila, Dry Curacao, Organic agave syrup, lime juice</p>
+                            <p class="menu-item-price">$10</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">FIND US</h2>
+            <div class="social-links">
+                <a href="https://www.facebook.com/p/Industry-Bar-61560778977308/" class="social-link">Facebook</a>
+                <a href="https://www.tiktok.com/@industry.bar" class="social-link">TikTok</a>
+                <a href="https://www.instagram.com/industrybarevansville/?hl=en" class="social-link">Instagram</a>
+            </div>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Visit Us</h3>
+                    <p class="contact-detail">📍 <a href="https://maps.google.com/maps?saddr=Current+Location&daddr=101+SE+1st+St,+Evansville,+IN+47708" target="_blank" class="directions-link">101 SE 1st St, Evansville, IN 47708</a></p>
+                    <p class="contact-detail">✉️ <a href="mailto:speicherskeels@gmail.com" class="directions-link">speicherskeels@gmail.com</a></p>
+                    <h3>Hours</h3>
+                    <p class="contact-detail">Monday: 4 PM - 3 AM</p>
+                    <p class="contact-detail">Tuesday: 4 PM - 3 AM</p>
+                    <p class="contact-detail">Wednesday: 4 PM - 3 AM</p>
+                    <p class="contact-detail">Thursday: 4 PM - 3 AM</p>
+                    <p class="contact-detail">Friday: 2 PM - 3 AM</p>
+                    <p class="contact-detail">Saturday: 12 PM - 3 AM</p>
+                    <p class="contact-detail">Sunday: 4 PM - 3 AM</p>
+                    <div class="map">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3145.3583299251395!2d-87.57614232464056!3d37.96876610096242!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8871d5c455c29121%3A0xe2eda61ec27e17f3!2sIndustry%20Bar!5e0!3m2!1sen!2sus!4v1743998991106!5m2!1sen!2sus" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-logo">INDUSTRY BAR</div>
+            <p class="copyright">© 2025 Industry Bar. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close the mobile menu when clicking a nav link
+                if (window.innerWidth <= 768) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+        
+        // Change navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const isClickInsideNav = navLinks.contains(event.target);
+            const isClickOnMenuBtn = mobileMenuBtn.contains(event.target);
+            
+            if (!isClickInsideNav && !isClickOnMenuBtn && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

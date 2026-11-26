@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamy Sleep</title>
+    <meta name="description" content="Sleep sound app with relaxing audio to help you fall asleep">
+    <meta name="theme-color" content="#2c003e">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+        
+        html {
+            overflow-x: hidden;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c003e, #1c2b4b);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+            color: #c2ffe0;
+            text-shadow: 0 0 10px rgba(194, 255, 224, 0.5);
+        }
+        
+        p.tagline {
+            font-size: 1.2rem;
+            color: #a090d0;
+            margin-bottom: 20px;
+        }
+        
+        .sound-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .sound-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sound-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(194, 255, 224, 0.1), rgba(160, 144, 208, 0.1));
+            z-index: -1;
+            border-radius: 15px;
+        }
+        
+        .sound-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .sound-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 400;
+            color: #d4c1ff;
+        }
+        
+        .sound-card p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .edit-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .edit-icon:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Player popup styles */
+        .player-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 50;
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid rgba(194, 255, 224, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .player-popup.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .player-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .player-popup-header h3 {
+            margin: 0;
+            color: #c2ffe0;
+            font-weight: 400;
+        }
+        
+        .close-popup {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+        }
+        
+        .close-popup:hover {
+            color: #fff;
+        }
+        
+        /* Player progress slider styles */
+        .progress-container {
+            margin: 15px 0;
+            width: 100%;
+        }
+        
+        .progress-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+        
+        .progress-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #c2ffe0;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #c2ffe0;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        button {
+            background: rgba(194, 255, 224, 0.2);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: rgba(194, 255, 224, 0.4);
+        }
+        
+        .timer-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        select {
+            background: rgba(194, 255, 224, 0.2);
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            outline: none;
+            font-size: 16px;
+        }
+        
+        select option {
+            background-color: #2c003e;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        /* Recording section styles */
+        .recording-section {
+            text-align: center;
+            padding-top: 10px;
+        }
+        
+        .recording-section h3 {
+            margin-bottom: 10px;
+            color: #c2ffe0;
+            font-size: 1.2rem;
+        }
+        
+        .recording-section p {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .record-btn {
+            background: rgba(255, 100, 100, 0.3);
+            border: none;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-size: 16px;
+        }
+        
+        .record-btn:hover {
+            background: rgba(255, 100, 100, 0.5);
+        }
+        
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+            background: rgba(255, 100, 100, 0.7);
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .record-timer {
+            font-size: 2rem;
+            margin: 15px 0;
+            font-family: monospace;
+            color: #c2ffe0;
+        }
+        
+        .recording-controls button {
+            margin: 0 5px;
+        }
+        
+        /* Modal styles for editing */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #3d1157, #2d3b5b);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #c2ffe0;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a090d0;
+        }
+        
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        .input-group textarea {
+            resize: vertical;
+            height: 80px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .sound-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sound-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dreamy Sleep</h1>
+            <p class="tagline">Drift into peaceful slumber with soothing sounds</p>
+        </header>
+        
+        <main>
+            <section>
+                <!-- 
+                    SOUND BUTTONS SECTION
+                    Now with edit icons and ability to record custom sounds
+                -->
+                <div class="sound-grid">
+                    <div class="sound-card" data-sound="rain">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Gentle Rain</h3>
+                        <p>Soft rainfall on a quiet night</p>
+                    </div>
+                    <div class="sound-card" data-sound="forest">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Forest Night</h3>
+                        <p>Crickets and distant owl hoots</p>
+                    </div>
+                    <div class="sound-card" data-sound="waves">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Ocean Waves</h3>
+                        <p>Waves gently breaking on the shore</p>
+                    </div>
+                    <div class="sound-card" data-sound="creek">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Babbling Brook</h3>
+                        <p>Water flowing over smooth stones</p>
+                    </div>
+                    <div class="sound-card" data-sound="white-noise">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>White Noise</h3>
+                        <p>Gentle static to mask disturbances</p>
+                    </div>
+                    <div class="sound-card" data-sound="fan">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Ceiling Fan</h3>
+                        <p>Rhythmic whirring of fan blades</p>
+                    </div>
+                    <div class="sound-card" data-sound="fireplace">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Crackling Fire</h3>
+                        <p>Warm fire burning in a hearth</p>
+                    </div>
+                    <div class="sound-card" data-sound="train">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Night Train</h3>
+                        <p>Distant train sounds and rail rhythms</p>
+                    </div>
+                    <div class="sound-card" data-sound="piano">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Gentle Piano</h3>
+                        <p>Soft piano melodies in the night</p>
+                    </div>
+                    <div class="sound-card" data-sound="meditation">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Meditation Bowls</h3>
+                        <p>Resonant singing bowls and chimes</p>
+                    </div>
+                    <div class="sound-card" data-sound="lullaby">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Lullaby</h3>
+                        <p>Soothing melodies for peaceful sleep</p>
+                    </div>
+                    <div class="sound-card" data-sound="space">
+                        <div class="edit-icon" title="Edit">✏️</div>
+                        <h3>Space Ambience</h3>
+                        <p>Ethereal cosmic soundscapes</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Player Popup with Recording Interface -->
+    <div class="player-popup" id="player-popup">
+        <div class="player-popup-header">
+            <h3 id="current-sound">No sound selected</h3>
+            <button class="close-popup" id="close-popup">✕</button>
+        </div>
+        
+        <!-- Player controls section -->
+        <div class="player-section" id="player-section">
+            <div class="progress-container">
+                <input type="range" min="0" max="100" value="0" class="progress-slider" id="progress-slider">
+                <div class="time-display">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+            </div>
+            <div class="player-controls">
+                <button id="play-btn">Play</button>
+                <button id="pause-btn">Pause</button>
+                <button id="record-toggle-btn">Record New</button>
+            </div>
+            <div class="timer-container">
+                <label for="timer" style="font-size: 16px; color: #c2ffe0;">Sleep Timer: </label>
+                <select id="timer">
+                    <option value="0">Continuous</option>
+                    <option value="30">30 minutes</option>
+                    <option value="60">1 hour</option>
+                    <option value="120">2 hours</option>
+                    <option value="240">4 hours</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Recording section (hidden by default) -->
+        <div class="recording-section" id="recording-section">
+            <h3>Record Your Own Sound</h3>
+            <p>Record a custom sound to replace the current selection</p>
+            <div class="record-timer">00:00</div>
+            <div class="recording-controls">
+                <button id="start-recording" class="record-btn">Start Recording</button>
+                <button id="stop-recording" disabled>Stop & Save</button>
+                <button id="cancel-recording">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <h3>Edit Sound</h3>
+            <div class="input-group">
+                <label for="sound-name">Sound Name:</label>
+                <input type="text" id="sound-name" placeholder="Enter a new name">
+            </div>
+            <div class="input-group">
+                <label for="sound-description">Description:</label>
+                <textarea id="sound-description" placeholder="Enter a new description"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button id="cancel-edit">Cancel</button>
+                <button id="save-edit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ====================================================================
+        // EDITABLE SECTION - CHANGE SOUND NAMES AND DESCRIPTIONS HERE
+        // ====================================================================
+        
+        // Default sound names and descriptions
+        const defaultSoundNames = {
+            'rain': 'Gentle Rain',
+            'forest': 'Forest Night',
+            'waves': 'Ocean Waves',
+            'creek': 'Babbling Brook',
+            'white-noise': 'White Noise',
+            'fan': 'Ceiling Fan',
+            'fireplace': 'Crackling Fire',
+            'train': 'Night Train',
+            'piano': 'Gentle Piano',
+            'meditation': 'Meditation Bowls',
+            'lullaby': 'Lullaby',
+            'space': 'Space Ambience'
+        };
+        
+        const defaultSoundDescriptions = {
+            'rain': 'Soft rainfall on a quiet night',
+            'forest': 'Crickets and distant owl hoots',
+            'waves': 'Waves gently breaking on the shore',
+            'creek': 'Water flowing over smooth stones',
+            'white-noise': 'Gentle static to mask disturbances',
+            'fan': 'Rhythmic whirring of fan blades',
+            'fireplace': 'Warm fire burning in a hearth',
+            'train': 'Distant train sounds and rail rhythms',
+            'piano': 'Soft piano melodies in the night',
+            'meditation': 'Resonant singing bowls and chimes',
+            'lullaby': 'Soothing melodies for peaceful sleep',
+            'space': 'Ethereal cosmic soundscapes'
+        };
+        
+        // Sound sources - update these paths to point to your GitHub hosted files
+        const soundSources = {
+            'rain': './sounds/rain.mp3', // Fixed path to rain sound file
+            'forest': './sounds/forest.mp3',
+            'waves': './sounds/waves.mp3',
+            'creek': './sounds/creek.mp3',
+            'white-noise': './sounds/white-noise.mp3',
+            'fan': './sounds/fan.mp3',
+            'fireplace': './sounds/fire.mp3',
+            'train': './sounds/train.mp3',
+            'piano': './sounds/piano.mp3',
+            'meditation': './sounds/meditation.mp3',
+            'lullaby': './sounds/lullaby.mp3',
+            'space': './sounds/space.mp3'
+        };
+        
+        // Load saved data from localStorage or use defaults
+        let soundNames = { ...defaultSoundNames };
+        let soundDescriptions = { ...defaultSoundDescriptions };
+        
+        // Try to load saved names and descriptions
+        try {
+            const savedNames = localStorage.getItem('dreamySleepNames');
+            const savedDescriptions = localStorage.getItem('dreamySleepDescriptions');
+            
+            if (savedNames) {
+                soundNames = { ...defaultSoundNames, ...JSON.parse(savedNames) };
+            }
+            
+            if (savedDescriptions) {
+                soundDescriptions = { ...defaultSoundDescriptions, ...JSON.parse(savedDescriptions) };
+            }
+        } catch (error) {
+            console.error('Error loading saved data:', error);
+        }
+        
+        // User recorded sounds will be stored here
+        const userRecordings = {};
+        
+        // Load any saved recordings from localStorage
+        const loadSavedRecordings = () => {
+            try {
+                const savedRecordingsList = localStorage.getItem('dreamySleepRecordings');
+                if (savedRecordingsList) {
+                    const recordingIds = JSON.parse(savedRecordingsList);
+                    
+                    // For each saved recording ID, load the audio data
+                    recordingIds.forEach(id => {
+                        const audioData = localStorage.getItem(`dreamySleepRecording_${id}`);
+                        if (audioData) {
+                            // Convert base64 string back to blob
+                            const binaryData = atob(audioData);
+                            const arrayBuffer = new ArrayBuffer(binaryData.length);
+                            const uint8Array = new Uint8Array(arrayBuffer);
+                            
+                            for (let i = 0; i < binaryData.length; i++) {
+                                uint8Array[i] = binaryData.charCodeAt(i);
+                            }
+                            
+                            const blob = new Blob([uint8Array], { type: 'audio/webm' });
+                            userRecordings[id] = URL.createObjectURL(blob);
+                            
+                            // Update UI to show custom recording is available
+                            const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+                            if (card) {
+                                card.style.background = 'rgba(194, 255, 224, 0.15)';
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading saved recordings:', error);
+            }
+        };
+        
+        // ====================================================================
+        // END OF EDITABLE SECTION
+        // ====================================================================
+        
+        // Audio functionality
+        const soundCards = document.querySelectorAll('.sound-card');
+        const playerPopup = document.getElementById('player-popup');
+        const currentSound = document.getElementById('current-sound');
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const timerSelect = document.getElementById('timer');
+        const recordToggleBtn = document.getElementById('record-toggle-btn');
+        const closePopupBtn = document.getElementById('close-popup');
+        
+        // Progress slider elements
+        const progressSlider = document.getElementById('progress-slider');
+        const currentTimeDisplay = document.getElementById('current-time');
+        const totalTimeDisplay = document.getElementById('total-time');
+        
+        // Player and recording sections in popup
+        const playerSection = document.getElementById('player-section');
+        const recordingSection = document.getElementById('recording-section');
+        
+        // Recording interface elements
+        const startRecordingBtn = document.getElementById('start-recording');
+        const stopRecordingBtn = document.getElementById('stop-recording');
+        const cancelRecordingBtn = document.getElementById('cancel-recording');
+        const recordTimer = document.querySelector('.record-timer');
+        
+        // Edit modal elements
+        const editModal = document.getElementById('edit-modal');
+        const soundNameInput = document.getElementById('sound-name');
+        const soundDescInput = document.getElementById('sound-description');
+        const saveEditBtn = document.getElementById('save-edit');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const editIcons = document.querySelectorAll('.edit-icon');
+        
+        // Audio element for playing sounds
+        let audioElement = null;
+        let currentSoundId = null;
+        let timerTimeout = null;
+        
+        // Recording variables
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let recordingInterval = null;
+        let recordingStartTime = null;
+        let currentEditingSoundId = null;
+        
+        // Initial setup for the recording section
+        recordingSection.style.display = 'none';
+        
+        // Function to format time as MM:SS
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            seconds = Math.floor(seconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Function to update the progress slider
+        function updateProgressSlider() {
+            if (audioElement && !isNaN(audioElement.duration)) {
+                const percentage = (audioElement.currentTime / audioElement.duration) * 100;
+                progressSlider.value = percentage;
+                
+                // Update time displays
+                currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+                totalTimeDisplay.textContent = formatTime(audioElement.duration);
+            }
+        }
+        
+        // Function to play a sound
+        function playSound(soundId) {
+            // Stop any currently playing audio
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            
+            // Clear any existing timer
+            if (timerTimeout) {
+                clearTimeout(timerTimeout);
+                timerTimeout = null;
+            }
+            
+            // Check if there's a user recording first
+            if (userRecordings[soundId]) {
+                audioElement = new Audio(userRecordings[soundId]);
+                audioElement.loop = true;
+                currentSoundId = soundId;
+                
+                // Add event listeners for progress tracking
+                setupAudioEvents(audioElement);
+                
+                // Play the audio
+                audioElement.play().catch(error => {
+                    console.error('Audio playback error:', error);
+                    // Removed alert
+                });
+                
+                // Set timer if selected
+                setTimer();
+            }
+            // If no user recording, play the default sound
+            else if (soundSources[soundId]) {
+                audioElement = new Audio(soundSources[soundId]);
+                audioElement.loop = true;
+                currentSoundId = soundId;
+                
+                // Add event listeners for progress tracking
+                setupAudioEvents(audioElement);
+                
+                // Play the audio
+                audioElement.play().catch(error => {
+                    console.error('Audio playback error:', error);
+                    const soundName = soundNames[soundId] || soundId;
+                    // Removed alert
+                });
+                
+                // Set timer if selected
+                setTimer();
+            } else {
+                console.error(`Sound source not found for: ${soundId}`);
+                // Removed alert
+            }
+        }
+        
+        // Function to set up audio event listeners
+        function setupAudioEvents(audio) {
+            // Reset slider when audio loaded
+            audio.addEventListener('loadedmetadata', () => {
+                progressSlider.value = 0;
+                currentTimeDisplay.textContent = "0:00";
+                totalTimeDisplay.textContent = formatTime(audio.duration);
+            });
+            
+            // Update slider as audio plays
+            audio.addEventListener('timeupdate', updateProgressSlider);
+            
+            // Reset when audio ends (although it should be looping)
+            audio.addEventListener('ended', () => {
+                progressSlider.value = 0;
+                currentTimeDisplay.textContent = "0:00";
+            });
+        }
+        
+        // Function to set sleep timer
+        function setTimer() {
+            const timerValue = parseInt(timerSelect.value);
+            
+            if (timerValue > 0 && audioElement) {
+                // Convert minutes to milliseconds
+                const timerDuration = timerValue * 60 * 1000;
+                
+                // Clear any existing timer
+                if (timerTimeout) {
+                    clearTimeout(timerTimeout);
+                }
+                
+                // Set new timer
+                timerTimeout = setTimeout(() => {
+                    if (audioElement) {
+                        audioElement.pause();
+                        audioElement = null;
+                    }
+                }, timerDuration);
+                
+                console.log(`Timer set for ${timerValue} minutes`);
+            }
+        }
+        
+        // Function to update the recording timer display
+        function updateRecordingTimer() {
+            if (!recordingStartTime) return;
+            
+            const elapsed = Date.now() - recordingStartTime;
+            const seconds = Math.floor((elapsed / 1000) % 60);
+            const minutes = Math.floor((elapsed / 1000 / 60) % 60);
+            
+            recordTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Function to save recording to localStorage
+        function saveRecording(soundId, blob) {
+            try {
+                // Get the current list of recording IDs
+                let recordingIds = [];
+                const savedList = localStorage.getItem('dreamySleepRecordings');
+                
+                if (savedList) {
+                    recordingIds = JSON.parse(savedList);
+                    
+                    // Add the current ID if it doesn't exist
+                    if (!recordingIds.includes(soundId)) {
+                        recordingIds.push(soundId);
+                    }
+                } else {
+                    recordingIds = [soundId];
+                }
+                
+                // Save the updated list
+                localStorage.setItem('dreamySleepRecordings', JSON.stringify(recordingIds));
+                
+                // Convert blob to base64 string for storage
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // Get base64 data (remove data URL prefix)
+                    const base64Data = reader.result.split(',')[1];
+                    
+                    // Store the audio data
+                    localStorage.setItem(`dreamySleepRecording_${soundId}`, base64Data);
+                    console.log(`Recording saved for ${soundId}`);
+                };
+                
+                reader.readAsDataURL(blob);
+            } catch (error) {
+                console.error('Error saving recording:', error);
+                console.log('Unable to save your recording. Local storage may be full or unavailable.');
+            }
+        }
+        
+        // FIXED: Function to start recording with bug fixes
+        function startRecording() {
+            // Stop any currently playing audio first
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            
+            if (!navigator.mediaDevices) {
+                console.error('Audio recording is not supported in this browser.');
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    recordedChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) {
+                            recordedChunks.push(e.data);
+                        }
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        // Create a blob from the recorded chunks
+                        const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                        
+                        // If there's an existing recording URL, revoke it to prevent memory leaks
+                        if (userRecordings[currentSoundId]) {
+                            URL.revokeObjectURL(userRecordings[currentSoundId]);
+                        }
+                        
+                        // Store the recording in userRecordings object
+                        if (currentSoundId) {
+                            userRecordings[currentSoundId] = URL.createObjectURL(blob);
+                            
+                            // Update UI to show custom recording is available
+                            const card = document.querySelector(`.sound-card[data-sound="${currentSoundId}"]`);
+                            if (card) {
+                                card.style.background = 'rgba(194, 255, 224, 0.15)';
+                            }
+                            
+                            // Save recording to localStorage
+                            saveRecording(currentSoundId, blob);
+                        }
+                        
+                        // Clear recording interface
+                        clearInterval(recordingInterval);
+                        recordingStartTime = null;
+                        recordTimer.textContent = '00:00';
+                        
+                        // Switch back to player view in the popup
+                        recordingSection.style.display = 'none';
+                        playerSection.style.display = 'block';
+                    };
+                    
+                    // Start recording
+                    mediaRecorder.start();
+                    recordingStartTime = Date.now();
+                    
+                    // Start timer
+                    recordingInterval = setInterval(updateRecordingTimer, 1000);
+                    
+                    // Update UI
+                    startRecordingBtn.classList.add('recording');
+                    startRecordingBtn.textContent = 'Recording...';
+                    stopRecordingBtn.disabled = false;
+                    
+                    console.log('Recording started');
+                })
+                .catch(err => {
+                    console.error('Error accessing microphone:', err);
+                    console.log('Unable to access microphone. Please check your browser permissions.');
+                });
+        }
+        
+        // Function to stop recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                startRecordingBtn.classList.remove('recording');
+                startRecordingBtn.textContent = 'Start Recording';
+                stopRecordingBtn.disabled = true;
+            }
+        }
+        
+        // Event Listeners for sound cards
+        soundCards.forEach(card => {
+            // Update card text from our editable variables
+            const soundId = card.dataset.sound;
+            if (soundNames[soundId]) {
+                card.querySelector('h3').textContent = soundNames[soundId];
+            }
+            if (soundDescriptions[soundId]) {
+                card.querySelector('p').textContent = soundDescriptions[soundId];
+            }
+            
+            // Add click handler
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking the edit icon
+                if (e.target.classList.contains('edit-icon') || e.target.closest('.edit-icon')) {
+                    return;
+                }
+                
+                const soundId = card.dataset.sound;
+                const soundName = card.querySelector('h3').textContent;
+                
+                // Update UI
+                currentSound.textContent = soundName;
+                playerPopup.classList.add('active');
+                
+                // Make sure we're showing the player controls, not recording interface
+                playerSection.style.display = 'block';
+                recordingSection.style.display = 'none';
+                
+                // Highlight selected card
+                soundCards.forEach(c => c.style.border = 'none');
+                card.style.border = '2px solid rgba(194, 255, 224, 0.7)';
+                
+                // Play the sound
+                currentSoundId = soundId;
+                playSound(soundId);
+            });
+        });
+        
+        // Event listeners for edit icons
+        editIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent card click
+                
+                const card = icon.closest('.sound-card');
+                const soundId = card.dataset.sound;
+                currentEditingSoundId = soundId;
+                
+                // Populate modal with current values
+                soundNameInput.value = soundNames[soundId] || card.querySelector('h3').textContent;
+                soundDescInput.value = soundDescriptions[soundId] || card.querySelector('p').textContent;
+                
+                // Show modal
+                editModal.classList.add('active');
+            });
+        });
+        
+        // Function to save names and descriptions to localStorage
+        function saveTextToLocalStorage() {
+            try {
+                localStorage.setItem('dreamySleepNames', JSON.stringify(soundNames));
+                localStorage.setItem('dreamySleepDescriptions', JSON.stringify(soundDescriptions));
+                console.log('Sound names and descriptions saved to localStorage');
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+            }
+        }
+        
+        // Event listeners for modal buttons
+        saveEditBtn.addEventListener('click', () => {
+            if (currentEditingSoundId) {
+                const newName = soundNameInput.value.trim();
+                const newDesc = soundDescInput.value.trim();
+                
+                if (newName && newDesc) {
+                    // Update data
+                    soundNames[currentEditingSoundId] = newName;
+                    soundDescriptions[currentEditingSoundId] = newDesc;
+                    
+                    // Update UI
+                    const card = document.querySelector(`.sound-card[data-sound="${currentEditingSoundId}"]`);
+                    if (card) {
+                        card.querySelector('h3').textContent = newName;
+                        card.querySelector('p').textContent = newDesc;
+                    }
+                    
+                    // Update current playing sound name if needed
+                    if (currentSoundId === currentEditingSoundId) {
+                        currentSound.textContent = newName;
+                    }
+                    
+                    // Save to localStorage
+                    saveTextToLocalStorage();
+                }
+                
+                // Close modal
+                editModal.classList.remove('active');
+                currentEditingSoundId = null;
+            }
+        });
+        
+        cancelEditBtn.addEventListener('click', () => {
+            editModal.classList.remove('active');
+            currentEditingSoundId = null;
+        });
+        
+        // Event listeners for player controls
+        playBtn.addEventListener('click', () => {
+            if (audioElement && currentSoundId) {
+                audioElement.play();
+            } else if (currentSoundId) {
+                playSound(currentSoundId);
+            }
+        });
+        
+        pauseBtn.addEventListener('click', () => {
+            if (audioElement) {
+                audioElement.pause();
+            }
+        });
+        
+        // Progress slider control
+        progressSlider.addEventListener('input', () => {
+            if (audioElement && !isNaN(audioElement.duration)) {
+                const seekTime = (progressSlider.value / 100) * audioElement.duration;
+                audioElement.currentTime = seekTime;
+                currentTimeDisplay.textContent = formatTime(seekTime);
+            }
+        });
+        
+        // Close popup button
+        closePopupBtn.addEventListener('click', () => {
+            playerPopup.classList.remove('active');
+            // Stop the audio when closing the popup
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            // Clear any existing timer
+            if (timerTimeout) {
+                clearTimeout(timerTimeout);
+                timerTimeout = null;
+            }
+            // Reset card highlights
+            soundCards.forEach(c => c.style.border = 'none');
+        });
+        
+        timerSelect.addEventListener('change', setTimer);
+        
+        // FIXED: Recording interface control with improved behavior
+        recordToggleBtn.addEventListener('click', () => {
+            // Stop any currently playing audio first
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            
+            if (currentSoundId) {
+                // Hide player controls, show recording interface
+                playerSection.style.display = 'none';
+                recordingSection.style.display = 'block';
+                
+                // Reset recording UI
+                startRecordingBtn.classList.remove('recording');
+                startRecordingBtn.textContent = 'Start Recording';
+                stopRecordingBtn.disabled = true;
+                recordTimer.textContent = '00:00';
+            } else {
+                console.log('Please select a sound to record over first.');
+            }
+        });
+        
+        startRecordingBtn.addEventListener('click', startRecording);
+        stopRecordingBtn.addEventListener('click', stopRecording);
+        
+        cancelRecordingBtn.addEventListener('click', () => {
+            // Stop any ongoing recording
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Clear recording interface
+            clearInterval(recordingInterval);
+            recordingStartTime = null;
+            recordTimer.textContent = '00:00';
+            startRecordingBtn.classList.remove('recording');
+            startRecordingBtn.textContent = 'Start Recording';
+            stopRecordingBtn.disabled = true;
+            
+            // Show player controls, hide recording interface
+            playerSection.style.display = 'block';
+            recordingSection.style.display = 'none';
+        });
+        
+        // Load saved recordings when the page loads
+        loadSavedRecordings();
+        
+        // Show an initial sound card as selected - FIXED: remove auto-play on page load
+        setTimeout(() => {
+            if (soundCards.length > 0) {
+                const firstCard = soundCards[0];
+                const soundId = firstCard.dataset.sound;
+                const soundName = firstCard.querySelector('h3').textContent;
+                
+                // Just highlight the card without playing it
+                firstCard.style.border = '2px solid rgba(194, 255, 224, 0.7)';
+                currentSoundId = soundId;
+                currentSound.textContent = soundName;
+            }
+        }, 1000);
+    </script>
+    
+    <!-- PWA installation script -->
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>

@@ -1,0 +1,100 @@
+🧠 STEP 1: Understand Key Terms First
+✅ K Readings (Keratometry)
+These measure how steep or flat the front of the eye (the cornea) is.
+
+Example: 42/44 @ 90 means one part of the eye is 42 (flatter), and another is 44 (steeper).
+
+The difference between them = corneal astigmatism.
+
+✅ Refraction (the glasses prescription)
+Example: -1.00 -2.00 x180
+
+This says the person is nearsighted (-1.00) and has -2.00 of cylinder, which is the total astigmatism they experience.
+
+✅ Astigmatism
+When the eye is shaped more like a football than a basketball.
+
+It can come from:
+
+The cornea (front of the eye — what the K readings measure).
+
+Or the lens inside the eye (called lenticular or residual astigmatism).
+
+👓 STEP 2: What are the 4 Types of RGP Lenses?
+1. Spherical RGP Lens
+It’s smooth, like a marble — no curve changes.
+
+Use it when:
+
+Corneal astigmatism (K readings difference) ≈ Refraction astigmatism (Rx cylinder).
+
+Example: K = 42/44 (2D), Rx = -1.00 -2.00 x180 → ✅ Use spherical lens.
+
+💡 Why does it work?
+The lens + your tears fill in the uneven cornea and make a smooth surface.
+
+2. Front Surface Toric (FST) Lens
+The toric (curved) part is on the front of the lens.
+
+Use it when:
+
+Very little corneal astigmatism (less than 1D from K readings),
+
+But lots of astigmatism in the Rx → means it's coming from inside the eye.
+
+💡 Example:
+K = 42/42.50 → very small corneal astigmatism
+Rx = -1.00 -2.00 x90 → 2D total astigmatism
+✅ That mismatch means you need a Front Toric.
+
+⚠️ Needs prism ballast to stay upright — like a little weight so it doesn’t spin.
+
+3. Back Surface Toric (BST) Lens
+The toric part is on the back of the lens, the part touching the eye.
+
+Use it when:
+
+Corneal astigmatism is about 2/3 of total astigmatism.
+
+Example: 4D corneal / 6D total = 2/3 match → ✅ Back Toric
+
+💡 Why?
+The back of the lens is shaped to match the uneven cornea directly.
+
+🧮 You may need to compensate for vertex distance (adjust Rx numbers when converting from glasses to contacts).
+
+4. Bi-Toric Lens
+Curved on both front AND back.
+
+Use it when:
+
+There’s lots of corneal astigmatism (like 4D or more),
+
+And the 2/3 rule doesn’t apply.
+
+Basically: when none of the other 3 lenses are working.
+
+💡 Example:
+K = 42/47 = 5D corneal
+Rx = -1.00 -6.00 x180 = 5D after vertex compensation
+Doesn't match any neat rule → ✅ Use a Bi-Toric
+
+📊 RECAP CHEAT SHEET
+
+Lens Type	When to Use
+Spherical	Corneal astigmatism ≈ Rx cylinder (match!)
+Front Toric	Corneal astigmatism < 1D, Rx has ≥ 1D → mismatch = lenticular
+Back Toric	Corneal astigmatism ≈ ⅔ of total Rx cylinder
+Bi-Toric	High corneal astigmatism + no ⅔ match = need correction on both sides
+😵 Still confused? Think of this:
+Imagine you're trying to cover a weirdly shaped hill with a blanket (the contact lens).
+Depending on how lumpy the hill is (cornea) and how much the person sees as blurry (Rx), you decide what kind of blanket works:
+
+Normal smooth blanket (spherical),
+
+Blanket with curves on top (front toric),
+
+Blanket with curves underneath (back toric),
+
+Or one that’s curved on both sides (bi-toric).
+

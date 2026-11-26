@@ -1,0 +1,169 @@
+
+Step 1: Changing (Transposing) Prescriptions
+Eye prescriptions come in two forms:
+
+Minus Cylinder Form (the one we want for contact lenses)
+
+Plus Cylinder Form (we must convert this)
+
+Why transpose?
+Contact lens prescriptions always use minus cylinder form.
+
+Example of transposing:
+Original prescription:
+
+diff
+Copy
+Edit
+-2.50 +1.00 x180
+This is "plus cylinder" because the cylinder is "+1.00".
+
+Here's how you transpose (convert) it:
+
+Combine Sphere and Cylinder:
+-2.50 (sphere) +1.00 (cylinder) = -1.50
+
+Change cylinder sign:
+Cylinder +1.00 becomes -1.00.
+
+Rotate axis by 90 degrees:
+Axis 180 becomes axis 90.
+
+Transposed prescription is now:
+
+diff
+Copy
+Edit
+-1.50 -1.00 x90
+(Now it's ready for fitting a contact lens.)
+
+Step 2: Vertex Distance (for strong prescriptions)
+Vertex distance means the distance from your eye (cornea) to your glasses or testing device.
+
+Usually about 12mm away.
+
+Important rule: If prescription is ±4.00 diopters or stronger, you must adjust for vertex distance.
+
+Why?
+Glasses sit away from your eyes. Contact lenses sit directly on your eyes, making them behave differently.
+
+Simplified rule:
+
+When converting glasses prescription to contacts, always make the prescription slightly more PLUS (or "less minus").
+
+Example:
+
+Glasses prescription: -4.00
+
+Contact lens prescription: about -3.75 (more PLUS, less minus)
+
+Bigger prescriptions require bigger adjustments (but not extreme).
+For example:
+
+Glasses: -10.00
+
+Contacts: about -9.00
+
+Step 3: Evaluating "K Readings"
+"K readings" measure how steep or flat the cornea (front clear surface of your eye) is.
+
+Example: 42.00 / 44.00 @180
+
+This shows the flattest meridian (42.00) and the steepest meridian (44.00) at 180 degrees.
+
+Difference between these numbers shows corneal astigmatism:
+
+Example: 44.00 - 42.00 = 2.00 diopters astigmatism
+
+Corneal vs. Lenticular Astigmatism:
+
+Corneal astigmatism: Astigmatism on your cornea.
+
+Lenticular (internal) astigmatism: Astigmatism inside your eye, from your natural lens.
+
+Important example:
+Prescription: -1.00 -3.00 x90 (Total astigmatism = 3.00 diopters)
+K readings: 42.00 / 44.00 (Corneal astigmatism = 2.00 diopters)
+
+Cornea has 2.00 diopters astigmatism.
+
+Total astigmatism is 3.00 diopters.
+
+This means: there's 1.00 diopter astigmatism inside your eye (lenticular).
+
+"SAM" and "FAP" Rules (Fitting RGP lenses)
+"SAM" = "Steeper Add Minus"
+
+"FAP" = "Flatter Add Plus"
+
+What does it mean?
+
+If the lens is fit "steeper" than K: You must add minus power to your final prescription.
+
+If the lens is fit "flatter" than K: You must add plus power to your final prescription.
+
+Example:
+
+Your final power is -2.00.
+
+If question says "fit 0.50 diopters flatter than K":
+
+Remember FAP: flatter means add plus (+0.50)
+
+Adjusted prescription: -2.00 + 0.50 = -1.50
+
+Gas Permeable (GP) Lenses and Astigmatism
+GP lenses are rigid and use tear film behind them to correct astigmatism naturally.
+
+GP lenses can correct:
+
+Up to 3.00 diopters "with-the-rule" astigmatism.
+
+Up to 2.00 diopters "against-the-rule" astigmatism.
+
+"With-the-rule" astigmatism:
+
+Cornea steeper vertically (90° meridian).
+
+Think of a football sitting horizontally on the ground.
+
+"Against-the-rule" astigmatism:
+
+Cornea steeper horizontally (180° meridian).
+
+Football standing upright.
+
+Careful with GP Lens and Hidden Astigmatism!
+Sometimes your K reading shows astigmatism but the prescription does NOT.
+
+Example:
+
+K readings: 42.00 / 43.50 (1.50 diopters corneal astigmatism)
+
+Prescription: -2.00 sphere (no astigmatism in the actual prescription)
+
+What this means:
+
+Cornea: has astigmatism.
+
+Lens inside eye: cancels that astigmatism out.
+
+Careful:
+If you fit a GP lens on this eye (thinking it corrects astigmatism), you actually CREATE astigmatism because the tear film behind lens fills the gap.
+
+Instead: Fit a soft (HEMA) lens, which drapes gently, avoiding induced astigmatism.
+
+Quick Recap (simple points):
+Always convert prescriptions to minus cylinder form.
+
+Adjust for vertex distance if prescription ±4.00 diopters or stronger (make more plus).
+
+Use K readings to find corneal astigmatism and difference from prescription (internal vs. corneal).
+
+Remember SAM (steeper add minus) and FAP (flatter add plus) for RGP lenses.
+
+GP lenses correct up to 3 diopters with-the-rule, 2 diopters against-the-rule astigmatism.
+
+Don't use GP lenses if there's corneal astigmatism that doesn't match the actual prescription—use a soft lens instead.
+
+This should simplify the key points clearly for you!

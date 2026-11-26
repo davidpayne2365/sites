@@ -1,0 +1,73 @@
+🧠 What is Lens Rotation?
+When a toric contact lens is put on the eye to fix astigmatism, it can rotate slightly once it’s on the eye.
+Think of it like this: you put glasses on, but they shift a little to the side. Now you're not seeing correctly.
+Same thing with the lens—rotation messes up the axis, which is a key part of the prescription.
+
+🔧 What’s the Problem?
+The axis in a toric lens (like 180, 90, etc.) tells the lens where to fix the blur from astigmatism.
+If the lens rotates, the axis is wrong now—your correction is no longer in the right place.
+So we need to adjust the prescription based on how much the lens rotated.
+
+🧩 The Easy Trick to Remember: LARS
+Left = Add degrees to the axis
+
+Right = Subtract degrees from the axis
+
+This tells you what to do with the axis based on how the lens rotated on the eye.
+
+🕰️ Wait, which way is left or right?
+This is where it gets a little confusing:
+
+If the lens turns clockwise, that’s to the left (so you add).
+
+If it turns counterclockwise, that’s to the right (so you subtract).
+
+Yes, that sounds backwards—but that’s just how it’s described from the doctor’s point of view, looking at your eye.
+
+🧮 Example 1:
+Original Rx: -3.00 -1.75 ×180
+Observation: Lens rotated 20° to the right (counterclockwise)
+
+Using LARS:
+
+Right = Subtract
+
+180 - 20 = 160
+
+✅ New Rx: -3.00 -1.75 ×160
+
+🧮 Example 2:
+Original Rx: -3.00 -1.75 ×180
+Observation: Lens rotated 30° to the left (clockwise)
+
+Using LARS:
+
+Left = Add
+
+But you’re at 180, so treat it like 0, and add 30
+
+✅ New Rx: -3.00 -1.75 ×30
+
+🧷 What helps lenses not rotate?
+Lenses can be designed to stay in place better using:
+
+Prism ballast – adds thickness to the bottom of the lens
+
+Peri-ballast
+
+Truncation – flattens the bottom edge
+
+Know those names for the NCLE exam, even if you don’t need to do math with them.
+
+📘 Key Takeaways
+Toric lenses must stay in place to work right.
+
+If they rotate, LARS helps fix the axis:
+
+Left (clockwise) → Add
+
+Right (counterclockwise) → Subtract
+
+Be careful: The test might say “clockwise” or “counterclockwise”, not left or right, to trip you up.
+
+Learn terms like prism ballast—they’re on the exam.
